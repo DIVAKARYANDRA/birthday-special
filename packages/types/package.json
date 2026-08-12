@@ -1,0 +1,8 @@
+{
+  "name": "@journey/types",
+  "private": true,
+  "version": "0.1.0",
+  "description": "Shared TypeScript types, generated from the backend's OpenAPI schema.",
+  "type": "module",
+  "main": "src/index.ts"
+}

@@ -1,0 +1,12 @@
+{
+  "name": "@journey/ui-kit",
+  "private": true,
+  "version": "0.1.0",
+  "description": "Shared design tokens and primitive UI components, consumed by both apps/web and apps/admin.",
+  "type": "module",
+  "main": "src/index.ts",
+  "peerDependencies": {
+    "react": "^18.3.0",
+    "react-dom": "^18.3.0"
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "name": "journey-to-my-heart",
+  "private": true,
+  "version": "0.1.0",
+  "description": "Monorepo for 'The Journey To My Heart' — see docs/ for the full architectural reference before making any implementation decision.",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "dev:web": "npm run dev --workspace=@journey-to-my-heart/web",
+    "dev:admin": "npm run dev --workspace=@journey-to-my-heart/admin",
+    "build:web": "npm run build --workspace=@journey-to-my-heart/web",
+    "build:admin": "npm run build --workspace=@journey-to-my-heart/admin",
+    "test:web": "npm run test --workspace=@journey-to-my-heart/web",
+    "test:admin": "npm run test --workspace=@journey-to-my-heart/admin"
+  }
+}
