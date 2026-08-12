@@ -1,0 +1,24 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/*
+ * Fallback token set — mirrors apps/web/src/theme/index.css. Real values
+ * are resolved from admin-authored Theme data once the Theme Engine
+ * (docs/05-frontend-architecture.md, Section 5) is implemented. The Admin
+ * Dashboard intentionally applies these tokens with more restraint than
+ * the User Website — see docs/02-design-system.md, Section 15.
+ */
+:root {
+  --color-primary: #4b2e83;
+  --color-secondary: #d8a7e0;
+  --color-accent: #f5d76e;
+  --color-background: #14101f;
+  --color-surface: rgba(255, 255, 255, 0.05);
+  --color-glow: #8e6ac4;
+
+  --font-display: serif;
+  --font-body: sans-serif;
+
+  --radius-md: 0.75rem;
+}
