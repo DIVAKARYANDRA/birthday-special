@@ -44,7 +44,7 @@ interface ProgressionState {
   isLocationUnlocked: (id: WorldMapLocationId) => boolean;
 }
 
-export const useProgressionStore = create<ProgressionState>((set, get) => ({
+export const useProgressionStore = create<ProgressionState>((_, get) => ({ 
   unlockedLocations: new Set<WorldMapLocationId>([
     "memory-garden",
     "timeline-train",

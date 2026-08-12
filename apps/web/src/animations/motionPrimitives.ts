@@ -9,10 +9,10 @@
  * Default ease-out for entrances, ease-in-out for looping/ambient motion,
  * per that same section.
  */
-import type { Transition, Variants } from "framer-motion";
+import type { Easing, Variants } from "framer-motion";
 
-export const EASE_OUT: Transition["ease"] = [0.16, 1, 0.3, 1];
-export const EASE_IN_OUT: Transition["ease"] = [0.45, 0, 0.55, 1];
+export const EASE_OUT: Easing = [0.16, 1, 0.3, 1];
+export const EASE_IN_OUT: Easing = [0.45, 0, 0.55, 1];
 
 /** Standard entrance for cards, panels, and list items — per
  * docs/05-frontend-architecture.md, Section 5's fadeInUp primitive. */

@@ -8,12 +8,13 @@
  * target), `active:scale-95` gives immediate tap feedback without
  * depending on `:hover` (Prompt 15's "avoid hover-only interactions").
  */
-import type { ButtonHTMLAttributes, ReactNode } from "react";
-import { motion } from "framer-motion";
+import type { ReactNode } from "react";
+import { motion, type HTMLMotionProps } from "framer-motion";
 
 import { useReducedMotion } from "@/hooks/useReducedMotion";
 
-interface MagicButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
+interface MagicButtonProps
+  extends HTMLMotionProps<"button"> {
   children: ReactNode;
 }
 
