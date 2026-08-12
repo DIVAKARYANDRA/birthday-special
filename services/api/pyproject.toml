@@ -1,0 +1,51 @@
+[project]
+name = "journey-to-my-heart-api"
+version = "0.1.0"
+description = "The Journey To My Heart — FastAPI backend (single source of truth for content and progression)"
+requires-python = ">=3.11"
+
+# ==================================================
+# Dependency rationale — see docs/06-engineering-foundation.md, Task/Section 6
+# ==================================================
+# fastapi          — the API framework itself (docs/01-system-architecture.md, Tech Stack)
+# uvicorn          — ASGI server to run the FastAPI app
+# pydantic         — request/response schema validation (API Layer, docs/04-backend-architecture.md, Section 1)
+# email-validator  — backs Pydantic's EmailStr (app.domains.users.schemas, Prompt 14)
+# sqlalchemy       — ORM used by the Data Access Layer (repositories)
+# alembic          — schema migrations (docs/04-backend-architecture.md, Section 7 / Prompt 6, Section 7)
+# psycopg          — PostgreSQL driver
+# python-jose      — JWT encode/decode for Admin authentication (docs/04-backend-architecture.md, Section 4)
+# passlib          — password hashing (never storing plaintext, Section 4/15)
+# cloudinary       — the official SDK, confined entirely to the Infrastructure Layer (Section 7)
+# python-dotenv    — local environment variable loading (never used to load production secrets)
+# pytest           — testing framework (docs/06-engineering-foundation.md, Section 9)
+#
+# Deliberately NOT included at this stage: any task-queue/broker (Celery, etc.) for background
+# processing (docs/04-backend-architecture.md, Section 13) — background job needs are modest enough
+# at this scope that FastAPI's own background-task support or a lightweight scheduler is preferred
+# over introducing a new infrastructure dependency; this can be revisited if volume ever warrants it.
+dependencies = [
+    "fastapi>=0.111.0",
+    "uvicorn[standard]>=0.30.0",
+    "pydantic>=2.8.0",
+    "pydantic-settings>=2.4.0",
+    "email-validator>=2.2.0",
+    "sqlalchemy>=2.0.0",
+    "alembic>=1.13.0",
+    "psycopg[binary]>=3.2.0",
+    "python-jose[cryptography]>=3.3.0",
+    "passlib[bcrypt]>=1.7.4",
+    "cloudinary>=1.41.0",
+    "python-dotenv>=1.0.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.3.0",
+    "pytest-asyncio>=0.23.0",
+    "httpx>=0.27.0",
+    "ruff>=0.5.0",
+]
+
+[tool.ruff]
+line-length = 100
