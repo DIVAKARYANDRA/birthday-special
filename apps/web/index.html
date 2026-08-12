@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <!--
+      viewport-fit=cover (Prompt 15, Part 10) lets the page extend under
+      the device's notch/home-indicator safe areas, which is what makes
+      the env(safe-area-inset-*) values used throughout
+      src/components/global/BottomNav.tsx and src/components/ui/Breadcrumb.tsx
+      actually resolve to non-zero values on notched devices — without
+      this, the browser never reports a safe-area inset in the first place.
+    -->
+    <title>The Journey To My Heart</title>
+    <!--
+      No content, copy, or personal details belong in this file — per
+      docs/03-data-architecture.md's content-as-data principle, even the
+      page title above is a placeholder and may eventually be sourced
+      from admin-configured Settings rather than hardcoded.
+    -->
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/app/main.tsx"></script>
+  </body>
+</html>

@@ -1,0 +1,31 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/*
+ * Design token CSS custom properties (--color-primary, --font-display,
+ * etc., referenced by tailwind.config.js) are resolved at runtime by
+ * the Theme Engine from admin-authored Theme data, per
+ * docs/05-frontend-architecture.md (Section 5) and
+ * docs/02-design-system.md (Section 16).
+ *
+ * A minimal fallback set is defined here only so the build doesn't
+ * reference undefined variables before the Theme Engine is implemented.
+ * These are NOT the final design tokens — see docs/02-design-system.md
+ * for the actual color/typography system.
+ */
+:root {
+  --color-primary: #4b2e83;
+  --color-secondary: #d8a7e0;
+  --color-accent: #f5d76e;
+  --color-background: #0f0a1e;
+  --color-surface: rgba(255, 255, 255, 0.06);
+  --color-glow: #8e6ac4;
+
+  --font-display: serif;
+  --font-body: sans-serif;
+  --font-handwritten: cursive;
+  --font-game: sans-serif;
+
+  --radius-md: 1rem;
+}
