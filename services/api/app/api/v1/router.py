@@ -33,6 +33,8 @@ from app.domains.quotes import router as quotes_router
 from app.domains.timeline import router as timeline_router
 from app.domains.unlocks import router as unlocks_router
 
+from app.domains.audio.router import router as audio_router
+
 api_router = APIRouter()
 
 api_router.include_router(platform.router)
@@ -49,7 +51,11 @@ api_router.include_router(letters_router.router, prefix="/admin/letters", tags=[
 api_router.include_router(quotes_router.router, prefix="/admin/quotes", tags=["admin:quotes"])
 api_router.include_router(achievements_router.router, prefix="/admin/achievements", tags=["admin:achievements"])
 api_router.include_router(unlocks_router.router, prefix="/admin/unlocks", tags=["admin:unlocks"])
-
+api_router.include_router(
+    audio_router,
+    prefix="/admin/music",
+    tags=["admin-music"],
+)
 # ------------------------------------------------------------------
 # Future domain router registration (uncomment as each is implemented,
 # per docs/04-backend-architecture.md, Section 3's API groups):

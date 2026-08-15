@@ -15,6 +15,7 @@ implemented in a future prompt, its import should be added here — nowhere
 else.
 """
 
+from app.domains.audio.models import MusicTrack
 
 def register_all_models() -> None:
     """
