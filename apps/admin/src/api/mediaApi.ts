@@ -56,6 +56,7 @@ export const mediaApi = {
     mediaType: string,
     altText?: string,
     displayOrder = 0,
+    usage?: string,
   ) => {
     const formData = new FormData();
 
@@ -65,6 +66,9 @@ export const mediaApi = {
 
     if (altText) {
       formData.append("alt_text", altText);
+    }
+    if (usage) {
+      formData.append("usage", usage);
     }
 
     return apiRequest<MediaAssetRead>(

@@ -68,6 +68,7 @@ export default function MediaListPage() {
         selectedFile,
         mediaType,
         altText,
+        0,
         usage || undefined,
       );
     },
