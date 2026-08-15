@@ -98,7 +98,7 @@ def upgrade() -> None:
         sa.UniqueConstraint(
             "visitor_session_id",
             "achievement_definition_id",
-            name="uq_achievement_progress_visitor_session_id_achievement_definition_id",
+            name="uq_achievement_progress_visitor_session_id"
         ),
     )
     op.create_index(
