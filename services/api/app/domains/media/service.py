@@ -105,17 +105,17 @@ class MediaAssetService:
 
         result = upload_media(file_obj)
 
-        secure_url = result.get("secure_url")
+        public_id = result.get("public_id")
 
-        if not secure_url:
+        if not public_id:
             raise AppError(
-                "Cloudinary did not return a usable media URL.",
+                "Cloudinary did not return a usable public ID.",
             )
 
         media_asset = MediaAsset(
             media_type=media_type,
             storage_provider=StorageProvider.CLOUDINARY,
-            external_reference=secure_url,
+            external_reference=public_id,
             original_filename=original_filename,
             mime_type=mime_type,
             alt_text=alt_text,

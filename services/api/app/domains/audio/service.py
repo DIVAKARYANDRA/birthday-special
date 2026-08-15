@@ -5,7 +5,6 @@ audio — Service Layer — business logic.
 import uuid
 
 from sqlalchemy.orm import Session
-from app.core.config import get_settings
 from app.core.exceptions import NotFoundError, ValidationAppError
 from app.domains.audio.models import MusicTrack
 from app.domains.audio.repository import MusicTrackRepository
@@ -120,8 +119,6 @@ class MusicTrackService:
 
         media_asset = music_track.media_asset
 
-        settings = get_settings()
-
         if media_asset.storage_provider.value != "cloudinary":
             raise ValidationAppError(
                 "The active music asset uses an unsupported storage provider."
@@ -132,11 +129,7 @@ class MusicTrackService:
                 "Cloudinary cloud name is not configured."
             )
 
-        audio_url = (
-            f"https://res.cloudinary.com/"
-            f"{settings.cloudinary_cloud_name}/video/upload/"
-            f"{media_asset.external_reference}"
-        )
+        audio_url = media_asset.external_reference
 
         return {
             "id": music_track.id,
