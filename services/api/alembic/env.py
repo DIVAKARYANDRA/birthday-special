@@ -41,7 +41,10 @@ config = context.config
 # module docstring for why.
 settings = get_settings()
 if settings.database_url:
-    config.set_main_option("sqlalchemy.url", settings.database_url)
+    config.set_main_option(
+        "sqlalchemy.url",
+        settings.database_url.replace("%", "%%")
+    )
 
 # Interpret the config file for Python logging, per the standard Alembic
 # template — this is what wires up alembic.ini's [loggers] section.
