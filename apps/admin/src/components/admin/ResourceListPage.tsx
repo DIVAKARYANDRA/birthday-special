@@ -55,7 +55,7 @@ interface ResourceListPageProps<TRead extends { id: string; status?: string }, T
   removeLabel?: string;
 }
 
-export function ResourceListPage<TRead extends { id: string; status?: string }, TCreate extends Record<string, unknown>>({
+export function ResourceListPage<TRead extends { id: string; status?: string }, TCreate>({
   title,
   queryKey,
   api,
