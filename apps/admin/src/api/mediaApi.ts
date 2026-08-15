@@ -18,6 +18,7 @@ export interface MediaAssetRead {
   status: string;
   display_order: number;
   is_visible: boolean;
+  usage: string | null;
   is_featured: boolean;
   created_at: string;
 }
@@ -27,6 +28,7 @@ export interface MediaAssetCreate {
   external_reference: string;
   storage_provider?: string;
   original_filename?: string;
+  usage?: string;
   alt_text?: string;
   display_order?: number;
 }
@@ -35,6 +37,7 @@ export interface MediaAssetUpdate {
   alt_text?: string;
   display_order?: number;
   is_visible?: boolean;
+  usage?: string;
   is_featured?: boolean;
   status?: string;
 }

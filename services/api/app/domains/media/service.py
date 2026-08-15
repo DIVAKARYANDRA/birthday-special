@@ -26,7 +26,6 @@ from sqlalchemy.orm import Session
 from app.core.exceptions import AppError, NotFoundError, ValidationAppError
 from app.domains.media.enums import MediaAssetStatus, MediaType, StorageProvider
 from app.infrastructure.cloudinary import upload_media
-from app.domains.media.enums import MediaAssetStatus
 from app.domains.media.models import MediaAsset
 from app.domains.media.repository import MediaAssetRepository
 from app.domains.media.schemas import MediaAssetCreate, MediaAssetUpdate
@@ -83,6 +82,7 @@ class MediaAssetService:
             is_featured=payload.is_featured,
             uploaded_by_admin_id=payload.uploaded_by_admin_id,
             status=MediaAssetStatus.DRAFT,
+            usage=payload.usage,
         )
         return self._repository.create(media_asset)
 
@@ -97,6 +97,7 @@ class MediaAssetService:
         display_order: int,
         uploaded_by_admin_id: uuid.UUID,
         file_size_bytes: int | None,
+        usage: str | None,
     ) -> MediaAsset:
         """
         Uploads a physical file to Cloudinary and creates the corresponding
@@ -118,6 +119,7 @@ class MediaAssetService:
             external_reference=public_id,
             original_filename=original_filename,
             mime_type=mime_type,
+            usage=usage,
             alt_text=alt_text,
             file_size_bytes=result.get("bytes") or file_size_bytes,
             width_px=result.get("width"),

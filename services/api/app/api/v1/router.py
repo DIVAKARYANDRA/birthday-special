@@ -32,7 +32,7 @@ from app.domains.memories import router as memories_router
 from app.domains.quotes import router as quotes_router
 from app.domains.timeline import router as timeline_router
 from app.domains.unlocks import router as unlocks_router
-
+from app.domains.media.public_router import router as media_public_router
 from app.domains.audio.router import router as audio_router
 from app.domains.audio.public_router import router as audio_public_router
 
@@ -61,6 +61,11 @@ api_router.include_router(
     audio_public_router,
     prefix="/experience",
     tags=["experience:music"],
+)
+experience_router.include_router(
+    media_public_router,
+    prefix="/media",
+    tags=["Experience Media"],
 )
 # ------------------------------------------------------------------
 # Future domain router registration (uncomment as each is implemented,

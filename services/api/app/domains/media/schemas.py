@@ -40,6 +40,10 @@ class MediaAssetBase(BaseModel):
     display_order: int = 0
     is_visible: bool = True
     is_featured: bool = False
+    usage: str | None = Field(
+        default=None,
+        max_length=50,
+    )
 
 
 class MediaAssetCreate(MediaAssetBase):

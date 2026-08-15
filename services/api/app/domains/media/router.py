@@ -47,6 +47,7 @@ def upload_media_asset(
     display_order: int = Form(0),
     db: Session = Depends(get_db),
     admin_user: AdminUser = Depends(get_current_admin_user),
+    usage: str | None = Form(None)
 ) -> MediaAssetRead:
     """
     Uploads a physical media file to Cloudinary and creates the
@@ -60,6 +61,7 @@ def upload_media_asset(
         media_type=media_type,
         alt_text=alt_text,
         display_order=display_order,
+        usage=usage,
         uploaded_by_admin_id=admin_user.id,
         file_size_bytes=file.size,
     )
