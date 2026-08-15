@@ -78,9 +78,47 @@ def register_exception_handlers(app: FastAPI) -> None:
                 "request_validation_error",
                 "The request could not be validated.",
                 request,
-                details={"errors": exc.errors()},
+                details={"errors": exc.errors(include_url=False)},
             ),
         )
+
+    def _json_safe_validation_errors(errors: list[dict]) -> list[dict]:
+        """
+        Converts Pydantic validation errors into JSON-safe structures.
+
+        ValidationError inputs can contain bytes or other non-JSON-native
+        objects, especially for multipart/form-data and file uploads.
+        """
+        safe_errors: list[dict] = []
+
+        for error in errors:
+            safe_error = dict(error)
+
+            if isinstance(safe_error.get("input"), bytes):
+                safe_error["input"] = safe_error["input"].decode(
+                    "utf-8",
+                    errors="replace",
+                )
+
+            safe_errors.append(safe_error)
+
+        return safe_errors
+
+
+    def _error_body(
+        code: str,
+        message: str,
+        request: Request,
+        details: dict | None = None,
+    ) -> dict:
+        return {
+            "error": {
+                "code": code,
+                "message": message,
+                "details": details or {},
+                "request_id": getattr(request.state, "request_id", None),
+            }
+        }
 
     @app.exception_handler(Exception)
     async def handle_unexpected_error(request: Request, exc: Exception) -> JSONResponse:
