@@ -15,7 +15,7 @@
  */
 import { useEffect } from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-
+import MusicPage from "@/modules/music/MusicPage";
 import { authApi } from "@/api/authApi";
 import ProtectedRoute from "@/components/ProtectedRoute";
 import DashboardLayout from "@/components/layout/DashboardLayout";
@@ -62,7 +62,18 @@ export default function App() {
             <Route path="/quotes" element={<QuotesListPage />} />
             <Route path="/achievements" element={<AchievementsListPage />} />
             <Route path="/unlocks" element={<UnlocksListPage />} />
+            <Route
+                path="/music"
+                element={
+                  <ProtectedRoute>
+                    <DashboardLayout>
+                      <MusicPage />
+                    </DashboardLayout>
+                  </ProtectedRoute>
+                }
+              />
           </Route>
+          
         </Route>
       </Routes>
     </BrowserRouter>

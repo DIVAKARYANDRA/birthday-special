@@ -15,12 +15,14 @@ import { useAuth } from "@/hooks/useAuth";
 const NAV_ITEMS = [
   { to: "/", label: "Dashboard" },
   { to: "/media", label: "Media" },
+  { to: "/music", label: "Music" },
   { to: "/memories", label: "Memories" },
   { to: "/timeline", label: "Timeline" },
   { to: "/letters", label: "Letters" },
   { to: "/quotes", label: "Quotes" },
   { to: "/achievements", label: "Achievements" },
   { to: "/unlocks", label: "Unlock Conditions" },
+  
 ];
 
 const linkStyle = (isActive: boolean): CSSProperties => ({
