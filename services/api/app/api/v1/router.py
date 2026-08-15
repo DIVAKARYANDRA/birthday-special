@@ -62,10 +62,10 @@ api_router.include_router(
     prefix="/experience",
     tags=["experience:music"],
 )
-experience_router.include_router(
+api_router.include_router(
     media_public_router,
-    prefix="/media",
-    tags=["Experience Media"],
+    prefix="/experience/media",
+    tags=["experience:media"],
 )
 # ------------------------------------------------------------------
 # Future domain router registration (uncomment as each is implemented,
