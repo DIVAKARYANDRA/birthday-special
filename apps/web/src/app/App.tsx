@@ -30,6 +30,7 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 
 import SceneTransition from "@/components/global/SceneTransition";
 import LandingScene from "@/scenes/landing/LandingScene";
+import BackgroundMusicPlayer from "@/features/audio/BackgroundMusicPlayer";
 
 const IntroSequence = lazy(() => import("@/scenes/landing/IntroSequence"));
 const WorldMapScene = lazy(() => import("@/scenes/world-map/WorldMapScene"));
@@ -77,6 +78,7 @@ function AnimatedRoutes() {
 export default function App() {
   return (
     <BrowserRouter>
+      <BackgroundMusicPlayer />
       <AnimatedRoutes />
     </BrowserRouter>
   );

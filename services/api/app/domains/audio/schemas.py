@@ -34,6 +34,7 @@ class MusicTrackResponse(BaseModel):
     default_volume: float
     loop: bool
     is_active: bool
+    audio_url: str
     created_at: datetime
     updated_at: datetime
 

@@ -86,3 +86,7 @@ class MusicTrack(Base):
     media_asset: Mapped["MediaAsset"] = relationship(
         lazy="joined",
     )
+
+    @property
+    def audio_url(self) -> str:
+        return self.media_asset.external_reference
