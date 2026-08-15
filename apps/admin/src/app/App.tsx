@@ -65,11 +65,7 @@ export default function App() {
             <Route
                 path="/music"
                 element={
-                  <ProtectedRoute>
-                    <DashboardLayout>
                       <MusicPage />
-                    </DashboardLayout>
-                  </ProtectedRoute>
                 }
               />
           </Route>
