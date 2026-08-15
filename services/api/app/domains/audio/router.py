@@ -36,9 +36,9 @@ def list_music_tracks(
 )
 def get_active_music(
     db: Session = Depends(get_db),
+    _: object = Depends(require_permission("manage_media")),
 ) -> MusicTrackResponse:
     return MusicTrackService(db).get_active()
-
 
 @router.get(
     "/{music_track_id}",

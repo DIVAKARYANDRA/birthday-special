@@ -5,7 +5,7 @@ audio — Service Layer — business logic.
 import uuid
 
 from sqlalchemy.orm import Session
-
+from app.core.config import get_settings
 from app.core.exceptions import NotFoundError, ValidationAppError
 from app.domains.audio.models import MusicTrack
 from app.domains.audio.repository import MusicTrackRepository
@@ -103,3 +103,48 @@ class MusicTrackService:
             music_track,
             is_active=False,
         )
+
+    def get_active_public(self) -> dict[str, object]:
+        """
+        Returns the currently active music track in the public API shape.
+
+        The public API exposes a playable Cloudinary URL while keeping
+        storage-provider details out of the public response model.
+        """
+        music_track = self._repository.get_active()
+
+        if music_track is None:
+            raise NotFoundError(
+                "No active background music is configured."
+            )
+
+        media_asset = music_track.media_asset
+
+        settings = get_settings()
+
+        if media_asset.storage_provider.value != "cloudinary":
+            raise ValidationAppError(
+                "The active music asset uses an unsupported storage provider."
+            )
+
+        if not settings.cloudinary_cloud_name:
+            raise ValidationAppError(
+                "Cloudinary cloud name is not configured."
+            )
+
+        audio_url = (
+            f"https://res.cloudinary.com/"
+            f"{settings.cloudinary_cloud_name}/video/upload/"
+            f"{media_asset.external_reference}"
+        )
+
+        return {
+            "id": music_track.id,
+            "media_asset_id": music_track.media_asset_id,
+            "title": music_track.title,
+            "mood": music_track.mood,
+            "audio_url": audio_url,
+            "default_volume": music_track.default_volume,
+            "loop": music_track.loop,
+            "is_active": music_track.is_active,
+        }

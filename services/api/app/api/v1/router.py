@@ -34,6 +34,7 @@ from app.domains.timeline import router as timeline_router
 from app.domains.unlocks import router as unlocks_router
 
 from app.domains.audio.router import router as audio_router
+from app.domains.audio.public_router import router as audio_public_router
 
 api_router = APIRouter()
 
@@ -55,6 +56,11 @@ api_router.include_router(
     audio_router,
     prefix="/admin/music",
     tags=["admin-music"],
+)
+api_router.include_router(
+    audio_public_router,
+    prefix="/experience",
+    tags=["experience:music"],
 )
 # ------------------------------------------------------------------
 # Future domain router registration (uncomment as each is implemented,

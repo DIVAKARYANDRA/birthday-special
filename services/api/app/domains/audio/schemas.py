@@ -26,7 +26,6 @@ class MusicTrackUpdate(BaseModel):
     loop: bool | None = None
     is_active: bool | None = None
 
-
 class MusicTrackResponse(BaseModel):
     id: uuid.UUID
     media_asset_id: uuid.UUID
@@ -37,6 +36,28 @@ class MusicTrackResponse(BaseModel):
     is_active: bool
     created_at: datetime
     updated_at: datetime
+
+    model_config = {
+        "from_attributes": True,
+    }
+
+
+class PublicMusicTrackResponse(BaseModel):
+    """
+    Public representation of the currently active background music.
+
+    Unlike the admin response, this includes the resolved playable URL
+    required by the visitor-facing web application.
+    """
+
+    id: uuid.UUID
+    media_asset_id: uuid.UUID
+    title: str
+    mood: str | None
+    audio_url: str
+    default_volume: float
+    loop: bool
+    is_active: bool
 
     model_config = {
         "from_attributes": True,
