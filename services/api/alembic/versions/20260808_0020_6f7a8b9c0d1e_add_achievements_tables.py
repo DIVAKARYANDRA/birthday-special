@@ -92,7 +92,7 @@ def upgrade() -> None:
         sa.ForeignKeyConstraint(
             ["achievement_definition_id"],
             ["achievement_definitions.id"],
-            name="fk_achievement_progress_achievement_definition_id_achievement_definitions",
+            name='fk_achievement_progress_achievement_definition_id',
             ondelete="CASCADE",
         ),
         sa.UniqueConstraint(
