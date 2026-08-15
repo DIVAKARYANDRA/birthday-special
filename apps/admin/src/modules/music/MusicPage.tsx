@@ -41,12 +41,18 @@ export default function MusicPage() {
       const [trackData, mediaData] = await Promise.all([
         musicApi.list(),
         apiRequest<AudioMediaAsset[]>(
-          "/api/v1/admin/media?media_type=audio",
+            "/api/v1/admin/media?media_type=audio",
         ),
-      ]);
+        ]);
 
-      setTracks(trackData);
-      setAudioAssets(mediaData);
+       const audioOnlyAssets = mediaData.filter(
+        (asset) =>
+            asset.media_type === "audio" ||
+            asset.mime_type?.startsWith("audio/"),
+        );
+
+        setTracks(trackData);
+        setAudioAssets(audioOnlyAssets);
     } catch (err) {
       setError(
         err instanceof Error

@@ -18,12 +18,14 @@ subclasses from app/core/exceptions.py (and the database-specific ones
 from app/db/errors.py) so a future router needs no special-case error
 handling of its own.
 """
-
 import uuid
+from typing import BinaryIO
 
 from sqlalchemy.orm import Session
 
-from app.core.exceptions import NotFoundError, ValidationAppError
+from app.core.exceptions import AppError, NotFoundError, ValidationAppError
+from app.domains.media.enums import MediaAssetStatus, MediaType, StorageProvider
+from app.infrastructure.cloudinary import upload_media
 from app.domains.media.enums import MediaAssetStatus
 from app.domains.media.models import MediaAsset
 from app.domains.media.repository import MediaAssetRepository
@@ -82,6 +84,52 @@ class MediaAssetService:
             uploaded_by_admin_id=payload.uploaded_by_admin_id,
             status=MediaAssetStatus.DRAFT,
         )
+        return self._repository.create(media_asset)
+
+    def upload_media_asset(
+        self,
+        *,
+        file_obj: BinaryIO,
+        original_filename: str,
+        mime_type: str | None,
+        media_type: MediaType,
+        alt_text: str | None,
+        display_order: int,
+        uploaded_by_admin_id: uuid.UUID,
+        file_size_bytes: int | None,
+    ) -> MediaAsset:
+        """
+        Uploads a physical file to Cloudinary and creates the corresponding
+        MediaAsset database record.
+        """
+
+        result = upload_media(file_obj)
+
+        secure_url = result.get("secure_url")
+
+        if not secure_url:
+            raise AppError(
+                "Cloudinary did not return a usable media URL.",
+            )
+
+        media_asset = MediaAsset(
+            media_type=media_type,
+            storage_provider=StorageProvider.CLOUDINARY,
+            external_reference=secure_url,
+            original_filename=original_filename,
+            mime_type=mime_type,
+            alt_text=alt_text,
+            file_size_bytes=result.get("bytes") or file_size_bytes,
+            width_px=result.get("width"),
+            height_px=result.get("height"),
+            duration_seconds=result.get("duration"),
+            display_order=display_order,
+            is_visible=True,
+            is_featured=False,
+            uploaded_by_admin_id=uploaded_by_admin_id,
+            status=MediaAssetStatus.DRAFT,
+        )
+
         return self._repository.create(media_asset)
 
     def get_media_asset(self, media_asset_id: uuid.UUID) -> MediaAsset:

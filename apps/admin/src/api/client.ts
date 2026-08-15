@@ -88,13 +88,24 @@ function buildUrl(path: string, query?: RequestOptions["query"]): string {
  */
 export async function apiRequest<T>(path: string, options: RequestOptions = {}, _isRetry = false): Promise<T> {
   const { accessToken } = useAuthStore.getState();
-  const headers: Record<string, string> = { "Content-Type": "application/json" };
-  if (accessToken) headers.Authorization = `Bearer ${accessToken}`;
+  const headers: Record<string, string> = {};
 
+  if (!(options.body instanceof FormData)) {
+    headers["Content-Type"] = "application/json";
+  }
+
+  if (accessToken) {
+    headers.Authorization = `Bearer ${accessToken}`;
+  }
   const response = await fetch(buildUrl(path, options.query), {
     method: options.method ?? "GET",
     headers,
-    body: options.body !== undefined ? JSON.stringify(options.body) : undefined,
+    body:
+    options.body instanceof FormData
+      ? options.body
+      : options.body !== undefined
+        ? JSON.stringify(options.body)
+        : undefined,
   });
 
   if (response.status === 401 && !_isRetry) {
