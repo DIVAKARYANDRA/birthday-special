@@ -1,13 +1,12 @@
 import { useEffect, useRef, useState } from "react";
 
 import { getActiveMusic, type ActiveMusic } from "@/api/musicApi";
-import { useUIStore } from "@/stores/uiStore";
+
+const MUSIC_PLAY_EVENT = "journey:music-play";
+const MUSIC_PAUSE_EVENT = "journey:music-pause";
 
 export default function BackgroundMusicPlayer() {
   const audioRef = useRef<HTMLAudioElement | null>(null);
-
-  const isMuted = useUIStore((state) => state.isMuted);
-
   const [music, setMusic] = useState<ActiveMusic | null>(null);
 
   useEffect(() => {
@@ -33,42 +32,40 @@ export default function BackgroundMusicPlayer() {
   }, []);
 
   useEffect(() => {
-    if (!music) {
+    if (!music?.audio_url) {
       return;
     }
 
     const audio = new Audio(music.audio_url);
 
     audio.loop = music.loop;
-    audio.volume = music.default_volume;
+    audio.volume = Math.max(0, Math.min(1, music.default_volume));
+    audio.preload = "auto";
+
     audioRef.current = audio;
 
+    const handlePlay = () => {
+      void audio.play().catch((error) => {
+        console.error("Unable to play background music:", error);
+      });
+    };
+
+    const handlePause = () => {
+      audio.pause();
+    };
+
+    window.addEventListener(MUSIC_PLAY_EVENT, handlePlay);
+    window.addEventListener(MUSIC_PAUSE_EVENT, handlePause);
+
     return () => {
+      window.removeEventListener(MUSIC_PLAY_EVENT, handlePlay);
+      window.removeEventListener(MUSIC_PAUSE_EVENT, handlePause);
+
       audio.pause();
       audio.src = "";
       audioRef.current = null;
     };
   }, [music]);
-
-  useEffect(() => {
-    const audio = audioRef.current;
-
-    if (!audio) {
-      return;
-    }
-
-    if (isMuted) {
-      audio.pause();
-      return;
-    }
-
-    void audio.play().catch((error) => {
-      console.debug(
-        "Browser prevented background music playback:",
-        error,
-      );
-    });
-  }, [isMuted, music]);
 
   return null;
 }

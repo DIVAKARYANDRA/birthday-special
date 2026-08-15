@@ -68,8 +68,20 @@ export default function LandingScene() {
       </div>
 
       <button
-        onClick={toggleMuted}
-        aria-label={isMuted ? "Unmute background music" : "Mute background music"}
+        onClick={() => {
+          if (isMuted) {
+            window.dispatchEvent(new Event("journey:music-play"));
+          } else {
+            window.dispatchEvent(new Event("journey:music-pause"));
+          }
+
+          toggleMuted();
+        }}
+        aria-label={
+          isMuted
+            ? "Unmute background music"
+            : "Mute background music"
+        }
         className="fixed right-4 top-4 z-20 flex min-h-[44px] min-w-[44px] items-center justify-center rounded-full bg-white/10 text-lg text-white backdrop-blur-sm active:scale-90"
         style={{ top: "calc(1rem + env(safe-area-inset-top))" }}
       >
