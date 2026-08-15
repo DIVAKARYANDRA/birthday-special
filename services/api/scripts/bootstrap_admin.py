@@ -11,7 +11,7 @@ from app.domains.users.enums import PermissionCode
 
 USERNAME = "divakar"
 EMAIL = "divakar@example.com"
-PASSWORD = "Poojitha#12345"
+PASSWORD = "PoojaLove19!"
 
 
 def bootstrap():
