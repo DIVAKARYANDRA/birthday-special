@@ -88,29 +88,22 @@ def get_session_factory() -> sessionmaker[Session]:
 def get_db() -> Iterator[Session]:
     """
     FastAPI dependency yielding a database session for the lifetime of a
-    single request, per docs/04-backend-architecture.md, Section 1's
-    Data Access Layer contract.
+    single request.
 
-    Usage (once a domain's router.py exists):
+    The request owns one transaction:
+      - successful request -> commit
+      - failed request -> rollback
+      - always -> close session
 
-        from fastapi import Depends
-        from app.db.session import get_db
-
-        @router.get(...)
-        def some_endpoint(db: Session = Depends(get_db)):
-            ...
-
-    The session is always closed in the `finally` block, and any
-    SQLAlchemy-level exception is translated (via app/db/errors.py) into
-    the shared AppError vocabulary before propagating, so the global error
-    handlers registered in app/core/error_handlers.py (Prompt 8) render it
-    consistently with every other application error — no repository needs
-    its own try/except around connection-level failures.
+    Repositories intentionally use flush(), not commit(). Transaction
+    ownership belongs here at the request/unit-of-work boundary.
     """
     session_factory = get_session_factory()
     session = session_factory()
+
     try:
         yield session
+        session.commit()
     except Exception as exc:
         session.rollback()
         raise translate_db_exception(exc) from exc
