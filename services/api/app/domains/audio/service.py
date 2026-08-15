@@ -106,10 +106,8 @@ class MusicTrackService:
     def get_active_public(self) -> dict[str, object]:
         """
         Returns the currently active music track in the public API shape.
-
-        The public API exposes a playable Cloudinary URL while keeping
-        storage-provider details out of the public response model.
         """
+
         music_track = self._repository.get_active()
 
         if music_track is None:
@@ -124,9 +122,9 @@ class MusicTrackService:
                 "The active music asset uses an unsupported storage provider."
             )
 
-        if not settings.cloudinary_cloud_name:
+        if not media_asset.external_reference:
             raise ValidationAppError(
-                "Cloudinary cloud name is not configured."
+                "The active music asset has no storage reference."
             )
 
         audio_url = media_asset.external_reference
