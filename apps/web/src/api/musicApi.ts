@@ -12,9 +12,7 @@ export interface ActiveMusic {
 }
 
 const API_BASE_URL =
-  import.meta.env.VITE_API_BASE_URL ??
-  import.meta.env.VITE_API_BASE_URL ??
-  "";
+  import.meta.env.VITE_API_BASE_URL ?? "";
 
 export async function getActiveMusic(): Promise<ActiveMusic | null> {
   const response = await fetch(
