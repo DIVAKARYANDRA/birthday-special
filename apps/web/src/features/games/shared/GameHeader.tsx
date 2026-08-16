@@ -1,3 +1,5 @@
+import type { ReactNode } from "react";
+
 interface GameHeaderProps {
 
 level:number;
@@ -6,7 +8,7 @@ totalScore:number;
 
 onReset:()=>void;
 
-music:React.ReactNode;
+music:ReactNode;
 
 }
 
@@ -14,7 +16,8 @@ export default function GameHeader(
 {
 level,
 totalScore,
-onReset
+onReset,
+music
 
 }:GameHeaderProps
 ){

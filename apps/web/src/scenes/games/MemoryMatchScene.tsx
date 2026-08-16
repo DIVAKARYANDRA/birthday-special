@@ -217,10 +217,8 @@ previous + score
 );
 
 
-const nextLevel =
-level + 1;
-
 if(level >= 10){
+
 
 updateGameProgress(
 gameId,
@@ -230,15 +228,19 @@ score
 }
 );
 
+
 setCompleted(true);
+
 
 return;
 
 }
 
 
+
 const nextLevel =
 level + 1;
+
 
 
 updateGameProgress(
@@ -250,9 +252,11 @@ score
 );
 
 
+
 setLevel(
 nextLevel
 );
+
 
 }
 
