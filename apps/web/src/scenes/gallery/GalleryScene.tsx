@@ -79,41 +79,34 @@ throw new Error(
 const data =
 await response.json();
 
-
-
-const mappedPhotos:GalleryPhoto[] =
+const mappedPhotos =
 data.map(
-(photo:any,index:number)=>({
+(photo,index)=>({
 
-id:photo.id,
+  id: photo.id,
 
-url:photo.url,
+  url: photo.url,
 
-title:
-photo.title ?? "Memory",
+  title: photo.title,
 
-
-alt_text:
-photo.caption ?? photo.title ?? "Gallery photo",
+  alt_text:
+    photo.alt_text ?? null,
 
 
-placeholderColor:
-"bg-white/10",
+  caption:
+    photo.alt_text ??
+    photo.title ??
+    "A beautiful memory",
 
 
-placeholderEmoji:
-"📸",
-
-
-rotationDeg:
-(index % 2 === 0)
-? -3
-: 3,
+  rotationDeg:
+    index % 2 === 0
+    ? -4
+    : 4,
 
 
 })
 );
-
 
 
 setPhotos(
