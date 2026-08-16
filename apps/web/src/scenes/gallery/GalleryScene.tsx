@@ -69,7 +69,8 @@ const [category,setCategory]=useState("all");
 const [loading,setLoading] =
 useState(true);
 
-
+const [viewerPhotos,setViewerPhotos] =
+useState<GalleryPhoto[]>([]);
 
 const [error,setError] =
 useState(false);
@@ -303,9 +304,15 @@ Every picture holds a little story of us ❤️
 
 
 </motion.div>
-
 <FeaturedCarousel
+
 photos={featuredPhotos}
+
+onOpen={(index)=>{
+ setViewerPhotos(featuredPhotos);
+ setViewerIndex(index);
+}}
+
 />
 
 {
@@ -397,9 +404,10 @@ onChange={setCategory}
 
 photos={visiblePhotos}
 
-onOpen={(index)=>
-setViewerIndex(index)
-}
+onOpen={(index)=>{
+ setViewerPhotos(visiblePhotos);
+ setViewerIndex(index);
+}}
 
 />
 
@@ -427,7 +435,7 @@ viewerIndex !== null &&
 
 
 photos={
-visiblePhotos
+viewerPhotos
 }
 
 
