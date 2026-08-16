@@ -57,7 +57,7 @@ useState<HiddenObjectImage[]>([]);
 
 
 const [
-// loading,
+loading,
 setLoading
 ]
 =
