@@ -180,16 +180,19 @@ status:"published"
 
 // IMPORTANT
 // archive route is plural in backend
+archive:(
 
-archive:(timelineId:string)=>
+  timelineId:string,
+
+)=>
 
 apiRequest<TimelineRead>(
 
-`/api/v1/admin/timelines/${timelineId}/archive`,
+  `${BASE_URL}/${timelineId}/archive`,
 
-{
-method:"POST"
-}
+  {
+    method:"POST",
+  }
 
 ),
 
