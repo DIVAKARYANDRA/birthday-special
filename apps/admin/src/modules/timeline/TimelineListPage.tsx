@@ -106,7 +106,32 @@ alert(
 
 
 
+async function deleteTimeline(id:string){
 
+const confirmed =
+window.confirm(
+"Remove this timeline?"
+);
+
+
+if(!confirmed)
+return;
+
+
+await timelineApi.archive(id);
+
+
+alert(
+"Timeline removed"
+);
+
+
+queryClient.invalidateQueries({
+ queryKey:["timelines"]
+});
+
+
+}
 
 
 async function addChapter(){
@@ -586,6 +611,25 @@ rounded
 
 Publish
 
+</button>
+
+<button
+onClick={()=>
+deleteTimeline(
+ timeline.id
+)
+}
+className="
+mt-3
+ml-3
+rounded
+bg-red-600
+px-4
+py-2
+text-white
+"
+>
+Delete
 </button>
 
 

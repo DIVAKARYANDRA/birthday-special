@@ -178,5 +178,15 @@ apiRequest<TimelineRead>(
 
 ),
 
+archive: (
+  timelineId:string,
+)=>
+apiRequest<TimelineRead>(
+  `/api/v1/admin/timelines/${timelineId}/archive`,
+  {
+    method:"POST",
+  },
+),
+
 
 };
