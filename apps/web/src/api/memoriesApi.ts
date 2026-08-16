@@ -1,4 +1,5 @@
-import { apiRequest } from "@/api/client";
+import { apiRequest } from "./client";
+
 
 export interface MemoryImage {
   id: string;
@@ -22,7 +23,7 @@ export interface MemoryRead {
 }
 
 
-export function getMemories() {
+export async function getMemories(): Promise<MemoryRead[]> {
   return apiRequest<MemoryRead[]>(
     "/api/v1/experience/memories",
   );

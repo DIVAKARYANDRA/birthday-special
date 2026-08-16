@@ -35,13 +35,16 @@ def get_public_memories(
         images = []
 
         for item in memory.media_items:
+
+            media_asset = item.media_asset
+
             images.append(
                 {
-                    "id": str(item.media_asset_id),
+                    "id": str(media_asset.id),
                     "url": (
                         f"https://res.cloudinary.com/"
                         f"{settings.cloudinary_cloud_name}/image/upload/"
-                        f"{item.media_asset_id}"
+                        f"{media_asset.external_reference}"
                     ),
                     "caption": item.caption,
                 }
