@@ -32,7 +32,7 @@ export const GAME_PASSWORDS: Record<string, GamePasswordConfig> = {
 
     "hidden-objects":{
 
-  password:"xxxx",
+  password:"DIVA000",
 
   title:"Hidden Objects 🔍",
 
