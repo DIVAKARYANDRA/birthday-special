@@ -6,50 +6,66 @@ import { useReducedMotion } from "@/hooks/useReducedMotion";
 
 import type { GalleryPhoto } from "./types";
 
+
 interface FloatingPolaroidProps {
   photo: GalleryPhoto;
   onOpen: () => void;
 }
 
 
+
 export default function FloatingPolaroid(
 {
- photo,
- onOpen
+  photo,
+  onOpen,
 
-}:FloatingPolaroidProps
+}: FloatingPolaroidProps
 ){
 
 
-const [flipped,setFlipped]=
+const [flipped,setFlipped] =
 useState(false);
-const [imageError,setImageError]=useState(false);
-const [dragging,setDragging]=useState(false);
+
+
+const [imageError,setImageError] =
+useState(false);
+
+
+const [dragging,setDragging] =
+useState(false);
+
+
 
 const reducedMotion =
 useReducedMotion();
 
 
 
+
 return (
 
 <motion.div
+
+
 className="
 relative
-h-56
-w-44
+h-48
+w-36
 sm:h-72
 sm:w-56
 shrink-0
 cursor-pointer
 "
 
+
 style={{
-rotate:photo.rotationDeg
+rotate: photo.rotationDeg
 }}
 
 
+
 drag
+
 
 dragElastic={0.5}
 
@@ -62,12 +78,14 @@ bottom:0
 }}
 
 
-onDragStart={()=>
+
+onDragStart={() =>
 setDragging(true)
 }
 
 
-onDragEnd={()=>
+
+onDragEnd={() =>
 setTimeout(
 ()=>setDragging(false),
 100
@@ -75,9 +93,11 @@ setTimeout(
 }
 
 
+
 whileTap={{
 scale:1.05
 }}
+
 
 
 variants={
@@ -87,17 +107,21 @@ variants={
 }
 
 
+
 animate={
 !reducedMotion
-?"animate"
-:undefined
+? "animate"
+: undefined
 }
+
 
 >
 
 
 
+
 <motion.div
+
 
 
 className="
@@ -106,9 +130,12 @@ h-full
 w-full
 "
 
+
+
 style={{
 transformStyle:"preserve-3d"
 }}
+
 
 
 animate={{
@@ -119,64 +146,107 @@ flipped
 }}
 
 
+
 transition={{
 duration:0.5
 }}
 
 
-onClick={()=>{
+
+onClick={() => {
+
 if(!dragging){
- setFlipped(
- value=>!value
- );
+
+setFlipped(
+value => !value
+);
+
 }
+
 }}
+
 
 
 >
 
 
+
 {/* FRONT */}
-{
-imageError ? (
 
 <div
+
+
+className="
+absolute
+inset-0
+flex
+flex-col
+rounded-sm
+border-4
+border-b-8
+border-white
+bg-white
+p-2
+shadow-xl
+overflow-hidden
+"
+
+
+
+style={{
+backfaceVisibility:"hidden"
+}}
+
+
+
+>
+
+
+{
+
+imageError ?
+
+
+(
+<div
+
 className="
 flex
-h-full
-w-full
+flex-1
 items-center
 justify-center
 bg-purple-100
 text-4xl
 "
+
 >
+
 📸
+
 </div>
 
 )
 
+
 :
+
+
+(
 
 <div
 className="
 flex
-h-full
-flex-col
-"
->
-
-
-<div
-className="
 flex-1
 overflow-hidden
 "
 >
 
+
 <img
 
+
 src={photo.url}
+
 
 alt={
 photo.alt_text ??
@@ -184,7 +254,16 @@ photo.title ??
 "Memory"
 }
 
+
+
 loading="lazy"
+
+
+
+onError={() =>
+setImageError(true)
+}
+
 
 
 className="
@@ -197,37 +276,53 @@ duration-500
 hover:scale-110
 "
 
+
+
 />
 
+
 </div>
+
+)
+
+}
+
 
 
 
 <div
+
 className="
 py-2
 text-center
 text-xs
-text-gray-700
 font-medium
+text-gray-700
 "
+
 >
+
 
 {
 photo.title ??
 "Beautiful memory"
 }
 
-</div>
-
 
 </div>
 
-}
+
+
+</div>
+
+
+
 
 
 
 {/* BACK */}
+
+
 
 <div
 
@@ -248,30 +343,38 @@ shadow-xl
 "
 
 
+
 style={{
 
 backfaceVisibility:
 "hidden",
+
 
 transform:
 "rotateY(180deg)"
 
 }}
 
+
+
 >
 
 
 <p
+
 className="
 text-xs
 leading-relaxed
 text-white
 "
+
 >
 
 {
-photo.caption
+photo.caption ??
+"Forever memory ❤️"
 }
+
 
 </p>
 
@@ -279,7 +382,12 @@ photo.caption
 </div>
 
 
+
+
+
 </motion.div>
+
+
 
 
 
@@ -290,13 +398,19 @@ photo.caption
 
 onClick={(e)=>{
 
+
 e.stopPropagation();
 
+
 if(!dragging){
-  onOpen();
+
+onOpen();
+
 }
 
+
 }}
+
 
 
 aria-label="
@@ -304,10 +418,11 @@ View full photo
 "
 
 
+
 className="
 absolute
--bottom-3
--right-3
+bottom-[-12px]
+right-[-12px]
 flex
 h-9
 w-9
@@ -320,15 +435,21 @@ shadow-md
 active:scale-90
 "
 
+
+
 >
 
 🔍
+
 
 </button>
 
 
 
+
+
 </motion.div>
+
 
 );
 
