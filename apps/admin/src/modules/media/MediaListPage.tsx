@@ -300,24 +300,28 @@ p-2
 Select Game
 </option>
 
-
 <option value="memory-match">
-Memory Match
+Memory Match ❤️
 </option>
 
 
-<option value="jigsaw">
-Jigsaw Puzzle
+<option value="story-puzzle">
+Our Story Puzzle 🧩
+</option>
+
+
+<option value="love-quiz">
+Love Quiz 💌
 </option>
 
 
 <option value="hidden-objects">
-Hidden Objects
+Hidden Objects 🔍
 </option>
 
 
-<option value="relationship-quiz">
-Relationship Quiz
+<option value="treasure-hunt">
+Treasure Hunt 🔐
 </option>
 
 
