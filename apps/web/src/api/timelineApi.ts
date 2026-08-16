@@ -1,71 +1,31 @@
 export interface TimelineStation {
-
   id: string;
-
   memory_id: string;
-
   title: string;
-
   memoryTitle: string;
-
   description: string | null;
-
   story: string | null;
-
   date: string | null;
-
   location: string | null;
-
   image: string | null;
-
   section: string | null;
-
   display_order: number;
-
 }
-
-
-
-export interface TimelineEntry {
-
-  id: string;
-
-  memory_id: string;
-
-  section: string | null;
-
-  display_order: number;
-
-}
-
 
 
 export interface TimelineChapter {
-
   id: string;
-
   title: string;
-
-  entries: TimelineEntry[];
-
+  description: string | null;
   stations: TimelineStation[];
-
 }
-
 
 
 export interface TimelineRead {
-
   id: string;
-
   title: string;
-
-  description?: string | null;
-
   chapters: TimelineChapter[];
-
 }
-
 
 
 const API_BASE_URL =
@@ -82,97 +42,86 @@ export async function getTimeline(): Promise<TimelineRead[]> {
 
 
   if (!response.ok) {
-
     throw new Error(
-      "Failed to load timeline",
+      "Failed to load timeline"
     );
-
   }
 
 
-
-  const data = await response.json();
-
+  const timelines = await response.json();
 
 
-  return data.map(
+
+  return timelines.map(
     (timeline: any) => ({
 
-      ...timeline,
+      id: timeline.id,
+
+      title: timeline.title,
 
 
       chapters:
-        timeline.chapters.map(
-          (chapter: any) => ({
+        timeline.chapters?.map(
+          (chapter:any)=>({
 
+            id:chapter.id,
 
-            ...chapter,
+            title:chapter.title,
+
+            description:
+              chapter.description ?? null,
 
 
             stations:
-              chapter.entries.map(
-                (entry: any) => ({
+              chapter.stations?.map(
+                (station:any)=>({
 
-
-                  id: entry.id,
-
+                  id:station.id,
 
                   memory_id:
-                    entry.memory_id,
+                    station.memory_id,
 
 
                   title:
-                    entry.section ??
-                    "Memory Station",
+                    station.title,
 
 
                   memoryTitle:
-                    entry.memory_title ??
-                    "Beautiful Memory",
+                    station.memoryTitle,
 
 
                   description:
-                    entry.description ??
-                    null,
+                    station.description ?? null,
 
 
                   story:
-                    entry.story ??
-                    null,
+                    station.story ?? null,
 
 
                   date:
-                    entry.memory_date ??
-                    null,
+                    station.date ?? null,
 
 
                   location:
-                    entry.location ??
-                    null,
+                    station.location ?? null,
 
 
                   image:
-                    entry.image ??
-                    null,
+                    station.image ?? null,
 
 
                   section:
-                    entry.section ??
-                    null,
+                    station.section ?? null,
 
 
                   display_order:
-                    entry.display_order ??
-                    0,
-
+                    station.display_order ?? 0,
 
                 })
-              )
-
+              ) ?? []
 
           })
-        )
-
+        ) ?? []
 
     })
   );

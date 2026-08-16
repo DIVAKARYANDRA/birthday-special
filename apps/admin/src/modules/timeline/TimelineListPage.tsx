@@ -592,51 +592,47 @@ className="ml-4 mt-2"
 
 }
 
+<div className="mt-3 flex gap-3">
 
+  {
+    t.status !== "published" && (
 
-{
-t.status !== "published" && (
+      <button
+        onClick={() =>
+          publishTimeline(t.id)
+        }
+        className="
+          rounded
+          bg-green-700
+          px-4
+          py-2
+          text-white
+        "
+      >
+        Publish
+      </button>
 
-<button
-
-onClick={() =>
-publishTimeline(t.id)
-}
-
-className="
-mt-3
-bg-green-700
-text-white
-px-4
-py-2
-rounded
-"
-
->
-
-Publish
-
-</button>
-
-)
-}
-
-<button
-  onClick={() =>
-    deleteTimeline(t.id)
+    )
   }
-  className="
-    mt-3
-    ml-3
-    rounded
-    bg-red-600
-    px-4
-    py-2
-    text-white
-  "
->
-  Delete
-</button>
+
+
+  <button
+    onClick={() =>
+      deleteTimeline(t.id)
+    }
+    className="
+      rounded
+      bg-red-600
+      px-4
+      py-2
+      text-white
+    "
+  >
+    Delete
+  </button>
+
+
+</div>
 
 
 </div>

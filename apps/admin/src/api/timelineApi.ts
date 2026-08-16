@@ -2,25 +2,24 @@ import { apiRequest } from "./client";
 
 
 export interface TimelineEntry {
-  id:string;
-  memory_id:string;
-  section:string|null;
-  display_order:number;
+  id: string;
+  memory_id: string;
+  section: string | null;
+  display_order: number;
 }
-
 
 
 export interface TimelineChapter {
 
-  id:string;
+  id: string;
 
-  title:string;
+  title: string;
 
-  description:string|null;
+  description: string | null;
 
-  display_order:number;
+  display_order: number;
 
-  entries:TimelineEntry[];
+  entries: TimelineEntry[];
 
 }
 
@@ -28,19 +27,19 @@ export interface TimelineChapter {
 
 export interface TimelineRead {
 
-  id:string;
+  id: string;
 
-  title:string;
+  title: string;
 
-  description:string|null;
+  description: string | null;
 
-  presentation_style:string;
+  presentation_style: string;
 
-  status:string;
+  status: string;
 
-  is_featured:boolean;
+  is_featured: boolean;
 
-  chapters:TimelineChapter[];
+  chapters: TimelineChapter[];
 
 }
 
@@ -48,11 +47,11 @@ export interface TimelineRead {
 
 export interface TimelineCreate {
 
- title:string;
+  title: string;
 
- description?:string;
+  description?: string;
 
- presentation_style:string;
+  presentation_style: string;
 
 }
 
@@ -60,11 +59,11 @@ export interface TimelineCreate {
 
 export interface TimelineChapterCreate {
 
- title:string;
+  title: string;
 
- description?:string;
+  description?: string;
 
- display_order?:number;
+  display_order?: number;
 
 }
 
@@ -72,121 +71,134 @@ export interface TimelineChapterCreate {
 
 export interface TimelineEntryCreate {
 
- memory_id:string;
+  memory_id: string;
 
- section?:string;
+  section?: string;
 
- display_order?:number;
+  display_order?: number;
 
 }
 
 
 
-export const timelineApi={
+const BASE_URL =
+  "/api/v1/admin/timeline";
 
 
 
-list:()=>
+export const timelineApi = {
 
 
-apiRequest<TimelineRead[]>(
+  list: () =>
 
-"/api/v1/admin/timeline"
+    apiRequest<TimelineRead[]>(
 
-),
+      BASE_URL
 
-
-
-
-
-create:(payload:TimelineCreate)=>
-
-apiRequest<TimelineRead>(
-
-"/api/v1/admin/timeline",
-
-{
- method:"POST",
- body:payload,
-}
-
-),
+    ),
 
 
 
+  create: (
+
+    payload: TimelineCreate,
+
+  ) =>
+
+    apiRequest<TimelineRead>(
+
+      BASE_URL,
+
+      {
+        method: "POST",
+        body: payload,
+      },
+
+    ),
 
 
 
-addChapter:(
+  addChapter: (
 
-timelineId:string,
+    timelineId: string,
 
-payload:TimelineChapterCreate
+    payload: TimelineChapterCreate,
 
-)=>
+  ) =>
 
-apiRequest<TimelineChapter>(
+    apiRequest<TimelineChapter>(
 
-`/api/v1/admin/timeline/${timelineId}/chapters`,
+      `${BASE_URL}/${timelineId}/chapters`,
 
-{
- method:"POST",
- body:payload,
-}
+      {
+        method: "POST",
+        body: payload,
+      },
 
-),
-
-
-
-
-
-attachMemory:(
-
-chapterId:string,
-
-payload:TimelineEntryCreate
-
-)=>
-
-apiRequest<TimelineEntry>(
-
-`/api/v1/admin/timeline/chapters/${chapterId}/entries`,
-
-{
- method:"POST",
- body:payload,
-}
-
-),
+    ),
 
 
 
 
+  attachMemory: (
 
-publish:(timelineId:string)=>
+    chapterId: string,
 
-apiRequest<TimelineRead>(
+    payload: TimelineEntryCreate,
 
-`/api/v1/admin/timeline/${timelineId}`,
+  ) =>
 
-{
- method:"PATCH",
- body:{
-   status:"published"
- }
-}
+    apiRequest<TimelineEntry>(
 
-),
+      `${BASE_URL}/chapters/${chapterId}/entries`,
 
-archive: (
-  timelineId:string,
-)=>
-apiRequest<TimelineRead>(
-  `/api/v1/admin/timelines/${timelineId}/archive`,
-  {
-    method:"POST",
-  },
-),
+      {
+        method: "POST",
+        body: payload,
+      },
+
+    ),
+
+
+
+
+  publish: (
+
+    timelineId: string,
+
+  ) =>
+
+    apiRequest<TimelineRead>(
+
+      `${BASE_URL}/${timelineId}`,
+
+      {
+        method: "PATCH",
+        body: {
+          status: "published",
+        },
+      },
+
+    ),
+
+
+
+
+  archive: (
+
+    timelineId: string,
+
+  ) =>
+
+    apiRequest<TimelineRead>(
+
+      `${BASE_URL}/${timelineId}/archive`,
+
+      {
+        method: "POST",
+      },
+
+    ),
 
 
 };
