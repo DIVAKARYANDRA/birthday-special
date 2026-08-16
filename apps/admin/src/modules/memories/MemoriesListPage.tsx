@@ -2,32 +2,37 @@ import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 
 import { memoriesApi } from "@/api/memoriesApi";
+import type { MemoryRead } from "@/api/memoriesApi";
+
 import { mediaApi } from "@/api/mediaApi";
 import type { MediaAssetRead } from "@/api/mediaApi";
 
+
 export default function MemoriesListPage() {
 
-  const [selectedMemory,setSelectedMemory] =
+  const [selectedMemory, setSelectedMemory] =
     useState<string | null>(null);
 
-  const [selectedMedia,setSelectedMedia] =
+  const [selectedMedia, setSelectedMedia] =
     useState<string>("");
 
 
-  const memoriesQuery = useQuery({
-    queryKey:["memories"],
-    queryFn: memoriesApi.list,
+  const memoriesQuery = useQuery<MemoryRead[]>({
+    queryKey: ["memories"],
+    queryFn: () => memoriesApi.list(),
   });
 
 
   const mediaQuery = useQuery<MediaAssetRead[]>({
-  queryKey: ["media"],
-  queryFn: mediaApi.list,
-});
+    queryKey: ["media"],
+    queryFn: () => mediaApi.list(),
+  });
 
-  async function attach(){
 
-    if(!selectedMemory || !selectedMedia){
+
+  async function attach() {
+
+    if (!selectedMemory || !selectedMedia) {
       return;
     }
 
@@ -35,8 +40,8 @@ export default function MemoriesListPage() {
     await memoriesApi.attachMediaItem(
       selectedMemory,
       {
-        media_asset_id:selectedMedia,
-        display_order:0,
+        media_asset_id: selectedMedia,
+        display_order: 0,
       },
     );
 
@@ -46,13 +51,16 @@ export default function MemoriesListPage() {
   }
 
 
+
   return (
 
     <div className="space-y-6 p-6">
 
+
       <h1 className="text-2xl font-semibold">
         Memories
       </h1>
+
 
 
       <div className="rounded-xl border p-5">
@@ -62,9 +70,11 @@ export default function MemoriesListPage() {
         </h2>
 
 
+
         <select
           className="mb-3 w-full rounded border p-2"
-          onChange={(e)=>
+          value={selectedMemory ?? ""}
+          onChange={(e) =>
             setSelectedMemory(e.target.value)
           }
         >
@@ -74,26 +84,28 @@ export default function MemoriesListPage() {
           </option>
 
 
-          {
-            memoriesQuery.data?.map(
-              memory=>(
-                <option
-                  key={memory.id}
-                  value={memory.id}
-                >
-                  {memory.title}
-                </option>
-              )
+          {memoriesQuery.data?.map(
+            (memory: MemoryRead) => (
+
+              <option
+                key={memory.id}
+                value={memory.id}
+              >
+                {memory.title}
+              </option>
+
             )
-          }
+          )}
 
         </select>
 
 
 
+
         <select
           className="mb-3 w-full rounded border p-2"
-          onChange={(e)=>
+          value={selectedMedia}
+          onChange={(e) =>
             setSelectedMedia(e.target.value)
           }
         >
@@ -103,34 +115,39 @@ export default function MemoriesListPage() {
           </option>
 
 
-          {
-            mediaQuery.data
-              ?.filter(
-                m=>m.media_type==="image"
+
+          {mediaQuery.data
+            ?.filter(
+              (media: MediaAssetRead) =>
+                media.media_type === "image",
+            )
+            .map(
+              (media: MediaAssetRead) => (
+
+                <option
+                  key={media.id}
+                  value={media.id}
+                >
+                  {media.original_filename}
+                </option>
+
               )
-              .map(
-                media=>(
-                  <option
-                    key={media.id}
-                    value={media.id}
-                  >
-                    {media.original_filename}
-                  </option>
-                )
-              )
+            )
           }
 
+
         </select>
+
 
 
         <button
           onClick={attach}
           className="
-          rounded
-          bg-purple-700
-          px-5
-          py-2
-          text-white
+            rounded
+            bg-purple-700
+            px-5
+            py-2
+            text-white
           "
         >
           Attach Image
@@ -140,6 +157,8 @@ export default function MemoriesListPage() {
       </div>
 
 
+
+
       <div>
 
         <h2 className="mb-3 font-semibold">
@@ -147,16 +166,18 @@ export default function MemoriesListPage() {
         </h2>
 
 
+
         {
           memoriesQuery.data?.map(
-            memory=>(
+            (memory: MemoryRead) => (
+
               <div
                 key={memory.id}
                 className="
-                rounded-lg
-                border
-                p-4
-                mb-3
+                  mb-3
+                  rounded-lg
+                  border
+                  p-4
                 "
               >
 
@@ -164,14 +185,18 @@ export default function MemoriesListPage() {
                   {memory.title}
                 </h3>
 
+
                 <p className="text-sm text-gray-500">
                   {memory.category}
                 </p>
 
+
               </div>
+
             )
           )
         }
+
 
       </div>
 
@@ -179,5 +204,4 @@ export default function MemoriesListPage() {
     </div>
 
   );
-
 }

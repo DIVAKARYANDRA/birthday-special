@@ -1,6 +1,3 @@
-import { apiRequest } from "./client";
-
-
 export interface MemoryImage {
   id: string;
   url: string;
@@ -23,8 +20,24 @@ export interface MemoryRead {
 }
 
 
+const API_BASE_URL =
+  import.meta.env.VITE_API_BASE_URL ?? "";
+
+
 export async function getMemories(): Promise<MemoryRead[]> {
-  return apiRequest<MemoryRead[]>(
-    "/api/v1/experience/memories",
+
+  const response = await fetch(
+    `${API_BASE_URL}/api/v1/experience/memories`,
   );
+
+
+  if (!response.ok) {
+    throw new Error(
+      "Failed to load memories.",
+    );
+  }
+
+
+  return response.json();
+
 }
