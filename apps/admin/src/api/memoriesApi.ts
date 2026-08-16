@@ -1,5 +1,11 @@
 import { apiRequest } from "./client";
 
+export interface MemoryImage {
+ id:string;
+ url:string;
+ caption:string|null;
+}
+
 
 export interface MemoryRead {
   id: string;
@@ -11,8 +17,9 @@ export interface MemoryRead {
   importance: string;
   status: string;
   is_featured: boolean;
-}
 
+  images:MemoryImage[];
+}
 
 
 export interface MemoryCreate {
@@ -24,7 +31,17 @@ export interface MemoryCreate {
   importance?: string;
 }
 
-
+export interface MemoryUpdate {
+  title?:string;
+  description?:string;
+  story?:string;
+  memory_date?:string;
+  category?:string;
+  importance?:string;
+  status?:string;
+  is_visible?:boolean;
+  is_featured?:boolean;
+}
 
 export interface MemoryMediaItemCreate {
   media_asset_id: string;
@@ -72,9 +89,9 @@ export const memoriesApi = {
 
 
   update: (
-    memoryId: string,
-    payload: Partial<MemoryCreate>,
-  ) =>
+ memoryId:string,
+ payload:MemoryUpdate,
+) =>
     apiRequest<MemoryRead>(
       `/api/v1/admin/memories/${memoryId}`,
       {

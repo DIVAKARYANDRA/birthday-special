@@ -59,6 +59,11 @@ export default function MemoriesListPage() {
 
   async function createMemory() {
 
+    if(!title.trim()){
+    alert("Title is required");
+    return;
+    }
+
     const payload: MemoryCreate = {
       title,
       description,
@@ -67,6 +72,8 @@ export default function MemoriesListPage() {
       category,
       importance: "notable",
     };
+
+    
 
 
     await memoriesApi.create(payload);
@@ -110,14 +117,49 @@ export default function MemoriesListPage() {
       },
     );
 
+    queryClient.invalidateQueries({
+      queryKey:["memories"],
+    });
+
+    setSelectedMemory("");
+    setSelectedMedia("");
+
 
     alert(
       "Image attached successfully",
     );
 
+    
+
+  }
+
+async function deleteMemory(
+  id: string,
+) {
+
+  const confirmed = window.confirm(
+    "Are you sure you want to remove this memory?"
+  );
+
+
+  if (!confirmed) {
+    return;
   }
 
 
+  await memoriesApi.archive(id);
+
+
+  alert(
+    "Memory removed successfully",
+  );
+
+
+  queryClient.invalidateQueries({
+    queryKey:["memories"],
+  });
+
+}
 
 
   async function publishMemory(
@@ -404,29 +446,43 @@ export default function MemoriesListPage() {
 
 
                 {
-                  memory.status !==
-                  "published" && (
+  memory.status !== "archived" && (
+    <>
+      <button
+        onClick={() =>
+          publishMemory(memory.id)
+        }
+        className="
+          mt-3
+          rounded
+          bg-green-600
+          px-4
+          py-2
+          text-white
+        "
+      >
+        Publish
+      </button>
 
-                    <button
-                      onClick={() =>
-                        publishMemory(
-                          memory.id,
-                        )
-                      }
-                      className="
-                        mt-3
-                        rounded
-                        bg-green-600
-                        px-4
-                        py-2
-                        text-white
-                      "
-                    >
-                      Publish
-                    </button>
-
-                  )
-                }
+      <button
+        onClick={() =>
+          deleteMemory(memory.id)
+        }
+        className="
+          mt-3
+          ml-3
+          rounded
+          bg-red-600
+          px-4
+          py-2
+          text-white
+        "
+      >
+        Delete
+      </button>
+    </>
+  )
+}
 
 
               </div>
