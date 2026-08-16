@@ -37,6 +37,7 @@ from app.domains.audio.router import router as audio_router
 from app.domains.audio.public_router import router as audio_public_router
 from app.domains.memories.public_router import router as memories_public_router
 from app.domains.timeline.public_router import router as timeline_public_router
+from app.domains.letters import public_router as letters_public_router
 api_router = APIRouter()
 
 api_router.include_router(platform.router)
@@ -77,6 +78,11 @@ api_router.include_router(
     timeline_public_router,
     prefix="/experience/timeline",
     tags=["experience:timeline"],
+)
+api_router.include_router(
+    letters_public_router.router,
+    prefix="/experience/letters",
+    tags=["experience:letters"],
 )
 # ------------------------------------------------------------------
 # Future domain router registration (uncomment as each is implemented,

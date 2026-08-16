@@ -1,28 +1,421 @@
-/** Letter management screen — Prompt 14, Part 6. Secret Message
- * management is a distinct sub-resource on the same backend router
- * (app.domains.letters.router) — deferred from this screen's scope, a
- * candidate for its own screen in a future polish pass. */
-import { lettersApi } from "@/api/lettersApi";
-import type { LetterCreate, LetterRead } from "@/api/lettersApi";
-import { ResourceListPage } from "@/components/admin/ResourceListPage";
+import {useState} from "react";
 
-export default function LettersListPage() {
-  return (
-    <ResourceListPage<LetterRead, LetterCreate>
-      title="Letters"
-      queryKey="letters"
-      api={lettersApi}
-      columns={[
-        { key: "title", label: "Title" },
-        { key: "written_date", label: "Written" },
-        { key: "status", label: "Status" },
-        { key: "unlock_condition_id", label: "Unlock Condition" },
-      ]}
-      createFields={[
-        { name: "title", label: "Title", required: true },
-        { name: "body", label: "Body", type: "textarea", required: true },
-        { name: "written_date", label: "Written Date", type: "date" },
-      ]}
-    />
-  );
+import {
+useQuery,
+useQueryClient
+} from "@tanstack/react-query";
+
+
+import {
+lettersApi
+} from "@/api/lettersApi";
+
+
+export default function LettersListPage(){
+
+
+const queryClient =
+useQueryClient();
+
+
+
+const [title,setTitle]=
+useState("");
+
+const [body,setBody]=
+useState("");
+
+const [writtenDate,setWrittenDate]=
+useState("");
+
+
+
+const letters =
+useQuery({
+
+queryKey:["letters"],
+
+queryFn:lettersApi.list,
+
+});
+
+
+
+async function createLetter(){
+
+try{
+
+
+if(!title.trim() || !body.trim()){
+
+alert(
+"Title and body required"
+);
+
+return;
+
+}
+
+
+
+await lettersApi.create({
+
+title,
+
+body,
+
+written_date:
+writtenDate || undefined,
+
+});
+
+
+
+setTitle("");
+
+setBody("");
+
+setWrittenDate("");
+
+
+
+queryClient.invalidateQueries({
+queryKey:["letters"]
+});
+
+
+alert(
+"Letter created"
+);
+
+
+}
+catch(error){
+
+console.error(error);
+
+alert(
+"Failed creating letter"
+);
+
+}
+
+}
+
+
+
+
+async function publishLetter(
+id:string
+){
+
+try{
+
+
+await lettersApi.update(
+id,
+{
+status:"published"
+}
+);
+
+
+queryClient.invalidateQueries({
+queryKey:["letters"]
+});
+
+
+alert(
+"Letter published"
+);
+
+
+}
+catch(error){
+
+console.error(error);
+
+alert(
+"Failed publishing letter"
+);
+
+}
+
+}
+
+
+
+
+
+async function archiveLetter(
+id:string
+){
+
+const confirmDelete =
+window.confirm(
+"Archive this letter?"
+);
+
+
+if(!confirmDelete)
+return;
+
+
+try{
+
+
+await lettersApi.archive(id);
+
+
+
+queryClient.invalidateQueries({
+queryKey:["letters"]
+});
+
+
+alert(
+"Letter archived"
+);
+
+
+}
+catch(error){
+
+console.error(error);
+
+alert(
+"Failed archiving letter"
+);
+
+}
+
+}
+
+
+
+return (
+
+<div className="space-y-6 p-6">
+
+
+<h1 className="text-2xl font-semibold">
+Love Letters 💌
+</h1>
+
+
+
+
+<div className="rounded-xl border p-5">
+
+
+<h2 className="font-semibold mb-3">
+Create Letter
+</h2>
+
+
+
+<input
+
+className="border rounded p-2 w-full mb-3"
+
+placeholder="Title"
+
+value={title}
+
+onChange={
+e=>setTitle(e.target.value)
+}
+
+/>
+
+
+
+
+<textarea
+
+className="border rounded p-2 w-full mb-3"
+
+placeholder="Write your letter..."
+
+value={body}
+
+onChange={
+e=>setBody(e.target.value)
+}
+
+/>
+
+
+
+
+<input
+
+type="date"
+
+className="border rounded p-2 w-full mb-3"
+
+value={writtenDate}
+
+onChange={
+e=>setWrittenDate(e.target.value)
+}
+
+/>
+
+
+
+
+<button
+
+onClick={createLetter}
+
+className="
+bg-purple-700
+text-white
+px-5
+py-2
+rounded
+"
+
+>
+
+Create Letter
+
+</button>
+
+
+</div>
+
+
+
+
+
+
+<div>
+
+
+<h2 className="font-semibold mb-3">
+Existing Letters
+</h2>
+
+
+
+
+{
+letters.data?.map(letter=>(
+
+
+<div
+
+key={letter.id}
+
+className="
+border
+rounded
+p-4
+mb-3
+"
+
+
+>
+
+
+<h3 className="font-semibold">
+
+{letter.title}
+
+</h3>
+<p className="text-sm text-white/60 mt-2">
+{letter.body.substring(0,120)}
+...
+</p>
+
+
+<p className="text-sm">
+
+Status:
+{" "}
+{letter.status}
+
+</p>
+
+
+
+
+{
+letter.status !== "published" &&
+
+<button
+
+onClick={()=>
+publishLetter(letter.id)
+}
+
+className="
+mt-3
+bg-green-600
+text-white
+px-4
+py-2
+rounded
+"
+
+>
+
+Publish
+
+</button>
+
+}
+
+
+
+
+
+{
+letter.status !== "archived" &&
+
+<button
+
+onClick={()=>
+archiveLetter(letter.id)
+}
+
+className="
+mt-3
+ml-3
+bg-red-600
+text-white
+px-4
+py-2
+rounded
+"
+
+>
+
+Archive
+
+</button>
+
+}
+
+
+
+
+</div>
+
+
+))
+
+}
+
+
+
+</div>
+
+
+</div>
+
+)
+
 }
