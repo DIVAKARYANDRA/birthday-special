@@ -49,6 +49,7 @@ interface GalleryResponse {
   alt_text:string|null;
 
   category:string|null;
+  featured:boolean;
 
   display_order:number;
 
@@ -448,7 +449,7 @@ No memories uploaded yet 📷
 
 {
 photos.length>0 &&
-
+<>
 <GalleryCategoryTabs
 
 selected={category}
@@ -523,6 +524,7 @@ setViewerIndex(index)
 
 
 </motion.div>
+</>
 
 
 }
