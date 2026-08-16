@@ -34,17 +34,15 @@ useReducedMotion();
 return (
 
 <motion.div
-
 className="
 relative
-h-52
-w-40
-sm:h-64
-sm:w-52
+h-56
+w-44
+sm:h-72
+sm:w-56
 shrink-0
 cursor-pointer
 "
-
 
 style={{
 rotate:photo.rotationDeg
@@ -160,6 +158,22 @@ text-4xl
 
 :
 
+<div
+className="
+flex
+h-full
+flex-col
+"
+>
+
+
+<div
+className="
+flex-1
+overflow-hidden
+"
+>
+
 <img
 
 src={photo.url}
@@ -172,18 +186,42 @@ photo.title ??
 
 loading="lazy"
 
-onError={()=>
-setImageError(true)
-}
 
 className="
 h-full
 w-full
 object-cover
 rounded-sm
+transition-transform
+duration-500
+hover:scale-110
 "
 
 />
+
+</div>
+
+
+
+<div
+className="
+py-2
+text-center
+text-xs
+text-gray-700
+font-medium
+"
+>
+
+{
+photo.title ??
+"Beautiful memory"
+}
+
+</div>
+
+
+</div>
 
 }
 

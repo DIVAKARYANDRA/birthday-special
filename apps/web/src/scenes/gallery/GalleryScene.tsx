@@ -214,37 +214,89 @@ void loadGallery();
 
 return (
 
-
 <SceneLayout
-
-mode="night"
-
-showFireflies
-
+  mode="night"
+  showFireflies
 >
 
-
 <Breadcrumb
-label="Gallery"
+ label="Gallery"
 />
 
 
-
-
-
 <div
-
 className="
 flex-1
 overflow-y-auto
-px-4
-pb-10
+px-5
+pb-24
 pt-6
+"
+>
+
+
+{/* Hero Section */}
+
+<motion.div
+
+initial={{
+opacity:0,
+y:-20
+}}
+
+animate={{
+opacity:1,
+y:0
+}}
+
+transition={{
+duration:0.8
+}}
+
+className="
+mb-10
+text-center
 "
 
 >
 
 
+<div
+className="
+text-4xl
+mb-3
+"
+>
+🌙
+</div>
+
+
+<h1
+className="
+text-3xl
+font-semibold
+text-white
+tracking-wide
+"
+>
+Our Memories
+</h1>
+
+
+<p
+className="
+mt-3
+text-sm
+text-white/60
+max-w-xs
+mx-auto
+"
+>
+Every picture holds a little story of us ❤️
+</p>
+
+
+</motion.div>
 
 
 {
