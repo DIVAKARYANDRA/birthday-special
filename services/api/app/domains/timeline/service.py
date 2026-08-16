@@ -150,8 +150,19 @@ class TimelineService:
         offset=0,
     ):
 
+        from sqlalchemy.orm import selectinload
+
+
         query = (
-            self.db.query(Timeline)
+            self._session.query(Timeline)
+            .options(
+                selectinload(
+                    Timeline.chapters
+                )
+                .selectinload(
+                    TimelineChapter.entries
+                )
+            )
             .filter(
                 Timeline.status != TimelineStatus.ARCHIVED
             )
@@ -185,7 +196,6 @@ class TimelineService:
             .limit(limit)
             .all()
         )
-
     def search_timelines(self, term: str, *, limit: int = 50, offset: int = 0) -> list[Timeline]:
         """Searching foundation (Task 5, supporting Task 4's
         repository-level search) — validates the term isn't empty before

@@ -11,18 +11,17 @@ export interface TimelineEntry {
 
 export interface TimelineChapter {
 
-  id: string;
+  id:string;
 
-  title: string;
+  title:string;
 
-  description: string | null;
+  description:string|null;
 
-  display_order: number;
+  display_order:number;
 
-  entries: TimelineEntry[];
+  entries:TimelineEntry[];
 
 }
-
 
 
 export interface TimelineRead {
@@ -42,7 +41,6 @@ export interface TimelineRead {
   chapters: TimelineChapter[];
 
 }
-
 
 
 export interface TimelineCreate {
