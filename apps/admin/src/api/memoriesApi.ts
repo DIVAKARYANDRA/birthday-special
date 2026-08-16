@@ -8,9 +8,11 @@ export interface MemoryRead {
   story: string | null;
   memory_date: string | null;
   category: string;
+  importance: string;
   status: string;
   is_featured: boolean;
 }
+
 
 
 export interface MemoryCreate {
@@ -19,7 +21,9 @@ export interface MemoryCreate {
   story?: string;
   memory_date?: string;
   category: string;
+  importance?: string;
 }
+
 
 
 export interface MemoryMediaItemCreate {
@@ -29,12 +33,15 @@ export interface MemoryMediaItemCreate {
 }
 
 
+
 export const memoriesApi = {
+
 
   list: () =>
     apiRequest<MemoryRead[]>(
       "/api/v1/admin/memories",
     ),
+
 
 
   create: (
@@ -49,6 +56,7 @@ export const memoriesApi = {
     ),
 
 
+
   attachMediaItem: (
     memoryId: string,
     payload: MemoryMediaItemCreate,
@@ -58,6 +66,47 @@ export const memoriesApi = {
       {
         method: "POST",
         body: payload,
+      },
+    ),
+
+
+
+  update: (
+    memoryId: string,
+    payload: Partial<MemoryCreate>,
+  ) =>
+    apiRequest<MemoryRead>(
+      `/api/v1/admin/memories/${memoryId}`,
+      {
+        method: "PATCH",
+        body: payload,
+      },
+    ),
+
+
+
+  publish: (
+    memoryId: string,
+  ) =>
+    apiRequest<MemoryRead>(
+      `/api/v1/admin/memories/${memoryId}`,
+      {
+        method: "PATCH",
+        body: {
+          status: "published",
+        },
+      },
+    ),
+
+
+
+  archive: (
+    memoryId: string,
+  ) =>
+    apiRequest<MemoryRead>(
+      `/api/v1/admin/memories/${memoryId}/archive`,
+      {
+        method: "POST",
       },
     ),
 
