@@ -143,22 +143,47 @@ class TimelineService:
 
     def list_timelines(
         self,
-        *,
-        status: TimelineStatus | None = None,
-        presentation_style: TimelinePresentationStyle | None = None,
-        featured_only: bool = False,
-        limit: int = 50,
-        offset: int = 0,
-    ) -> list[Timeline]:
-        """Retrieves a page of Timelines, optionally filtered. Thin
-        pass-through to the repository, mirroring
-        MemoryService.list_memories (Prompt 11)."""
-        return self._repository.list(
-            status=status,
-            presentation_style=presentation_style,
-            featured_only=featured_only,
-            limit=limit,
-            offset=offset,
+        status=None,
+        presentation_style=None,
+        featured_only=False,
+        limit=50,
+        offset=0,
+    ):
+
+        query = (
+            self.db.query(Timeline)
+            .filter(
+                Timeline.status != TimelineStatus.ARCHIVED
+            )
+        )
+
+
+        if status:
+            query = query.filter(
+                Timeline.status == status
+            )
+
+
+        if presentation_style:
+            query = query.filter(
+                Timeline.presentation_style == presentation_style
+            )
+
+
+        if featured_only:
+            query = query.filter(
+                Timeline.is_featured.is_(True)
+            )
+
+
+        return (
+            query
+            .order_by(
+                Timeline.display_order.asc()
+            )
+            .offset(offset)
+            .limit(limit)
+            .all()
         )
 
     def search_timelines(self, term: str, *, limit: int = 50, offset: int = 0) -> list[Timeline]:
