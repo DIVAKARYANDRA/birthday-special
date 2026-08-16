@@ -1,55 +1,64 @@
-import {useEffect,useState} from "react";
-import {motion} from "framer-motion";
+/**
+ * GalleryScene — Dynamic Cloudinary Gallery
+ */
+
+import {
+  useEffect,
+  useState,
+} from "react";
+
+import {
+  motion,
+} from "framer-motion";
 
 
 import SceneLayout from "@/components/global/SceneLayout";
 import Breadcrumb from "@/components/ui/Breadcrumb";
 
+
 import FloatingPolaroid from "@/features/gallery/FloatingPolaroid";
 import PhotoViewer from "@/features/gallery/PhotoViewer";
 
+
+import type {
+  GalleryPhoto,
+} from "@/features/gallery/types";
+
+
 import {
- staggerContainer
+  staggerContainer,
 } from "@/animations/motionPrimitives";
 
 
+
 const API =
-import.meta.env.VITE_API_BASE_URL ?? "";
+  import.meta.env.VITE_API_BASE_URL ?? "";
 
-
-
-export interface GalleryPhoto{
-
-id:string;
-
-url:string;
-
-title:string|null;
-
-caption:string|null;
-
-order:number;
-
-}
 
 
 
 export default function GalleryScene(){
 
 
-const [photos,setPhotos]=
+const [photos,setPhotos] =
 useState<GalleryPhoto[]>([]);
 
 
-const [viewerIndex,setViewerIndex]=
+
+const [viewerIndex,setViewerIndex] =
 useState<number|null>(null);
+
+
 
 
 
 useEffect(()=>{
 
 
-async function load(){
+async function loadGallery(){
+
+
+try{
 
 
 const response =
@@ -58,17 +67,76 @@ await fetch(
 );
 
 
+if(!response.ok){
+
+throw new Error(
+"Failed loading gallery"
+);
+
+}
+
+
 const data =
 await response.json();
 
 
-setPhotos(data);
+
+const mappedPhotos:GalleryPhoto[] =
+data.map(
+(photo:any,index:number)=>({
+
+id:photo.id,
+
+url:photo.url,
+
+title:
+photo.title ?? "Memory",
+
+
+alt_text:
+photo.caption ?? photo.title ?? "Gallery photo",
+
+
+placeholderColor:
+"bg-white/10",
+
+
+placeholderEmoji:
+"📸",
+
+
+rotationDeg:
+(index % 2 === 0)
+? -3
+: 3,
+
+
+})
+);
+
+
+
+setPhotos(
+mappedPhotos
+);
+
+
+}
+catch(error){
+
+console.error(
+"Gallery loading failed",
+error
+);
+
+}
 
 
 }
 
 
-void load();
+
+void loadGallery();
 
 
 },[]);
@@ -76,12 +144,19 @@ void load();
 
 
 
+
+
 return (
 
-<SceneLayout mode="night" showFireflies>
+<SceneLayout
+mode="night"
+showFireflies
+>
 
 
-<Breadcrumb label="Gallery"/>
+<Breadcrumb
+label="Gallery"
+/>
 
 
 
@@ -95,8 +170,8 @@ pt-6
 >
 
 
-<motion.div
 
+<motion.div
 
 variants={staggerContainer}
 
@@ -123,23 +198,32 @@ photos.map(
 
 <FloatingPolaroid
 
-key={photo.id}
+key={
+photo.id
+}
 
-photo={photo}
+photo={
+photo
+}
+
 
 onOpen={()=>
 setViewerIndex(index)
 }
 
+
 />
 
 
-))
+)
+
+)
 
 }
 
 
 </motion.div>
+
 
 
 </div>
@@ -149,20 +233,30 @@ setViewerIndex(index)
 
 
 {
-viewerIndex!==null &&
+viewerIndex !== null &&
 
 
 <PhotoViewer
 
-photos={photos}
+photos={
+photos
+}
 
-activeIndex={viewerIndex}
+
+activeIndex={
+viewerIndex
+}
+
 
 onClose={()=>
 setViewerIndex(null)
 }
 
-onNavigate={setViewerIndex}
+
+onNavigate={
+setViewerIndex
+}
+
 
 />
 
@@ -174,6 +268,7 @@ onNavigate={setViewerIndex}
 </SceneLayout>
 
 
-)
+);
+
 
 }
