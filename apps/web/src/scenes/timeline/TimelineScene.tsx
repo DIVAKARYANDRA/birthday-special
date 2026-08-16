@@ -14,7 +14,7 @@ import StationModal from "@/features/timeline/StationModal";
 
 import {
   getTimeline,
-  type TimelineChapter,
+  type TimelineRead,
   type TimelineStation,
 } from "@/api/timelineApi";
 
@@ -24,8 +24,8 @@ import { EASE_OUT } from "@/animations/motionPrimitives";
 export default function TimelineScene() {
 
 
-  const [chapters, setChapters] =
-    useState<TimelineChapter[]>([]);
+  const [timelines, setTimelines] =
+    useState<TimelineRead[]>([]);
 
 
   const [activeChapter, setActiveChapter] =
@@ -43,6 +43,7 @@ export default function TimelineScene() {
 
   useEffect(() => {
 
+
     async function loadTimeline() {
 
       try {
@@ -50,20 +51,29 @@ export default function TimelineScene() {
         const data = await getTimeline();
 
 
-        if (data.length > 0) {
+        setTimelines(data);
 
-          setChapters(
-            data[0].chapters
-          );
 
+        if(data.length > 0){
 
           setActiveChapter(
-            data[0].chapters[0]?.title ?? ""
+            data[0]
+              ?.chapters?.[0]
+              ?.title ?? ""
           );
 
         }
 
-      } finally {
+
+      } catch(error){
+
+        console.error(
+          "Failed loading timeline",
+          error
+        );
+
+      }
+      finally{
 
         setLoading(false);
 
@@ -79,25 +89,21 @@ export default function TimelineScene() {
 
 
 
-  /*
-   * Loading screen
-   * Must be outside JSX return
-   */
-  if (loading) {
+
+
+  if(loading){
 
     return (
 
       <SceneLayout mode="twilight">
 
-        <div
-          className="
-            flex
-            h-full
-            items-center
-            justify-center
-            text-white
-          "
-        >
+        <div className="
+          flex
+          h-full
+          items-center
+          justify-center
+          text-white
+        ">
 
           Loading our journey 🚂
 
@@ -111,6 +117,7 @@ export default function TimelineScene() {
 
 
 
+
   return (
 
     <SceneLayout mode="twilight">
@@ -120,18 +127,18 @@ export default function TimelineScene() {
 
 
 
-      {/* Header */}
+      {/* HEADER */}
 
       <motion.div
 
         initial={{
-          y: -30,
-          opacity: 0,
+          y:-30,
+          opacity:0,
         }}
 
         animate={{
-          y: 0,
-          opacity: 1,
+          y:0,
+          opacity:1,
         }}
 
         className="
@@ -141,35 +148,29 @@ export default function TimelineScene() {
 
       >
 
-        <div
-          className="
-            text-5xl
-            animate-pulse
-          "
-        >
+        <div className="
+          text-5xl
+          animate-pulse
+        ">
           🚂
         </div>
 
 
-        <h1
-          className="
-            font-display
-            text-2xl
-            text-white
-          "
-        >
+        <h1 className="
+          font-display
+          text-2xl
+          text-white
+        ">
 
           Our Journey
 
         </h1>
 
 
-        <p
-          className="
-            text-sm
-            text-white/50
-          "
-        >
+        <p className="
+          text-sm
+          text-white/50
+        ">
 
           Every station holds a memory
 
@@ -181,49 +182,44 @@ export default function TimelineScene() {
 
 
 
-      {/* Active chapter */}
 
-      <div
-        className="
-          sticky
-          top-0
-          z-10
-          -mt-1
-          bg-gradient-to-b
-          from-[#1d1533]
-          to-transparent
-          px-5
-          pb-3
-          pt-2
-          text-center
-        "
-      >
+      {/* ACTIVE CHAPTER */}
 
-        <p
-          className="
-            text-xs
-            uppercase
-            tracking-[0.3em]
-            text-white/40
-          "
-        >
+      <div className="
+        sticky
+        top-0
+        z-10
+        bg-gradient-to-b
+        from-[#1d1533]
+        to-transparent
+        px-5
+        pb-3
+        pt-2
+        text-center
+      ">
+
+
+        <p className="
+          text-xs
+          uppercase
+          tracking-[0.3em]
+          text-white/40
+        ">
 
           Now Arriving
 
         </p>
 
 
-        <h1
-          className="
-            font-display
-            text-lg
-            text-white
-          "
-        >
+        <h2 className="
+          font-display
+          text-lg
+          text-white
+        ">
 
           {activeChapter}
 
-        </h1>
+        </h2>
 
 
       </div>
@@ -232,95 +228,129 @@ export default function TimelineScene() {
 
 
 
-      {/* Train Timeline */}
+      {/* TIMELINES */}
 
-      <div
-        className="
-          flex-1
-          px-6
-          pb-8
-        "
-      >
+      <div className="
+        flex-1
+        px-6
+        pb-8
+      ">
 
 
-        <div
-          className="
-            relative
-            ml-4
-            border-l-2
-            border-white/15
-            pl-8
-          "
-        >
-
-
-          {
-            chapters.map(
-              (chapter) => (
-
-                <motion.section
-
-                  key={chapter.id}
-
-                  onViewportEnter={() =>
-                    setActiveChapter(
-                      chapter.title
-                    )
-                  }
-
-                  viewport={{
-                    margin:
-                    "-45% 0px -45% 0px",
-                  }}
-
-                  className="mb-10"
-
-                >
-
-
-                  <h2
-                    className="
-                      mb-4
-                      text-sm
-                      font-medium
-                      uppercase
-                      tracking-wide
-                      text-white/50
-                    "
-                  >
-
-                    {chapter.title}
-
-                  </h2>
+        <div className="
+          relative
+          ml-4
+          border-l-2
+          border-white/15
+          pl-8
+        ">
 
 
 
-                  <div
-                    className="
-                      flex
-                      flex-col
-                      gap-6
-                    "
-                  >
+        {
+          timelines.map(
+            (timeline)=>(
 
 
-                    {
-                      chapter.stations.map(
-                        (station) => (
+              <div
+                key={timeline.id}
+                className="mb-12"
+              >
+
+
+
+                <h1 className="
+                  mb-6
+                  text-xl
+                  font-semibold
+                  text-white
+                ">
+
+                  {timeline.title}
+
+                </h1>
+
+
+
+
+
+                {
+                  timeline.chapters?.map(
+                    (chapter)=>(
+
+
+                    <motion.section
+
+                      key={chapter.id}
+
+
+                      onViewportEnter={() =>
+                        setActiveChapter(
+                          chapter.title
+                        )
+                      }
+
+
+                      viewport={{
+                        margin:
+                        "-45% 0px -45% 0px",
+                      }}
+
+
+                      className="mb-10"
+
+
+                    >
+
+
+
+                      <h2 className="
+                        mb-4
+                        text-sm
+                        uppercase
+                        tracking-wide
+                        text-white/50
+                      ">
+
+                        {chapter.title}
+
+                      </h2>
+
+
+
+
+
+
+                      <div className="
+                        flex
+                        flex-col
+                        gap-6
+                      ">
+
+
+
+                      {
+                        chapter.stations?.map(
+                          (station)=>(
+
+
 
                           <motion.div
 
                             key={station.id}
+
 
                             initial={{
                               opacity:0,
                               x:-12,
                             }}
 
+
                             whileInView={{
                               opacity:1,
                               x:0,
                             }}
+
 
                             viewport={{
                               once:true,
@@ -328,10 +358,12 @@ export default function TimelineScene() {
                               "-10% 0px -10% 0px",
                             }}
 
+
                             transition={{
                               duration:0.5,
                               ease:EASE_OUT,
                             }}
+
 
                             className="
                               relative
@@ -340,28 +372,29 @@ export default function TimelineScene() {
                               gap-3
                             "
 
+
                           >
 
 
+
+
+
                             <span
-
                               aria-hidden="true"
-
                               className="
-                                absolute
-                                -left-[2.55rem]
-                                flex
-                                h-8
-                                w-8
-                                items-center
-                                justify-center
-                                rounded-full
-                                border-2
-                                border-white/30
-                                bg-[#1d1533]
-                                text-sm
+                              absolute
+                              -left-[2.55rem]
+                              flex
+                              h-8
+                              w-8
+                              items-center
+                              justify-center
+                              rounded-full
+                              border-2
+                              border-white/30
+                              bg-[#1d1533]
+                              text-sm
                               "
-
                             >
 
                               {
@@ -376,6 +409,7 @@ export default function TimelineScene() {
 
 
 
+
                             <button
 
                               onClick={() =>
@@ -384,6 +418,7 @@ export default function TimelineScene() {
                                 )
                               }
 
+
                               className="
                                 w-full
                                 text-left
@@ -391,15 +426,18 @@ export default function TimelineScene() {
 
                             >
 
+
                               <TrainStation
 
                                 title={
                                   station.title
                                 }
 
+
                                 memoryTitle={
                                   station.memoryTitle
                                 }
+
 
                               />
 
@@ -411,20 +449,34 @@ export default function TimelineScene() {
                           </motion.div>
 
 
+                          )
                         )
-                      )
-                    }
+                      }
 
 
-                  </div>
+                      </div>
 
 
-                </motion.section>
 
 
-              )
+                    </motion.section>
+
+
+                    )
+
+                  )
+                }
+
+
+
+              </div>
+
+
             )
-          }
+
+          )
+        }
+
 
 
         </div>
@@ -432,7 +484,6 @@ export default function TimelineScene() {
 
 
 
-        {/* Modal outside map */}
 
         {
           selectedStation && (
@@ -443,9 +494,11 @@ export default function TimelineScene() {
                 selectedStation
               }
 
+
               onClose={() =>
                 setSelectedStation(null)
               }
+
 
             />
 
@@ -456,12 +509,13 @@ export default function TimelineScene() {
 
 
 
+
         <Link
 
           to="/memories"
 
           className="
-            mt-2
+            mt-4
             block
             min-h-[44px]
             rounded-full
@@ -480,6 +534,7 @@ export default function TimelineScene() {
           Browse Memories Instead →
 
         </Link>
+
 
 
 
