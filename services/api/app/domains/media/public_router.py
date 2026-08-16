@@ -28,7 +28,17 @@ def build_cloudinary_url(
         f"{public_id}"
     )
 
+def build_cloudinary_audio_url(
+    public_id: str,
+):
+    settings = get_settings()
 
+    return (
+        f"https://res.cloudinary.com/"
+        f"{settings.cloudinary_cloud_name}/video/upload/"
+        f"q_auto/"
+        f"{public_id}"
+    )
 
 @router.get("/intro")
 def get_intro_images(
@@ -196,14 +206,14 @@ def get_game_music(
 
     return {
 
-        "id":str(asset.id),
+    "id":str(asset.id),
 
-        "url":
-        build_cloudinary_url(
-            asset.external_reference
-        ),
+    "url":
+    build_cloudinary_audio_url(
+        asset.external_reference
+    ),
 
-        "title":
-        asset.original_filename
+    "title":
+    asset.original_filename
 
-    }
+}
