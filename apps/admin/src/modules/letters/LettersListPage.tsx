@@ -30,12 +30,20 @@ useState("");
 const [writtenDate,setWrittenDate]=
 useState("");
 
-const letters =
-useQuery<LetterRead[]>({
+const {
+  data: letters = [],
+} = useQuery<LetterRead[]>({
 
   queryKey:["letters"],
 
-  queryFn: lettersApi.list,
+  queryFn: async () => {
+
+    const response =
+      await lettersApi.list();
+
+    return response;
+
+  },
 
 });
 
@@ -302,8 +310,7 @@ Existing Letters
 
 
 {
-letters.data?.map(letter=>(
-
+letters.map(letter=>(
 
 <div
 
