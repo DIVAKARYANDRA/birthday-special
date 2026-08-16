@@ -35,6 +35,7 @@ from app.domains.unlocks import router as unlocks_router
 from app.domains.media.public_router import router as media_public_router
 from app.domains.audio.router import router as audio_router
 from app.domains.audio.public_router import router as audio_public_router
+from app.domains.memories.public_router import router as memories_public_router
 
 api_router = APIRouter()
 
@@ -66,6 +67,11 @@ api_router.include_router(
     media_public_router,
     prefix="/experience/media",
     tags=["experience:media"],
+)
+api_router.include_router(
+    memories_public_router,
+    prefix="/experience/memories",
+    tags=["experience:memories"],
 )
 # ------------------------------------------------------------------
 # Future domain router registration (uncomment as each is implemented,

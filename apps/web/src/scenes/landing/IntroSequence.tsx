@@ -22,7 +22,6 @@ import AmbientBackground from "@/components/global/AmbientBackground";
 import { EASE_OUT } from "@/animations/motionPrimitives";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
 
-const AUTO_ADVANCE_MS = 8500;
 const PHOTO_INTERVAL_MS = 2100;
 
 export default function IntroSequence() {
@@ -114,19 +113,6 @@ export default function IntroSequence() {
     }
   }, [images.length, currentPhoto]);
 
-  /*
-   * Automatically continue to the World Map.
-   */
-  useEffect(() => {
-    const advanceTimer = window.setTimeout(
-      continueToWorld,
-      AUTO_ADVANCE_MS,
-    );
-
-    return () => {
-      window.clearTimeout(advanceTimer);
-    };
-  }, []);
 
   const currentImage = images[currentPhoto];
 

@@ -11,19 +11,46 @@
  * MOBILE-FIRST: single-column card list at the 375px baseline
  * (comfortable full-width tap targets), 2 columns from `sm:` up.
  */
-import { useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { Link } from "react-router-dom";
 
 import SceneLayout from "@/components/global/SceneLayout";
 import Breadcrumb from "@/components/ui/Breadcrumb";
 import MemoryCard from "@/features/memories/MemoryCard";
-import { DEMO_MEMORIES } from "@/features/memories/data";
+import { useEffect, useState } from "react";
+import {
+  getMemories,
+  type MemoryRead,
+} from "@/api/memoriesApi";
 import { fadeInUp, staggerContainer } from "@/animations/motionPrimitives";
 
 export default function MemoriesScene() {
-  const [selectedId, setSelectedId] = useState<string | null>(null);
-  const selectedMemory = DEMO_MEMORIES.find((m) => m.id === selectedId) ?? null;
+  const [memories,setMemories] =
+  useState<MemoryRead[]>([]);
+
+const [selectedId,setSelectedId] =
+  useState<string | null>(null);
+
+
+const selectedMemory =
+  memories.find(
+    (memory)=>memory.id===selectedId
+  ) ?? null;
+
+
+useEffect(()=>{
+
+ async function load(){
+
+   const data = await getMemories();
+
+   setMemories(data);
+
+ }
+
+ void load();
+
+},[]);
 
   return (
     <SceneLayout mode="dawn">
@@ -35,7 +62,7 @@ export default function MemoriesScene() {
           animate="visible"
           className="grid grid-cols-1 gap-4 sm:grid-cols-2"
         >
-          {DEMO_MEMORIES.map((memory) => (
+          {memories.map((memory) => (
             <MemoryCard key={memory.id} memory={memory} onSelect={setSelectedId} />
           ))}
         </motion.div>
