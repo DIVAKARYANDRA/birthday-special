@@ -4,7 +4,6 @@ import { apiRequest } from "./client";
 import { createResourceApi } from "./resource";
 
 
-
 export interface LetterRead {
 
   id:string;
@@ -59,25 +58,45 @@ export interface LetterUpdate {
 
 
 
+const resourceApi =
+createResourceApi<
+  LetterRead,
+  LetterCreate,
+  LetterUpdate
+>(
+  "/api/v1/admin/letters"
+);
+
+
+
 export const lettersApi = {
 
 
-  ...createResourceApi<
-    LetterRead,
-    LetterCreate,
-    LetterUpdate
-  >(
-    "/api/v1/admin/letters"
-  ),
+  list:
+    resourceApi.list,
+
+
+  get:
+    resourceApi.get,
+
+
+  create:
+    resourceApi.create,
+
+
+  update:
+    resourceApi.update,
+
+
+  archive:
+    resourceApi.archive,
 
 
 
   listSecretMessages: () =>
 
     apiRequest<unknown[]>(
-
       "/api/v1/admin/letters/secret-messages"
-
     ),
 
 
