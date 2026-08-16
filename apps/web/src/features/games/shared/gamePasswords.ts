@@ -30,6 +30,16 @@ export const GAME_PASSWORDS: Record<string, GamePasswordConfig> = {
 
     },
 
+    "hidden-objects":{
+
+  password:"xxxx",
+
+  title:"Hidden Objects 🔍",
+
+  hint:"Find the hidden memories inside our special photos ❤️"
+
+},
+
 
   "guess-memory": {
 

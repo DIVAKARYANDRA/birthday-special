@@ -63,6 +63,16 @@ Record<string,GameGift>
 },
 
 
+"hidden-objects":{
+
+ title:"Memory Explorer 🔍",
+
+ message:"You discovered every hidden moment ❤️",
+
+ emoji:"🔍"
+
+},
+
 
   "guess-memory":{
 
