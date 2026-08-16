@@ -53,7 +53,7 @@ from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.db.base import Base
 from app.domains.timeline.enums import TimelinePresentationStyle, TimelineStatus
-
+from app.domains.memories.models import Memory
 
 class Timeline(Base):
     """
@@ -226,6 +226,7 @@ class TimelineEntry(Base):
     )
 
     chapter: Mapped["TimelineChapter"] = relationship(back_populates="entries")
+    memory: Mapped["Memory"] = relationship()
 
     def __repr__(self) -> str:  # pragma: no cover - debugging aid only
         return f"<TimelineEntry chapter_id={self.chapter_id} memory_id={self.memory_id}>"
