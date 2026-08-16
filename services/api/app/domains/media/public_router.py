@@ -43,3 +43,48 @@ def get_intro_images(
         }
         for asset in assets
     ]
+
+
+@router.get("/gallery")
+def get_gallery_images(
+    db: Session = Depends(get_db),
+):
+
+    settings = get_settings()
+
+    assets = (
+        db.query(MediaAsset)
+        .filter(
+            MediaAsset.media_type == MediaType.IMAGE,
+            MediaAsset.usage == "gallery",
+            MediaAsset.is_visible.is_(True),
+            MediaAsset.status == MediaAssetStatus.PUBLISHED,
+        )
+        .order_by(
+            MediaAsset.display_order.asc()
+        )
+        .all()
+    )
+
+
+    return [
+        {
+            "id": str(asset.id),
+
+            "url":
+                f"https://res.cloudinary.com/"
+                f"{settings.cloudinary_cloud_name}/image/upload/"
+                f"{asset.external_reference}",
+
+            "title":
+                asset.original_filename,
+
+            "caption":
+                asset.alt_text,
+
+            "order":
+                asset.display_order,
+        }
+
+        for asset in assets
+    ]

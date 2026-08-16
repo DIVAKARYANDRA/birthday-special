@@ -419,25 +419,72 @@ export default function MediaListPage() {
                           </td>
 
                           {/* Actions */}
-                          <td className="px-4 py-3">
-                            {media.status !==
-                              "archived" && (
-                              <button
-                                type="button"
-                                onClick={() =>
-                                  archiveMutation.mutate(
-                                    media.id,
-                                  )
-                                }
-                                disabled={
-                                  archiveMutation.isPending
-                                }
-                                className="rounded border px-3 py-1 text-sm disabled:cursor-not-allowed disabled:opacity-50"
-                              >
-                                Archive
-                              </button>
-                            )}
-                          </td>
+<td className="px-4 py-3 space-x-2">
+
+  {
+    media.status !== "published" &&
+    media.status !== "archived" && (
+
+      <button
+        type="button"
+        onClick={() =>
+          mediaApi.update(
+            media.id,
+            {
+              status:"published"
+            }
+          ).then(() => {
+            queryClient.invalidateQueries({
+              queryKey:["media"]
+            });
+          })
+        }
+        className="
+          rounded
+          bg-green-600
+          px-3
+          py-1
+          text-sm
+          text-white
+        "
+      >
+        Publish
+      </button>
+
+    )
+  }
+
+
+
+  {
+    media.status !== "archived" && (
+
+      <button
+        type="button"
+        onClick={() =>
+          archiveMutation.mutate(
+            media.id
+          )
+        }
+        disabled={
+          archiveMutation.isPending
+        }
+        className="
+          rounded
+          border
+          px-3
+          py-1
+          text-sm
+        "
+      >
+        Archive
+      </button>
+
+    )
+  }
+
+
+</td>
                         </tr>
                       ),
                     )}
