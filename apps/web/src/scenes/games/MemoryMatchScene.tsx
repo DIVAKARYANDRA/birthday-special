@@ -203,60 +203,43 @@ void loadImages();
 },[]);
 
 
-
-
-
-
-
-
 function handleLevelComplete(
 score:number
 ){
+
+if(level >= 10){
+
+updateGameProgress(
+gameId,
+{
+level:10,
+score
+}
+);
+
+setCompleted(true);
+
+return;
+
+}
 
 
 const nextLevel =
 level + 1;
 
 
-
 updateGameProgress(
 gameId,
 {
-
-level:
-nextLevel,
-
+level:nextLevel,
 score
-
 }
-
 );
-
-
-
-
-if(
-level >= 10
-){
-
-
-
-
-setCompleted(true);
-
-
-return;
-
-
-}
-
-
 
 
 setLevel(
 nextLevel
 );
-
 
 }
 

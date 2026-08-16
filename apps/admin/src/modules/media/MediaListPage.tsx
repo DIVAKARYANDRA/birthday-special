@@ -132,6 +132,26 @@ useState("");
     },
   });
 
+  const publishMutation = useMutation({
+
+  mutationFn: (id:string)=>
+    mediaApi.update(
+      id,
+      {
+        status:"published"
+      }
+    ),
+
+  onSuccess:()=>{
+
+    queryClient.invalidateQueries({
+      queryKey:["media"]
+    });
+
+  },
+
+});
+
   function handleFileChange(
     event: React.ChangeEvent<HTMLInputElement>,
   ) {
@@ -662,7 +682,36 @@ Status:
 
 </p>
 
+{
+media.status === "draft" &&
 
+<button
+
+type="button"
+
+onClick={()=>
+publishMutation.mutate(
+media.id
+)
+}
+
+className="
+w-full
+rounded-lg
+bg-green-600
+px-3
+py-2
+text-sm
+text-white
+"
+
+>
+
+Publish
+
+</button>
+
+}
 
 
 <button
