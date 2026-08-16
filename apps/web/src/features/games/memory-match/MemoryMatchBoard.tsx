@@ -736,47 +736,6 @@ handleFlip
 
 
 
-<div
-
-className="
-mt-6
-text-center
-text-white
-"
-
->
-
-
-<p
-
-className="
-text-sm
-text-white/60
-"
-
->
-
-Current Score
-
-</p>
-
-
-<p
-
-className="
-text-3xl
-font-semibold
-"
-
->
-
-{score} ❤️
-
-</p>
-
-
-</div>
-
 
 
 

@@ -6,10 +6,11 @@ import {
 
 import SceneLayout from "@/components/global/SceneLayout";
 import Breadcrumb from "@/components/ui/Breadcrumb";
-
+import GameHeader from "@/features/games/shared/GameHeader";
 
 import GamePasswordGate from "@/features/games/shared/GamePasswordGate";
-
+import GameMusicPlayer 
+from "@/features/games/shared/GameMusicPlayer";
 import GiftReveal from "@/features/games/shared/GiftReveal";
 
 import {
@@ -93,7 +94,9 @@ setCompleted
 useState(false);
 
 
-
+const [totalScore,setTotalScore] = useState(
+0
+);
 
 
 useEffect(()=>{
@@ -207,6 +210,16 @@ function handleLevelComplete(
 score:number
 ){
 
+
+setTotalScore(
+previous =>
+previous + score
+);
+
+
+const nextLevel =
+level + 1;
+
 if(level >= 10){
 
 updateGameProgress(
@@ -308,65 +321,29 @@ getGameGift(gameId)
 
 <>
 
+<GameHeader
 
-<div
+level={level}
 
-className="
-mb-8
-text-center
-"
+totalScore={totalScore}
 
->
+music={
+<GameMusicPlayer
+gameId="memory-match"
+/>
+}
 
+onReset={()=>{
 
-<div
+sessionStorage.removeItem(
+`game-progress-${gameId}`
+);
 
-className="
-mb-3
-text-5xl
-"
+window.location.reload();
 
->
+}}
 
-❤️
-
-</div>
-
-
-
-<h1
-
-className="
-text-3xl
-font-semibold
-text-white
-"
-
->
-
-Memory Match
-
-</h1>
-
-
-
-<p
-
-className="
-mt-2
-text-sm
-text-white/60
-"
-
->
-
-Level {level}/10
-
-</p>
-
-
-
-</div>
+/>
 
 
 

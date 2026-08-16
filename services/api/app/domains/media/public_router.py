@@ -170,3 +170,40 @@ def get_gallery_images(
     for asset in assets
 
 ]
+
+@router.get("/game-music/{game_id}")
+def get_game_music(
+    game_id:str,
+    db:Session=Depends(get_db)
+):
+
+    asset = (
+        db.query(MediaAsset)
+        .filter(
+            MediaAsset.media_type == MediaType.AUDIO,
+            MediaAsset.usage == "game-music",
+            MediaAsset.category == game_id,
+            MediaAsset.is_visible.is_(True),
+            MediaAsset.status == MediaAssetStatus.PUBLISHED
+        )
+        .first()
+    )
+
+
+    if not asset:
+        return None
+
+
+    return {
+
+        "id":str(asset.id),
+
+        "url":
+        build_cloudinary_url(
+            asset.external_reference
+        ),
+
+        "title":
+        asset.original_filename
+
+    }

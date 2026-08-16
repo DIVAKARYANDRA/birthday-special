@@ -33,6 +33,10 @@ const mediaUsages = [
  value:"game",
  label:"Game Images"
 },
+{
+ value:"game-music",
+ label:"Game Music"
+},
   {
     value: "background",
     label: "Background",
@@ -264,14 +268,12 @@ useState("");
             </select>
 
            {
-usage === "game" && (
+(usage === "game" || usage === "game-music") && (
 
 <>
 
 <label className="mt-4 block">
-
-Game Category
-
+Game Category / Music Target
 </label>
 
 
@@ -439,12 +441,11 @@ Used to organize gallery memories.
               <br />
 
 <strong>Category:</strong>{" "}
+
 {
 category
 ?
-galleryCategories.find(
-(item)=>item.value===category
-)?.label
+category
 :
 "None"
 }
