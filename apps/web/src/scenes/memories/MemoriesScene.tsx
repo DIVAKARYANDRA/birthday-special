@@ -87,7 +87,17 @@ useEffect(()=>{
               style={{ paddingBottom: "calc(1.5rem + env(safe-area-inset-bottom))" }}
             >
               <span aria-hidden="true" className="mb-3 block text-4xl">
-                {selectedMemory.previewEmoji}
+                {selectedMemory.images?.[0]?.url ? (
+                  <img
+                    src={selectedMemory.images[0].url}
+                    alt={selectedMemory.title}
+                    className="mb-3 h-32 w-full rounded-xl object-cover"
+                  />
+                ) : (
+                  <span aria-hidden="true" className="mb-3 block text-4xl">
+                    🌸
+                  </span>
+                )}
               </span>
               <h2 className="mb-1 font-display text-xl text-white">{selectedMemory.title}</h2>
               <p className="mb-4 text-sm text-white/70">{selectedMemory.description}</p>

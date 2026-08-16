@@ -3,7 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 
 import { memoriesApi } from "@/api/memoriesApi";
 import { mediaApi } from "@/api/mediaApi";
-
+import type { MediaAssetRead } from "@/api/mediaApi";
 
 export default function MemoriesListPage() {
 
@@ -20,11 +20,10 @@ export default function MemoriesListPage() {
   });
 
 
-  const mediaQuery = useQuery({
-    queryKey:["media"],
-    queryFn: mediaApi.list,
-  });
-
+  const mediaQuery = useQuery<MediaAssetRead[]>({
+  queryKey: ["media"],
+  queryFn: mediaApi.list,
+});
 
   async function attach(){
 

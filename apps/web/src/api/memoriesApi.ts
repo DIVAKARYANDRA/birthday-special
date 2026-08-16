@@ -1,5 +1,4 @@
-import { apiRequest } from "./client";
-
+import { apiRequest } from "@/api/client";
 
 export interface MemoryImage {
   id: string;
