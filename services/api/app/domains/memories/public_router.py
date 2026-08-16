@@ -24,7 +24,10 @@ from sqlalchemy.orm import Session, joinedload
 from app.db.session import get_db
 from app.core.config import get_settings
 
-from app.domains.memories.models import Memory
+from app.domains.memories.models import (
+    Memory,
+    MemoryMediaItem,
+)
 from app.domains.memories.enums import MemoryStatus
 
 
@@ -51,7 +54,7 @@ def get_public_memories(
         .options(
             joinedload(Memory.media_items)
             .joinedload(
-                "media_asset"
+                MemoryMediaItem.media_asset
             )
         )
         .filter(

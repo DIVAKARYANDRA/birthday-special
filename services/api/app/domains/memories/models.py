@@ -44,7 +44,7 @@ from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.db.base import Base
 from app.domains.memories.enums import MemoryCategory, MemoryImportance, MemoryStatus
-
+from app.domains.media.models import MediaAsset
 
 class Memory(Base):
     """
@@ -176,6 +176,7 @@ class MemoryMediaItem(Base):
     caption: Mapped[str | None] = mapped_column(String(500), nullable=True)
 
     memory: Mapped["Memory"] = relationship(back_populates="media_items")
+    media_asset: Mapped["MediaAsset"] = relationship()
 
     def __repr__(self) -> str:  # pragma: no cover - debugging aid only
         return f"<MemoryMediaItem memory_id={self.memory_id} media_asset_id={self.media_asset_id}>"
