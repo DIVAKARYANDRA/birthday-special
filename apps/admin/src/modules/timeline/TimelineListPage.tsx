@@ -160,6 +160,7 @@ setSelectedChapter(
 chapter.id
 );
 
+setChapterTitle("");
 
 queryClient.invalidateQueries({
 queryKey:["timelines"]
@@ -212,6 +213,7 @@ alert(
 "Memory added to train"
 );
 
+setSelectedMemory("");
 
 
 }
@@ -592,9 +594,12 @@ className="ml-4 mt-2"
 
 
 
+{
+t.status !== "published" && (
+
 <button
 
-onClick={()=>
+onClick={() =>
 publishTimeline(t.id)
 }
 
@@ -613,23 +618,24 @@ Publish
 
 </button>
 
-<button
-onClick={()=>
-deleteTimeline(
- timeline.id
 )
 }
-className="
-mt-3
-ml-3
-rounded
-bg-red-600
-px-4
-py-2
-text-white
-"
+
+<button
+  onClick={() =>
+    deleteTimeline(t.id)
+  }
+  className="
+    mt-3
+    ml-3
+    rounded
+    bg-red-600
+    px-4
+    py-2
+    text-white
+  "
 >
-Delete
+  Delete
 </button>
 
 
