@@ -1,7 +1,60 @@
-"""
-games — SQLAlchemy model placeholder.
+from sqlalchemy import Column, String, Float, Integer, ForeignKey
+from sqlalchemy.orm import relationship
 
-Domain purpose: Universal mini-game backend — Game/GameLevel catalog, GameProgress tracking, score submission validation.
+from app.db.base import Base
 
-No database models are defined yet — per Prompt 7's explicit exclusion of database model implementation. Must faithfully implement the corresponding entity/entities described in docs/03-data-architecture.md once implemented.
-"""
+
+class HiddenObjectTarget(Base):
+
+    __tablename__ = "hidden_object_targets"
+
+
+    id = Column(
+        String,
+        primary_key=True
+    )
+
+
+    media_id = Column(
+        String,
+        ForeignKey(
+            "media_assets.id"
+        ),
+        nullable=False
+    )
+
+
+    level = Column(
+        Integer,
+        nullable=False
+    )
+
+
+    name = Column(
+        String,
+        nullable=False
+    )
+
+
+    emoji = Column(
+        String,
+        nullable=False
+    )
+
+
+    x_position = Column(
+        Float,
+        nullable=False
+    )
+
+
+    y_position = Column(
+        Float,
+        nullable=False
+    )
+
+
+    radius = Column(
+        Float,
+        default=8
+    )

@@ -26,6 +26,14 @@ const GAMES = [
  available:true
 },
 
+{
+ id:"hidden-objects",
+ title:"Hidden Objects",
+ emoji:"🔍",
+ description:"Find hidden memories inside our photos",
+ route:"/games/hidden-objects",
+ available:true
+},
 
 {
  id:"love-quiz",
