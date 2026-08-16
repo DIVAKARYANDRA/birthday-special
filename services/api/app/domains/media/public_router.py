@@ -52,73 +52,18 @@ def get_intro_images(
 
     return [
         {
-            "id":str(asset.id),
+            "id": str(asset.id),
 
-            "url":
-            build_cloudinary_url(
+            "url": build_cloudinary_url(
                 asset.external_reference
             ),
 
-            "title":
-            asset.original_filename,
+            "title": asset.original_filename,
 
-            "alt_text":
-            asset.alt_text,
+            "alt_text": asset.alt_text,
 
             "display_order":
-            asset.display_order,
-
-        }
-
-        for asset in assets
-    ]
-
-
-@router.get("/gallery")
-def get_gallery_images(
-    db: Session = Depends(get_db),
-):
-
-    settings = get_settings()
-
-
-    assets = (
-        db.query(MediaAsset)
-        .filter(
-            MediaAsset.media_type == MediaType.IMAGE,
-            MediaAsset.usage == "gallery",
-            MediaAsset.is_visible.is_(True),
-            MediaAsset.status != MediaAssetStatus.ARCHIVED,
-        )
-        .order_by(
-            MediaAsset.display_order.asc()
-        )
-        .all()
-    )
-
-
-    return [
-        {
-            "id":str(asset.id),
-
-            "url":
-            (
-            f"https://res.cloudinary.com/"
-            f"{settings.cloudinary_cloud_name}/image/upload/"
-            f"{asset.external_reference}"
-            ),
-
-            "title":
-            asset.original_filename,
-
-            "alt_text":
-            asset.alt_text,
-
-            "category":
-            asset.category,
-
-            "display_order":
-            asset.display_order,
+                asset.display_order,
         }
 
         for asset in assets
@@ -137,13 +82,18 @@ def get_gallery_images(
     assets = (
         db.query(MediaAsset)
         .filter(
-            MediaAsset.media_type == MediaType.IMAGE,
 
-            MediaAsset.usage == "gallery",
+            MediaAsset.media_type ==
+            MediaType.IMAGE,
+
+            MediaAsset.usage ==
+            "gallery",
 
             MediaAsset.is_visible.is_(True),
 
-            MediaAsset.status == MediaAssetStatus.PUBLISHED,
+            MediaAsset.status ==
+            MediaAssetStatus.PUBLISHED,
+
         )
         .order_by(
             MediaAsset.display_order.asc()
@@ -173,6 +123,10 @@ def get_gallery_images(
 
             "alt_text":
             asset.alt_text,
+
+
+            "category":
+            asset.category,
 
 
             "display_order":

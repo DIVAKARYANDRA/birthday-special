@@ -13,7 +13,7 @@ import {
   motion,
 } from "framer-motion";
 
-
+import GalleryFilters from "@/features/gallery/GalleryFilters";
 import SceneLayout from "@/components/global/SceneLayout";
 import Breadcrumb from "@/components/ui/Breadcrumb";
 
@@ -37,7 +37,6 @@ const API =
   import.meta.env.VITE_API_BASE_URL ?? "";
 
 
-
 interface GalleryResponse {
 
   id:string;
@@ -47,6 +46,8 @@ interface GalleryResponse {
   title:string|null;
 
   alt_text:string|null;
+
+  category:string|null;
 
   display_order:number;
 
@@ -66,7 +67,7 @@ useState<GalleryPhoto[]>([]);
 const [viewerIndex,setViewerIndex] =
 useState<number|null>(null);
 
-
+const [category,setCategory]=useState("all");
 
 const [loading,setLoading] =
 useState(true);
@@ -112,9 +113,6 @@ GalleryResponse[] =
 await response.json();
 
 
-
-
-
 const mappedPhotos:
 GalleryPhoto[] =
 
@@ -139,6 +137,8 @@ alt_text:
 photo.alt_text,
 
 
+category:
+ photo.category ?? null,
 
 caption:
 photo.alt_text ??
@@ -208,7 +208,13 @@ void loadGallery();
 
 
 
-
+const visiblePhotos =
+photos.filter(
+(photo)=>
+category==="all"
+||
+photo.category===category
+);
 
 
 
@@ -295,6 +301,17 @@ mx-auto
 Every picture holds a little story of us ❤️
 </p>
 
+<div className="mt-8">
+
+<GalleryFilters
+
+selected={category}
+
+onChange={setCategory}
+
+/>
+
+</div>
 
 </motion.div>
 
@@ -411,7 +428,7 @@ gap-y-12
 
 
 {
-photos.map(
+visiblePhotos.map(
 (photo,index)=>(
 
 
@@ -467,7 +484,7 @@ viewerIndex !== null &&
 
 
 photos={
-photos
+visiblePhotos
 }
 
 
