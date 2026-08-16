@@ -7,7 +7,7 @@ import {
 
 import { ApiError } from "@/api/client";
 import { mediaApi } from "@/api/mediaApi";
-
+import { getCloudinaryUrl } from "@/utils/mediaUrl";
 const mediaTypes = [
   "image",
   "video",
@@ -427,177 +427,274 @@ galleryCategories.find(
           </p>
         )}
 
-        {mediaQuery.data &&
-          mediaQuery.data.length === 0 && (
-            <div className="rounded-xl border bg-white p-6">
-              <p className="text-gray-500">
-                No media uploaded yet.
-              </p>
-            </div>
-          )}
+       {
+mediaQuery.data &&
+mediaQuery.data.length > 0 && (
 
-        {mediaQuery.data &&
-          mediaQuery.data.length > 0 && (
-            <div className="overflow-hidden rounded-xl border bg-white">
-              <div className="overflow-x-auto">
-                <table className="w-full">
-                  <thead>
-                    <tr className="bg-gray-50 text-left text-sm">
-                      <th className="px-4 py-3">
-                        Type
-                      </th>
+<div
+className="
+grid
+grid-cols-1
+sm:grid-cols-2
+lg:grid-cols-3
+gap-6
+"
+>
 
-                      <th className="px-4 py-3">
-                        Usage
-                      </th>
+{
+mediaQuery.data.map(
+(media)=>(
 
-                      <th className="px-4 py-3">
-                        Filename
-                      </th>
 
-                      <th className="px-4 py-3">
-                        Status
-                      </th>
+<div
 
-                      <th className="px-4 py-3">
-                        Featured
-                      </th>
+key={media.id}
 
-                      <th className="px-4 py-3">
-                        Actions
-                      </th>
-                    </tr>
-                  </thead>
+className="
+rounded-xl
+border
+bg-white
+overflow-hidden
+shadow-sm
+"
 
-                  <tbody>
-                    {mediaQuery.data.map(
-                      (media) => (
-                        <tr
-                          key={media.id}
-                          className="border-t"
-                        >
-                          {/* Type */}
-                          <td className="px-4 py-3">
-                            {media.media_type}
-                          </td>
+>
 
-                          {/* Usage */}
-                          <td className="px-4 py-3">
-                            {media.usage ===
-                            "intro" ? (
-                              <span className="rounded-full bg-purple-100 px-2 py-1 text-xs font-medium text-purple-700">
-                                Intro
-                              </span>
-                            ) : media.usage ===
-                              "gallery" ? (
-                              <span className="rounded-full bg-blue-100 px-2 py-1 text-xs font-medium text-blue-700">
-                                Gallery
-                              </span>
-                            ) : media.usage ===
-                              "background" ? (
-                              <span className="rounded-full bg-green-100 px-2 py-1 text-xs font-medium text-green-700">
-                                Background
-                              </span>
-                            ) : (
-                              <span className="text-gray-400">
-                                General
-                              </span>
-                            )}
-                          </td>
 
-                          {/* Filename */}
-                          <td className="px-4 py-3">
-                            {media.original_filename ??
-                              "-"}
-                          </td>
+{/* Preview */}
 
-                          {/* Status */}
-                          <td className="px-4 py-3">
-                            {media.status}
-                          </td>
+<div
+className="
+h-56
+bg-gray-100
+overflow-hidden
+"
+>
 
-                          {/* Featured */}
-                          <td className="px-4 py-3">
-                            {media.is_featured
-                              ? "Yes"
-                              : "No"}
-                          </td>
+{
+media.media_type==="image" &&
 
-                          {/* Actions */}
-<td className="px-4 py-3 space-x-2">
+<img
 
-  {
-    media.status !== "published" &&
-    media.status !== "archived" && (
+src={
+getCloudinaryUrl(
+media.external_reference
+)
+}
 
-      <button
-        type="button"
-        onClick={() =>
-          mediaApi.update(
-            media.id,
-            {
-              status:"published"
-            }
-          ).then(() => {
-            queryClient.invalidateQueries({
-              queryKey:["media"]
-            });
-          })
-        }
-        className="
-          rounded
-          bg-green-600
-          px-3
-          py-1
-          text-sm
-          text-white
-        "
-      >
-        Publish
-      </button>
+alt={
+media.alt_text ??
+"media"
+}
 
-    )
-  }
+className="
+h-full
+w-full
+object-cover
+"
+/>
+
+}
+
+
+</div>
 
 
 
-  {
-    media.status !== "archived" && (
 
-      <button
-        type="button"
-        onClick={() =>
-          archiveMutation.mutate(
-            media.id
-          )
-        }
-        disabled={
-          archiveMutation.isPending
-        }
-        className="
-          rounded
-          border
-          px-3
-          py-1
-          text-sm
-        "
-      >
-        Archive
-      </button>
-
-    )
-  }
+<div
+className="
+p-4
+space-y-3
+"
+>
 
 
-</td>
-                        </tr>
-                      ),
-                    )}
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          )}
+<h3
+className="
+font-semibold
+truncate
+"
+>
+
+{
+media.original_filename
+}
+
+</h3>
+
+
+
+<div
+className="
+flex
+gap-2
+flex-wrap
+"
+>
+
+
+{
+media.category &&
+
+<span
+className="
+rounded-full
+bg-purple-100
+px-3
+py-1
+text-xs
+"
+>
+
+{
+media.category
+}
+
+</span>
+
+}
+
+
+
+{
+media.usage &&
+
+<span
+className="
+rounded-full
+bg-blue-100
+px-3
+py-1
+text-xs
+"
+>
+
+{
+media.usage
+}
+
+</span>
+
+}
+
+
+</div>
+
+
+
+
+<p
+className="text-sm text-gray-500"
+>
+
+Status:
+{" "}
+{media.status}
+
+</p>
+
+
+
+
+<button
+
+type="button"
+
+onClick={()=>
+
+mediaApi.update(
+media.id,
+{
+is_featured:
+!media.is_featured
+}
+)
+.then(
+()=>queryClient.invalidateQueries(
+{
+queryKey:["media"]
+}
+)
+)
+
+}
+
+className="
+w-full
+rounded-lg
+border
+px-3
+py-2
+text-sm
+"
+
+>
+
+{
+media.is_featured
+?
+"⭐ Featured"
+:
+"☆ Make Featured"
+}
+
+</button>
+
+
+
+
+
+{
+media.status !== "archived" &&
+
+<button
+
+type="button"
+
+onClick={()=>
+archiveMutation.mutate(
+media.id
+)
+}
+
+className="
+w-full
+rounded-lg
+bg-red-600
+px-3
+py-2
+text-sm
+text-white
+"
+
+>
+
+Archive
+
+</button>
+
+}
+
+
+</div>
+
+
+</div>
+
+
+)
+
+)
+
+}
+
+
+</div>
+
+)
+
+}
       </div>
     </div>
   );

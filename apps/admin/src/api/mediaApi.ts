@@ -22,6 +22,7 @@ export interface MediaAssetRead {
   is_featured: boolean;
   created_at: string;
   category:string|null;
+  url?: string;
 }
 
 export interface MediaAssetCreate {
@@ -31,6 +32,7 @@ export interface MediaAssetCreate {
   original_filename?: string;
   usage?: string;
   alt_text?: string;
+  category?: string;
   display_order?: number;
 }
 
@@ -40,6 +42,7 @@ export interface MediaAssetUpdate {
   is_visible?: boolean;
   usage?: string;
   is_featured?: boolean;
+  category?:string;
   status?: string;
 }
 

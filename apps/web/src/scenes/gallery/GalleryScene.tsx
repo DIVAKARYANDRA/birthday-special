@@ -16,7 +16,8 @@ import {
 import GalleryFilters from "@/features/gallery/GalleryFilters";
 import SceneLayout from "@/components/global/SceneLayout";
 import Breadcrumb from "@/components/ui/Breadcrumb";
-
+import GalleryCategoryTabs 
+from "@/features/gallery/GalleryCategoryTabs";
 
 import FloatingPolaroid from "@/features/gallery/FloatingPolaroid";
 import PhotoViewer from "@/features/gallery/PhotoViewer";
@@ -78,6 +79,10 @@ const [error,setError] =
 useState(false);
 
 
+const featuredPhotos =
+photos.filter(
+photo=>photo.featured
+);
 
 
 
@@ -139,6 +144,9 @@ photo.alt_text,
 
 category:
  photo.category ?? null,
+
+featured:
+ photo.featured ?? false,
 
 caption:
 photo.alt_text ??
@@ -205,7 +213,6 @@ void loadGallery();
 
 
 },[]);
-
 
 
 const visiblePhotos =
@@ -314,7 +321,56 @@ onChange={setCategory}
 </div>
 
 </motion.div>
+{
+featuredPhotos.length>0 &&
 
+<section>
+
+<h2 className="
+text-white
+text-xl
+mb-4
+">
+
+⭐ Featured Memories
+
+</h2>
+
+
+<div className="
+flex
+overflow-x-auto
+gap-4
+">
+
+{
+featuredPhotos.map(photo=>(
+
+<img
+
+key={photo.id}
+
+src={photo.url}
+
+className="
+h-56
+w-56
+rounded-xl
+object-cover
+"
+
+/>
+
+))
+
+}
+
+</div>
+
+
+</section>
+
+}
 
 {
 loading &&
@@ -393,7 +449,13 @@ No memories uploaded yet 📷
 {
 photos.length>0 &&
 
+<GalleryCategoryTabs
 
+selected={category}
+
+onChange={setCategory}
+
+/>
 <motion.div
 
 

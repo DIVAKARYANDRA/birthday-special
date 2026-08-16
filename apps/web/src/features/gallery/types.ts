@@ -1,17 +1,21 @@
 export interface GalleryPhoto {
 
- id:string;
+id:string;
 
- url:string;
+url:string;
 
- title:string|null;
+title:string|null;
 
- alt_text:string|null;
+alt_text:string|null;
 
- caption:string;
+category:string|null;
 
- category:string|null;
+caption:string;
 
- rotationDeg:number;
+featured:boolean;
+
+created_at:string|null;
+
+rotationDeg:number;
 
 }
