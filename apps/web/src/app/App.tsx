@@ -35,7 +35,6 @@ import LetterDetailScene from "@/scenes/letters/LetterDetailScene";
 
 const IntroSequence = lazy(() => import("@/scenes/landing/IntroSequence"));
 const WorldMapScene = lazy(() => import("@/scenes/world-map/WorldMapScene"));
-const ComingSoonScene = lazy(() => import("@/scenes/world-map/ComingSoonScene"));
 const MemoriesScene = lazy(() => import("@/scenes/memories/MemoriesScene"));
 const TimelineScene = lazy(() => import("@/scenes/timeline/TimelineScene"));
 const GalleryScene = lazy(() => import("@/scenes/gallery/GalleryScene"));

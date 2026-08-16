@@ -94,15 +94,6 @@ useState(false);
 
 
 
-const [
-finalScore,
-setFinalScore
-]
-=
-useState(0);
-
-
-
 
 
 useEffect(()=>{
@@ -249,7 +240,6 @@ level >= 10
 ){
 
 
-setFinalScore(score);
 
 
 setCompleted(true);
@@ -271,24 +261,6 @@ nextLevel
 }
 
 
-
-
-
-
-
-
-function restartJourney(){
-
-
-sessionStorage.removeItem(
-`game-progress-${gameId}`
-);
-
-
-window.location.reload();
-
-
-}
 
 
 
