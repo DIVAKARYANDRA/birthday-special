@@ -38,8 +38,7 @@ export interface TimelineRead {
 
   is_featured: boolean;
 
-  chapters: TimelineChapter[];
-
+  chapters: TimelineChapter[] | [];
 }
 
 
@@ -80,7 +79,7 @@ export interface TimelineEntryCreate {
 
 
 const BASE_URL =
-  "/api/v1/admin/timeline";
+  "/api/v1/admin/timelines";
 
 
 

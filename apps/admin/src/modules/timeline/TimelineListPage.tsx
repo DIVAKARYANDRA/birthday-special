@@ -1,23 +1,23 @@
-import {useState} from "react";
+import { useState } from "react";
 
 import {
-useQuery,
-useQueryClient
+  useQuery,
+  useQueryClient,
 } from "@tanstack/react-query";
 
 
 import {
-timelineApi
+  timelineApi,
 } from "@/api/timelineApi";
 
 
 import {
-memoriesApi
+  memoriesApi,
 } from "@/api/memoriesApi";
 
 
 import type {
-MemoryRead
+  MemoryRead,
 } from "@/api/memoriesApi";
 
 
@@ -72,7 +72,26 @@ queryFn:memoriesApi.list,
 
 
 
+async function refreshTimelines(){
+
+await queryClient.invalidateQueries({
+queryKey:["timelines"]
+});
+
+}
+
+
+
+
+
+
 async function createTimeline(){
+
+
+if(!title.trim()){
+alert("Title required");
+return;
+}
 
 
 const result =
@@ -92,9 +111,11 @@ result.id
 );
 
 
-queryClient.invalidateQueries({
-queryKey:["timelines"]
-});
+await refreshTimelines();
+
+
+setTitle("");
+setDescription("");
 
 
 alert(
@@ -106,7 +127,12 @@ alert(
 
 
 
+
+
+
+
 async function deleteTimeline(id:string){
+
 
 const confirmed =
 window.confirm(
@@ -118,7 +144,14 @@ if(!confirmed)
 return;
 
 
+
+try{
+
+
 await timelineApi.archive(id);
+
+
+await refreshTimelines();
 
 
 alert(
@@ -126,19 +159,42 @@ alert(
 );
 
 
-queryClient.invalidateQueries({
- queryKey:["timelines"]
-});
+}
+catch(error){
+
+console.error(error);
+
+alert(
+"Failed to remove timeline"
+);
+
+}
 
 
 }
 
 
+
+
+
+
+
+
+
 async function addChapter(){
 
 
-if(!selectedTimeline)
+if(
+!selectedTimeline ||
+!chapterTitle.trim()
+)
+{
+alert(
+"Select timeline and enter chapter"
+);
+
 return;
+}
 
 
 
@@ -160,11 +216,11 @@ setSelectedChapter(
 chapter.id
 );
 
+
 setChapterTitle("");
 
-queryClient.invalidateQueries({
-queryKey:["timelines"]
-});
+
+await refreshTimelines();
 
 
 alert(
@@ -180,6 +236,8 @@ alert(
 
 
 
+
+
 async function attachMemory(){
 
 
@@ -187,7 +245,13 @@ if(
 !selectedChapter ||
 !selectedMemory
 )
+{
+alert(
+"Select chapter and memory"
+);
+
 return;
+}
 
 
 
@@ -204,19 +268,21 @@ display_order:0
 
 
 
-queryClient.invalidateQueries({
-queryKey:["timelines"]
-});
+await refreshTimelines();
 
-
-alert(
-"Memory added to train"
-);
 
 setSelectedMemory("");
 
 
+alert(
+"Memory added"
+);
+
+
 }
+
+
+
 
 
 
@@ -231,9 +297,7 @@ id:string
 await timelineApi.publish(id);
 
 
-queryClient.invalidateQueries({
-queryKey:["timelines"]
-});
+await refreshTimelines();
 
 
 alert(
@@ -242,6 +306,10 @@ alert(
 
 
 }
+
+
+
+
 
 
 
@@ -259,12 +327,14 @@ Timeline Builder 🚂
 
 
 
+
 <div className="rounded-xl border p-5">
 
 
 <h2 className="font-semibold mb-3">
 Create Timeline
 </h2>
+
 
 
 <input
@@ -282,6 +352,8 @@ e=>setTitle(e.target.value)
 />
 
 
+
+
 <textarea
 
 className="border rounded p-2 w-full mb-3"
@@ -295,6 +367,8 @@ e=>setDescription(e.target.value)
 }
 
 />
+
+
 
 
 
@@ -334,6 +408,8 @@ Add Chapter
 
 
 
+
+
 <select
 
 className="border rounded p-2 w-full mb-3"
@@ -346,7 +422,8 @@ e=>setSelectedTimeline(e.target.value)
 
 >
 
-<option>
+
+<option value="">
 Select Timeline
 </option>
 
@@ -364,10 +441,12 @@ value={t.id}
 </option>
 
 ))
+
 }
 
 
 </select>
+
 
 
 
@@ -385,6 +464,8 @@ e=>setChapterTitle(e.target.value)
 }
 
 />
+
+
 
 
 
@@ -427,6 +508,7 @@ Add Memory Station
 
 
 
+
 <select
 
 className="border rounded p-2 w-full mb-3"
@@ -439,15 +521,17 @@ e=>setSelectedChapter(e.target.value)
 
 >
 
-<option>
+
+<option value="">
 Select Chapter
 </option>
 
 
 {
+
 timelines.data
 ?.flatMap(
-t=>t.chapters
+t=>t.chapters ?? []
 )
 .map(c=>(
 
@@ -461,6 +545,7 @@ value={c.id}
 </option>
 
 ))
+
 }
 
 
@@ -482,7 +567,8 @@ e=>setSelectedMemory(e.target.value)
 
 >
 
-<option>
+
+<option value="">
 Select Memory
 </option>
 
@@ -500,10 +586,12 @@ value={m.id}
 </option>
 
 ))
+
 }
 
 
 </select>
+
 
 
 
@@ -537,6 +625,7 @@ Attach Memory
 
 
 
+
 <div>
 
 
@@ -547,6 +636,21 @@ Existing Timelines
 
 
 {
+
+timelines.data?.length === 0 && (
+
+<p>
+No timelines found
+</p>
+
+)
+
+}
+
+
+
+{
+
 timelines.data?.map(t=>(
 
 
@@ -561,12 +665,16 @@ p-4
 mt-3
 "
 
+
 >
 
 
 <h3 className="font-semibold">
+
 {t.title}
+
 </h3>
+
 
 
 <p>
@@ -576,8 +684,12 @@ Status:
 
 
 
+
+
 {
-t.chapters.map(c=>(
+
+t.chapters?.map(c=>(
+
 
 <div
 key={c.id}
@@ -588,52 +700,66 @@ className="ml-4 mt-2"
 
 </div>
 
+
 ))
 
 }
 
+
+
+
+
 <div className="mt-3 flex gap-3">
 
-  {
-    t.status !== "published" &&
-t.status !== "archived" && (
-
-      <button
-        onClick={() =>
-          publishTimeline(t.id)
-        }
-        className="
-          rounded
-          bg-green-700
-          px-4
-          py-2
-          text-white
-        "
-      >
-        Publish
-      </button>
-
-    )
-  }
 
 
 {
-t.status !== "archived" && (
+
+t.status !== "published" &&
+
+t.status !== "archived" &&
+
+(
 
 <button
 
-onClick={() =>
+onClick={()=>
+publishTimeline(t.id)
+}
+
+className="
+bg-green-700
+text-white
+px-4
+py-2
+rounded
+"
+
+>
+
+Publish
+
+</button>
+
+)
+
+}
+
+
+
+
+<button
+
+onClick={()=>
 deleteTimeline(t.id)
 }
 
 className="
-mt-3
-ml-3
-rounded
 bg-red-600
+text-white
 px-4
 py-2
-text-white
+rounded
 "
 
 >
@@ -642,11 +768,10 @@ Delete
 
 </button>
 
-)
-}
 
 
 </div>
+
 
 
 </div>
@@ -655,7 +780,6 @@ Delete
 ))
 
 }
-
 
 
 </div>
