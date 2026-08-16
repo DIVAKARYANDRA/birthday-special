@@ -35,20 +35,6 @@ return (
 
 <motion.div
 
-drag
-
-onDragStart={()=>
-setDragging(true)
-}
-
-onDragEnd={()=>
-setTimeout(
-()=>setDragging(false),
-100
-)
-}
-
-
 className="
 relative
 h-52
@@ -59,6 +45,7 @@ shrink-0
 cursor-pointer
 "
 
+
 style={{
 rotate:photo.rotationDeg
 }}
@@ -68,12 +55,26 @@ drag
 
 dragElastic={0.5}
 
+
 dragConstraints={{
 top:0,
 left:0,
 right:0,
 bottom:0
 }}
+
+
+onDragStart={()=>
+setDragging(true)
+}
+
+
+onDragEnd={()=>
+setTimeout(
+()=>setDragging(false),
+100
+)
+}
 
 
 whileTap={{
@@ -94,25 +95,11 @@ animate={
 :undefined
 }
 
-
 >
 
 
 
 <motion.div
-
-drag
-
-onDragStart={()=>
-setDragging(true)
-}
-
-onDragEnd={()=>
-setTimeout(
-()=>setDragging(false),
-100
-)
-}
 
 
 className="
@@ -267,7 +254,9 @@ onClick={(e)=>{
 
 e.stopPropagation();
 
-onOpen();
+if(!dragging){
+  onOpen();
+}
 
 }}
 
