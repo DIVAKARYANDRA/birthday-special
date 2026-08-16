@@ -48,6 +48,7 @@ export default function HiddenObjectsScene(){
 const gameId =
 "hidden-objects";
 
+
 const [
 images,
 setImages
