@@ -28,7 +28,7 @@ export const GAME_PASSWORDS: Record<string, GamePasswordConfig> = {
 
     hint:"Put our memories back together ❤️"
 
-    }
+    },
 
 
   "guess-memory": {
