@@ -81,6 +81,9 @@ export default function MediaListPage() {
   const [category, setCategory] =
 useState("");
 
+const [displayOrder, setDisplayOrder] =
+useState(0);
+
   const [altText, setAltText] =
     useState("");
 
@@ -102,7 +105,7 @@ useState("");
   selectedFile,
   mediaType,
   altText,
-  0,
+  displayOrder,
   usage || undefined,
   category || undefined,
 );
@@ -118,6 +121,7 @@ useState("");
       setUsage("");
       setCategory("");
       setMediaType("image");
+      setDisplayOrder(0);
 
       if (fileInputRef.current) {
         fileInputRef.current.value = "";
@@ -333,6 +337,8 @@ Treasure Hunt 🔐
 )
 }
 
+
+
             <p className="mt-1 text-xs text-gray-400">
               Choose where this media should be
               used in the experience.
@@ -422,6 +428,42 @@ Used to organize gallery memories.
               className="w-full rounded-lg border p-2"
             />
           </div>
+
+          <div>
+
+<label className="mb-1 block text-sm font-medium">
+Display Order / Level
+</label>
+
+
+<input
+
+type="number"
+
+value={displayOrder}
+
+onChange={(e)=>
+setDisplayOrder(
+Number(e.target.value)
+)
+}
+
+className="
+w-full
+rounded-lg
+border
+p-2
+"
+
+placeholder="Example: 1"
+
+/>
+
+<p className="mt-1 text-xs text-gray-400">
+For games this represents level number.
+</p>
+
+</div>
 
           {/* Selected File */}
           {selectedFile && (
