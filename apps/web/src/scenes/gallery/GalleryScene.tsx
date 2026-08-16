@@ -13,13 +13,12 @@ import {
   motion,
 } from "framer-motion";
 
-import GalleryFilters from "@/features/gallery/GalleryFilters";
 import SceneLayout from "@/components/global/SceneLayout";
 import Breadcrumb from "@/components/ui/Breadcrumb";
 import GalleryCategoryTabs 
 from "@/features/gallery/GalleryCategoryTabs";
-
-import FloatingPolaroid from "@/features/gallery/FloatingPolaroid";
+import MemoryWall from "@/features/gallery/MemoryWall";
+import FeaturedCarousel from "@/features/gallery/FeaturedCarousel";
 import PhotoViewer from "@/features/gallery/PhotoViewer";
 
 
@@ -239,7 +238,8 @@ return (
 className="
 flex-1
 overflow-y-auto
-px-5
+px-4
+sm:px-6
 pb-24
 pt-6
 "
@@ -306,69 +306,12 @@ mx-auto
 Every picture holds a little story of us ❤️
 </p>
 
-<div className="mt-8">
-
-<GalleryFilters
-
-selected={category}
-
-onChange={setCategory}
-
-/>
-
-</div>
 
 </motion.div>
-{
-featuredPhotos.length>0 &&
 
-<section>
-
-<h2 className="
-text-white
-text-xl
-mb-4
-">
-
-⭐ Featured Memories
-
-</h2>
-
-
-<div className="
-flex
-overflow-x-auto
-gap-4
-">
-
-{
-featuredPhotos.map(photo=>(
-
-<img
-
-key={photo.id}
-
-src={photo.url}
-
-className="
-h-56
-w-56
-rounded-xl
-object-cover
-"
-
+<FeaturedCarousel
+photos={featuredPhotos}
 />
-
-))
-
-}
-
-</div>
-
-
-</section>
-
-}
 
 {
 loading &&
@@ -454,73 +397,17 @@ selected={category}
 onChange={setCategory}
 
 />
-<motion.div
 
+<MemoryWall
 
-variants={
-staggerContainer
-}
+photos={visiblePhotos}
 
-
-initial="hidden"
-
-
-animate="visible"
-
-
-
-className="
-
-flex
-
-flex-wrap
-
-justify-center
-
-gap-x-4
-
-gap-y-12
-
-"
-
-
->
-
-
-{
-visiblePhotos.map(
-(photo,index)=>(
-
-
-<FloatingPolaroid
-
-key={
-photo.id
-}
-
-
-photo={
-photo
-}
-
-
-
-onOpen={()=>
+onOpen={(index)=>
 setViewerIndex(index)
 }
 
-
 />
 
-
-)
-
-)
-
-}
-
-
-</motion.div>
 </>
 
 
