@@ -21,6 +21,7 @@ export interface MediaAssetRead {
   usage: string | null;
   is_featured: boolean;
   created_at: string;
+  category:string|null;
 }
 
 export interface MediaAssetCreate {
@@ -57,7 +58,8 @@ export const mediaApi = {
     altText?: string,
     displayOrder = 0,
     usage?: string,
-  ) => {
+    category?: string,
+) => {
     const formData = new FormData();
 
     formData.append("file", file);
@@ -70,6 +72,12 @@ export const mediaApi = {
     if (usage) {
       formData.append("usage", usage);
     }
+    if(category){
+ formData.append(
+   "category",
+   category
+ );
+}
 
     return apiRequest<MediaAssetRead>(
       "/api/v1/admin/media/upload",

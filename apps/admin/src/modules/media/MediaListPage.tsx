@@ -35,6 +35,29 @@ const mediaUsages = [
   },
 ];
 
+const galleryCategories = [
+  {
+    value: "first_moments",
+    label: "First Moments ❤️",
+  },
+  {
+    value: "trips",
+    label: "Trips ✈️",
+  },
+  {
+    value: "celebrations",
+    label: "Celebrations 🎂",
+  },
+  {
+    value: "random_us",
+    label: "Random Us 😂",
+  },
+  {
+    value: "family",
+    label: "Family 👨‍👩‍👧",
+  },
+];
+
 export default function MediaListPage() {
   const queryClient = useQueryClient();
 
@@ -46,6 +69,9 @@ export default function MediaListPage() {
 
   const [usage, setUsage] =
     useState("");
+
+  const [category, setCategory] =
+useState("");
 
   const [altText, setAltText] =
     useState("");
@@ -65,12 +91,13 @@ export default function MediaListPage() {
       }
 
       return mediaApi.upload(
-        selectedFile,
-        mediaType,
-        altText,
-        0,
-        usage || undefined,
-      );
+  selectedFile,
+  mediaType,
+  altText,
+  0,
+  usage || undefined,
+  category || undefined,
+);
     },
 
     onSuccess: () => {
@@ -81,6 +108,7 @@ export default function MediaListPage() {
       setSelectedFile(null);
       setAltText("");
       setUsage("");
+      setCategory("");
       setMediaType("image");
 
       if (fileInputRef.current) {
@@ -215,6 +243,71 @@ export default function MediaListPage() {
               Choose where this media should be
               used in the experience.
             </p>
+
+            {/* Gallery Category */}
+
+{
+usage === "gallery" && (
+
+<div>
+
+<label className="mb-1 block text-sm font-medium">
+Gallery Category
+</label>
+
+
+<select
+
+value={category}
+
+onChange={(event)=>
+setCategory(event.target.value)
+}
+
+className="w-full rounded-lg border p-2"
+
+>
+
+<option value="">
+Select Category
+</option>
+
+
+{
+galleryCategories.map(item=>(
+
+<option
+
+key={item.value}
+
+value={item.value}
+
+>
+
+{item.label}
+
+</option>
+
+))
+
+}
+
+
+</select>
+
+
+<p className="mt-1 text-xs text-gray-400">
+
+Used to organize gallery memories.
+
+</p>
+
+
+</div>
+
+)
+
+}
           </div>
 
           {/* Alt Text */}
@@ -255,6 +348,18 @@ export default function MediaListPage() {
               <br />
 
               <strong>Usage:</strong>{" "}
+              <br />
+
+<strong>Category:</strong>{" "}
+{
+category
+?
+galleryCategories.find(
+(item)=>item.value===category
+)?.label
+:
+"None"
+}
               {usage
                 ? mediaUsages.find(
                     (item) =>

@@ -61,6 +61,10 @@ class MediaAsset(Base):
         String(50),
         nullable=True,
     )
+    category: Mapped[str | None] = mapped_column(
+        String(50),
+        nullable=True,
+    )
     storage_provider: Mapped[StorageProvider] = mapped_column(
         Enum(StorageProvider, name="storage_provider"),
         nullable=False,

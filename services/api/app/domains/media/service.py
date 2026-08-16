@@ -98,6 +98,7 @@ class MediaAssetService:
         uploaded_by_admin_id: uuid.UUID,
         file_size_bytes: int | None,
         usage: str | None,
+        category: str | None,
     ) -> MediaAsset:
         """
         Uploads a physical file to Cloudinary and creates the corresponding
@@ -120,6 +121,7 @@ class MediaAssetService:
             original_filename=original_filename,
             mime_type=mime_type,
             usage=usage,
+            category=category,
             alt_text=alt_text,
             file_size_bytes=result.get("bytes") or file_size_bytes,
             width_px=result.get("width"),

@@ -1,16 +1,28 @@
 /**
  * PhotoViewer
  *
- * Full-screen mobile-first photo viewer.
- * Supports:
+ * Mobile-first fullscreen gallery viewer.
+ *
+ * Features:
  * - Cloudinary images
- * - swipe navigation
- * - fullscreen focus mode
- * - touch gestures
+ * - Swipe navigation
+ * - Double tap zoom
+ * - Smooth image loading
+ * - Safe area support
+ * - Romantic fullscreen experience
  */
 
 
-import { AnimatePresence, motion } from "framer-motion";
+import {
+  useState
+} from "react";
+
+
+import {
+  AnimatePresence,
+  motion
+} from "framer-motion";
+
 
 import {
   EASE_OUT
@@ -25,7 +37,7 @@ import type {
 
 interface PhotoViewerProps {
 
-  photos:GalleryPhoto[];
+  photos: GalleryPhoto[];
 
   activeIndex:number;
 
@@ -46,7 +58,7 @@ export default function PhotoViewer(
  photos,
  activeIndex,
  onClose,
- onNavigate
+ onNavigate,
 
 }:PhotoViewerProps
 ){
@@ -58,10 +70,34 @@ photos[activeIndex];
 
 
 
+const [zoom,setZoom] =
+useState(false);
+
+
+
+const [loaded,setLoaded] =
+useState(false);
+
+
+
+const [closingBlocked,setClosingBlocked] =
+useState(false);
+
+
+
+
 if(!photo)
 return null;
 
 
+
+
+
+function handleDragStart(){
+
+setClosingBlocked(true);
+
+}
 
 
 
@@ -75,33 +111,38 @@ info:{
 ){
 
 
+setTimeout(
+()=>setClosingBlocked(false),
+200
+);
+
+
+
 if(
- info.offset.x >
- SWIPE_THRESHOLD
- &&
- activeIndex > 0
+info.offset.x >
+SWIPE_THRESHOLD
+&&
+activeIndex > 0
 ){
 
 onNavigate(
- activeIndex - 1
+activeIndex-1
 );
 
 }
 
 
 
-else if(
-
+if(
 info.offset.x <
 -SWIPE_THRESHOLD
 &&
 activeIndex <
 photos.length-1
-
 ){
 
 onNavigate(
- activeIndex + 1
+activeIndex+1
 );
 
 }
@@ -131,7 +172,7 @@ flex-col
 items-center
 justify-center
 bg-black/90
-backdrop-blur-md
+backdrop-blur-lg
 px-4
 "
 
@@ -151,10 +192,15 @@ opacity:0
 }}
 
 
-onClick={onClose}
+onClick={()=>{
+if(!closingBlocked){
+onClose();
+}
+}}
 
 
 >
+
 
 
 
@@ -164,7 +210,9 @@ onClick={onClose}
 key={photo.id}
 
 
+
 drag="x"
+
 
 
 dragConstraints={{
@@ -173,9 +221,13 @@ right:0
 }}
 
 
-onDragEnd={
-handleDragEnd
-}
+
+onDragStart={handleDragStart}
+
+
+
+onDragEnd={handleDragEnd}
+
 
 
 onClick={
@@ -186,8 +238,9 @@ e=>e.stopPropagation()
 
 initial={{
 opacity:0,
-scale:0.92
+scale:0.9
 }}
+
 
 
 animate={{
@@ -196,10 +249,12 @@ scale:1
 }}
 
 
+
 exit={{
 opacity:0,
-scale:0.92
+scale:0.9
 }}
+
 
 
 transition={{
@@ -212,38 +267,58 @@ ease:EASE_OUT
 className="
 relative
 flex
+max-h-[70vh]
+w-full
+max-w-sm
 items-center
 justify-center
 overflow-hidden
-rounded-xl
-bg-white
+rounded-2xl
 shadow-2xl
-w-full
-max-w-sm
-aspect-square
 sm:max-w-lg
 "
+
 
 
 
 >
 
 
+{
+!loaded &&
+
+<div
+
+className="
+absolute
+inset-0
+flex
+items-center
+justify-center
+text-4xl
+"
+
+>
+
+📸
+
+</div>
+
+}
+
+
 
 <img
 
 
-src={
-photo.url
-}
+src={photo.url}
+
 
 
 alt={
-
 photo.alt_text ??
 photo.title ??
-"Gallery photo"
-
+"Gallery memory"
 }
 
 
@@ -252,12 +327,41 @@ loading="lazy"
 
 
 
-className="
-h-full
-w-full
-object-cover
-"
+onLoad={()=>
+setLoaded(true)
+}
 
+
+
+onDoubleClick={()=>
+setZoom(
+value=>!value
+)
+}
+
+
+
+className={
+
+`
+max-h-[70vh]
+w-full
+rounded-2xl
+object-contain
+transition-transform
+duration-300
+
+${
+zoom
+?
+"scale-150"
+:
+"scale-100"
+}
+
+`
+
+}
 
 
 
@@ -271,35 +375,78 @@ object-cover
 
 
 
-<p
+{/* Caption */}
+
+
+<div
 
 
 className="
 mt-6
 max-w-sm
-px-6
+rounded-xl
+bg-white/10
+px-5
+py-3
 text-center
-text-sm
-leading-relaxed
-text-white/80
+backdrop-blur-md
 "
 
 >
 
 
-{
-photo.caption
-}
+<p
 
+className="
+text-sm
+leading-relaxed
+text-white
+"
+
+>
+
+{
+photo.caption ??
+"Beautiful memory ❤️"
+}
 
 
 </p>
 
 
 
+{
+photo.title &&
 
 
-{/* pagination dots */}
+<p
+
+className="
+mt-2
+text-xs
+text-white/50
+"
+
+>
+
+{photo.title}
+
+</p>
+
+}
+
+
+
+</div>
+
+
+
+
+
+
+{/* Dots */}
+
+
 
 <div
 
@@ -311,14 +458,13 @@ gap-2
 
 >
 
-{
 
+{
 photos.map(
 (p,index)=>(
 
 
 <span
-
 
 key={p.id}
 
@@ -329,6 +475,7 @@ className={
 h-2
 w-2
 rounded-full
+
 ${
 index===activeIndex
 ?
@@ -336,6 +483,7 @@ index===activeIndex
 :
 "bg-white/30"
 }
+
 `
 
 }
@@ -348,11 +496,11 @@ index===activeIndex
 
 )
 
-
 }
 
 
 </div>
+
 
 
 
@@ -364,9 +512,9 @@ index===activeIndex
 onClick={onClose}
 
 
-aria-label="
-Close photo viewer
-"
+
+aria-label="Close photo viewer"
+
 
 
 className="
@@ -385,6 +533,7 @@ active:scale-90
 "
 
 
+
 style={{
 
 top:
@@ -393,11 +542,13 @@ top:
 }}
 
 
+
 >
 
 ✕
 
 </button>
+
 
 
 

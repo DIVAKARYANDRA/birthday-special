@@ -44,6 +44,10 @@ class MediaAssetBase(BaseModel):
         default=None,
         max_length=50,
     )
+    category: str | None = Field(
+        default=None,
+        max_length=50,
+    )
 
 
 class MediaAssetCreate(MediaAssetBase):
