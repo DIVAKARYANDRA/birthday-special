@@ -5,7 +5,9 @@ useQuery,
 useQueryClient
 } from "@tanstack/react-query";
 
-
+import type {
+  LetterRead
+} from "@/api/lettersApi";
 import {
 lettersApi
 } from "@/api/lettersApi";
@@ -28,14 +30,12 @@ useState("");
 const [writtenDate,setWrittenDate]=
 useState("");
 
-
-
 const letters =
-useQuery({
+useQuery<LetterRead[]>({
 
-queryKey:["letters"],
+  queryKey:["letters"],
 
-queryFn:lettersApi.list,
+  queryFn: lettersApi.list,
 
 });
 
