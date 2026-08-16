@@ -242,8 +242,7 @@ text-white/60
 
 >
 
-This memory game is locked ❤️
-
+This game is locked ❤️
 </p>
 
 
@@ -357,8 +356,7 @@ active:scale-95
 
 >
 
-Unlock Memory Match ❤️
-
+Unlock {config.title} ❤️
 </button>
 
 

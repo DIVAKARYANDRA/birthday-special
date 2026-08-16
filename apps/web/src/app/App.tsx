@@ -42,6 +42,9 @@ const LettersScene = lazy(() => import("@/scenes/letters/LettersScene"));
 const MemoryMatchScene = lazy(
   () => import("@/scenes/games/MemoryMatchScene")
 );
+const GameHubScene = lazy(
+()=>import("@/scenes/games/GameHubScene")
+);
 
 /** Ambient, in-world loading fallback — per
  * docs/02-design-system.md, Section 7: "loading indicators are
@@ -78,6 +81,10 @@ function AnimatedRoutes() {
             path="/games/memory-match" 
             element={<MemoryMatchScene />} 
             />
+            <Route
+              path="/games"
+              element={<GameHubScene />}
+              />
           <Route path="*" element={<LandingScene />} />
         </Routes>
       </Suspense>
