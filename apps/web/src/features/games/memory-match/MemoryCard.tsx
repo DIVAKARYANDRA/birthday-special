@@ -5,21 +5,15 @@ import type {
 } from "./types";
 
 
-
 interface MemoryCardProps {
-
 
   card:MemoryCardType;
 
-
   onFlip:(id:string)=>void;
-
 
   disabled:boolean;
 
 }
-
-
 
 
 
@@ -33,9 +27,7 @@ export default function MemoryCard(
 ){
 
 
-
 function handleClick(){
-
 
 if(disabled)
 return;
@@ -49,28 +41,19 @@ if(card.isMatched)
 return;
 
 
-onFlip(
-card.id
-);
-
+onFlip(card.id);
 
 }
 
 
 
-
-
 return (
-
 
 <motion.button
 
-
 type="button"
 
-
 onClick={handleClick}
-
 
 
 className="
@@ -82,29 +65,42 @@ sm:max-w-[110px]
 perspective
 "
 
+animate={
 
-animate={{
-
-scale:
 card.isMatched
+
 ?
-1.05
+
+{
+scale:1.08
+}
+
 :
-1
 
-}}
+{
+scale:1
+}
+
+}
 
 
+whileTap={
 
-whileTap={{
+!disabled
+?
+{
+scale:0.92
+}
+:
+undefined
 
-scale:
-0.92
+}
 
-}}
 
 
 >
+
+
 
 
 
@@ -141,8 +137,9 @@ card.isMatched
 
 transition={{
 
-duration:
-0.45
+duration:0.5,
+
+ease:"easeInOut"
 
 }}
 
@@ -152,11 +149,9 @@ duration:
 
 
 
-{/* FRONT - Hidden Card */}
-
+{/* FRONT */}
 
 <div
-
 
 className="
 absolute
@@ -169,9 +164,10 @@ border
 border-white/20
 bg-gradient-to-br
 from-purple-700
-to-pink-600
+via-pink-600
+to-purple-800
 text-3xl
-shadow-lg
+shadow-xl
 "
 
 style={{
@@ -193,7 +189,9 @@ backfaceVisibility:
 
 
 
-{/* BACK - Photo */}
+
+
+{/* BACK */}
 
 
 <div
@@ -207,29 +205,25 @@ rounded-2xl
 border
 border-white/30
 bg-white
-shadow-lg
+shadow-xl
 "
 
 style={{
 
-
 backfaceVisibility:
 "hidden",
-
 
 transform:
 "rotateY(180deg)"
 
-
 }}
+
 
 
 >
 
 
-
 <img
-
 
 src={
 card.imageUrl
@@ -250,19 +244,30 @@ w-full
 object-cover
 "
 
+ />
 
-
-
-/>
 
 
 
 
 {
+
 card.isMatched &&
 
 
-<div
+<motion.div
+
+
+initial={{
+opacity:0,
+scale:0.5
+}}
+
+
+animate={{
+opacity:1,
+scale:1
+}}
 
 
 className="
@@ -272,14 +277,16 @@ flex
 items-center
 justify-center
 bg-black/20
-text-3xl
+text-4xl
 "
 
 >
 
+
 ✨
 
-</div>
+
+</motion.div>
 
 
 }
@@ -292,12 +299,13 @@ text-3xl
 
 
 
+
 </motion.div>
 
 
 
-</motion.button>
 
+</motion.button>
 
 );
 

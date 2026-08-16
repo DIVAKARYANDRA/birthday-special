@@ -5,18 +5,13 @@ import type {
 } from "./gifts";
 
 
-
 interface GiftRevealProps {
-
 
   gift:GameGift;
 
-
   onContinue?:()=>void;
 
-
 }
-
 
 
 
@@ -29,22 +24,87 @@ export default function GiftReveal(
 ){
 
 
-
 return (
-
 
 <div
 
 className="
+relative
 flex
 min-h-full
 flex-1
 items-center
 justify-center
+overflow-hidden
 px-6
 "
 
 >
+
+
+{/* Floating hearts */}
+
+<div
+className="
+absolute
+inset-0
+pointer-events-none
+"
+
+>
+
+{
+
+["❤️","✨","💖","⭐"].map(
+(item,index)=>(
+
+<motion.div
+
+key={index}
+
+initial={{
+y:300,
+opacity:0
+}}
+
+animate={{
+y:-300,
+opacity:1
+}}
+
+transition={{
+duration:4,
+delay:index*0.5,
+repeat:Infinity
+}}
+
+className="
+absolute
+text-3xl
+"
+
+style={{
+
+left:`${20 + index*20}%`
+
+}}
+
+>
+
+{item}
+
+</motion.div>
+
+)
+
+)
+
+}
+
+</div>
+
+
+
 
 
 <motion.div
@@ -54,7 +114,7 @@ initial={{
 
 opacity:0,
 
-scale:0.85
+scale:0.8
 
 }}
 
@@ -70,13 +130,15 @@ scale:1
 
 transition={{
 
-duration:0.6
+duration:0.7
 
 }}
 
 
 
 className="
+relative
+z-10
 w-full
 max-w-sm
 rounded-3xl
@@ -85,7 +147,7 @@ border-white/20
 bg-white/10
 p-8
 text-center
-backdrop-blur-lg
+backdrop-blur-xl
 "
 
 >
@@ -98,15 +160,10 @@ backdrop-blur-lg
 animate={{
 
 rotate:[
-
 0,
-
-10,
-
--10,
-
+12,
+-12,
 0
-
 ]
 
 }}
@@ -114,7 +171,7 @@ rotate:[
 
 transition={{
 
-duration:1,
+duration:1.5,
 
 repeat:Infinity,
 
@@ -123,10 +180,9 @@ repeatDelay:2
 }}
 
 
-
 className="
-mb-5
-text-6xl
+mb-4
+text-7xl
 "
 
 >
@@ -142,17 +198,48 @@ text-6xl
 <h1
 
 className="
-mb-3
 font-display
-text-2xl
+text-3xl
+font-semibold
 text-white
 "
 
 >
 
-Congratulations ❤️
+Journey Completed ❤️
 
 </h1>
+
+
+
+
+<p
+
+className="
+mt-2
+text-sm
+text-white/60
+"
+
+>
+
+You unlocked the final surprise
+
+</p>
+
+
+
+
+
+<div
+
+className="
+my-6
+h-px
+bg-white/20
+"
+
+/>
 
 
 
@@ -161,7 +248,6 @@ Congratulations ❤️
 <h2
 
 className="
-mb-4
 text-xl
 font-semibold
 text-white
@@ -181,8 +267,33 @@ text-white
 
 gift.image &&
 
+<motion.img
 
-<img
+
+initial={{
+
+opacity:0,
+
+scale:0.8
+
+}}
+
+
+animate={{
+
+opacity:1,
+
+scale:1
+
+}}
+
+
+transition={{
+
+delay:0.3
+
+}}
+
 
 
 src={
@@ -197,17 +308,15 @@ gift.title
 
 className="
 mx-auto
-mb-5
-h-48
-w-48
+mt-5
+h-52
+w-52
 rounded-2xl
 object-cover
-shadow-xl
+shadow-2xl
 "
 
-
 />
-
 
 }
 
@@ -219,7 +328,7 @@ shadow-xl
 <p
 
 className="
-mb-6
+mt-5
 text-sm
 leading-relaxed
 text-white/70
@@ -235,12 +344,12 @@ text-white/70
 
 
 
-
 <div
 
 className="
-rounded-xl
-bg-white/5
+mt-6
+rounded-2xl
+bg-white/10
 p-4
 "
 
@@ -250,13 +359,14 @@ p-4
 <p
 
 className="
-text-xs
-text-white/50
+text-sm
+font-semibold
+text-white
 "
 
 >
 
-Your mission ❤️
+🎁 Your reward is unlocked
 
 </p>
 
@@ -264,19 +374,20 @@ Your mission ❤️
 <p
 
 className="
-mt-1
-text-sm
-text-white
+mt-2
+text-xs
+text-white/60
 "
 
 >
 
-Take a screenshot and send it to me 🎁
+Take a screenshot and send it to me ❤️
 
 </p>
 
 
 </div>
+
 
 
 
@@ -299,7 +410,9 @@ w-full
 rounded-xl
 bg-purple-700
 py-3
+font-medium
 text-white
+transition
 active:scale-95
 "
 
@@ -314,15 +427,11 @@ Continue Journey ❤️
 
 
 
-
-
 </motion.div>
 
 
 </div>
 
-
 );
-
 
 }

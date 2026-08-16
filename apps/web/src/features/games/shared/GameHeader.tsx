@@ -2,60 +2,99 @@ import type { ReactNode } from "react";
 
 interface GameHeaderProps {
 
-level:number;
+  level:number;
 
-totalScore:number;
+  totalScore:number;
 
-onReset:()=>void;
+  onReset:()=>void;
 
-music:ReactNode;
+  music:ReactNode;
 
 }
 
+
 export default function GameHeader(
 {
-level,
-totalScore,
-onReset,
-music
+ level,
+ totalScore,
+ onReset,
+ music
 
 }:GameHeaderProps
 ){
+
+
+const progress =
+Math.min(
+(level / 10) * 100,
+100
+);
+
+
 
 return (
 
 <div
 className="
 mb-8
-text-center
 text-white
 "
 >
 
+
+{/* Top controls */}
+
 <div
 className="
 flex
-justify-between
 items-center
-mb-4
+justify-between
+mb-5
 "
 >
 
+
 <div>
-
 {music}
-
 </div>
 
+
+
+<div
+className="
+text-center
+"
+>
 
 <h1
 className="
 text-2xl
 font-semibold
+tracking-wide
 "
 >
+
 ❤️ Memory Match
+
 </h1>
+
+
+<p
+className="
+mt-1
+text-xs
+text-white/50
+"
+>
+
+A journey of memories
+
+</p>
+
+
+</div>
+
+
 
 
 <button
@@ -67,7 +106,13 @@ rounded-full
 bg-white/10
 px-3
 py-2
+text-lg
+transition
+active:scale-90
 "
+
+aria-label="Reset game"
+
 >
 
 🔄
@@ -75,29 +120,74 @@ py-2
 </button>
 
 
+
 </div>
 
 
 
-<p
+
+
+{/* Level */}
+
+<div
 className="
-text-sm
-text-white/60
+rounded-2xl
+bg-white/10
+p-4
+backdrop-blur-md
 "
 >
-
-Level {level} / 10
-
-</p>
 
 
 <div
 className="
+flex
+justify-between
+text-sm
+"
+
+>
+
+<span
+className="
+text-white/70
+"
+>
+
+Level
+
+</span>
+
+
+<span
+className="
+font-semibold
+"
+>
+
+{level} / 10
+
+</span>
+
+
+</div>
+
+
+
+
+
+{/* Progress */}
+
+<div
+
+className="
 mt-3
 h-2
+overflow-hidden
 rounded-full
 bg-white/20
 "
+
 >
 
 <div
@@ -105,30 +195,62 @@ bg-white/20
 className="
 h-full
 rounded-full
-bg-purple-500
+bg-purple-400
+transition-all
+duration-700
 "
 
 style={{
-width:`${level*10}%`
+width:`${progress}%`
 }}
 
 />
 
+
 </div>
+
+
+
+
+
+
+<div
+className="
+mt-4
+text-center
+"
+>
 
 
 <p
 className="
-mt-4
-text-xl
-font-semibold
+text-xs
+text-white/50
 "
 >
 
-Total Score:
+🏆 Love Points
+
+</p>
+
+
+<p
+className="
+text-2xl
+font-bold
+"
+>
+
 {totalScore} ❤️
 
 </p>
+
+
+</div>
+
+
+</div>
+
 
 
 </div>
