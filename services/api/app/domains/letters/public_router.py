@@ -8,6 +8,8 @@ from app.domains.letters.models import Letter
 from app.domains.letters.enums import LetterStatus
 
 
+from fastapi import HTTPException
+
 router = APIRouter()
 
 
@@ -40,3 +42,38 @@ def get_public_letters(
         }
         for letter in letters
     ]
+
+
+
+@router.get("/{letter_id}")
+def get_public_letter(
+    letter_id: uuid.UUID,
+    db: Session = Depends(get_db),
+):
+
+    letter = (
+        db.query(Letter)
+        .filter(
+            Letter.id == letter_id,
+            Letter.status == LetterStatus.PUBLISHED
+        )
+        .first()
+    )
+
+
+    if not letter:
+        raise HTTPException(
+            status_code=404,
+            detail="Letter not found"
+        )
+
+
+    return {
+        "id": str(letter.id),
+        "title": letter.title,
+        "body": letter.body,
+        "written_date":
+            str(letter.written_date)
+            if letter.written_date
+            else None
+    }

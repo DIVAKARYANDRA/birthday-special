@@ -31,6 +31,7 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import SceneTransition from "@/components/global/SceneTransition";
 import LandingScene from "@/scenes/landing/LandingScene";
 import BackgroundMusicPlayer from "@/features/audio/BackgroundMusicPlayer";
+import LetterDetailScene from "@/scenes/letters/LetterDetailScene";
 
 const IntroSequence = lazy(() => import("@/scenes/landing/IntroSequence"));
 const WorldMapScene = lazy(() => import("@/scenes/world-map/WorldMapScene"));
@@ -67,6 +68,10 @@ function AnimatedRoutes() {
           <Route path="/timeline" element={<TimelineScene />} />
           <Route path="/gallery" element={<GalleryScene />} />
           <Route path="/letters" element={<LettersScene />} />
+          <Route
+            path="/letters/:id"
+            element={<LetterDetailScene />}
+            />
           <Route path="/coming-soon" element={<ComingSoonScene />} />
           <Route path="*" element={<LandingScene />} />
         </Routes>
