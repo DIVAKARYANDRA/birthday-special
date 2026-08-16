@@ -30,7 +30,12 @@ const LOCATIONS: { id: WorldMapLocationId; label: string; emoji: string; to: str
   { id: "timeline-train", label: "Timeline Train", emoji: "🚂", to: "/timeline" },
   { id: "love-letters", label: "Love Letters", emoji: "💌", to: "/letters" },
   { id: "gallery", label: "Gallery", emoji: "📷", to: "/gallery" },
-  { id: "game-zone", label: "Game Zone", emoji: "🎮", to: "/coming-soon" },
+  {
+    id: "game-zone",
+    label: "Game Zone",
+    emoji: "🎮",
+    to: "/games/memory-match"
+  },
   { id: "birthday-castle", label: "Birthday Castle", emoji: "🏰", to: "/coming-soon" },
   { id: "secret-room", label: "Secret Room", emoji: "🗝️", to: "/coming-soon" },
 ];

@@ -52,22 +52,32 @@ def get_intro_images(
 
     return [
         {
-            "id": str(asset.id),
+        "id":str(asset.id),
 
-            "url": build_cloudinary_url(
-                asset.external_reference
-            ),
+        "url":build_cloudinary_url(
+        asset.external_reference
+        ),
 
-            "title": asset.original_filename,
+        "title":asset.original_filename,
 
-            "alt_text": asset.alt_text,
+        "alt_text":asset.alt_text,
 
-            "display_order":
-                asset.display_order,
+        "category":asset.category,
+
+        "usage":asset.usage,
+
+        "featured":asset.is_featured,
+
+        "created_at":
+        asset.created_at.isoformat()
+        if asset.created_at
+        else None,
+
+        "display_order":
+        asset.display_order,
         }
-
         for asset in assets
-    ]
+        ]
 
 
 
@@ -86,8 +96,12 @@ def get_gallery_images(
             MediaAsset.media_type ==
             MediaType.IMAGE,
 
-            MediaAsset.usage ==
-            "gallery",
+            MediaAsset.usage.in_(
+                    [
+                        "gallery",
+                        "game",
+                    ]
+                ),
 
             MediaAsset.is_visible.is_(True),
 
@@ -105,7 +119,7 @@ def get_gallery_images(
 
     return [
 
-        {
+    {
 
         "id":
         str(asset.id),
@@ -113,7 +127,7 @@ def get_gallery_images(
 
         "url":
         build_cloudinary_url(
-        asset.external_reference
+            asset.external_reference
         ),
 
 
@@ -127,6 +141,10 @@ def get_gallery_images(
 
         "category":
         asset.category,
+
+
+        "usage":
+        asset.usage,
 
 
         "caption":
@@ -143,11 +161,12 @@ def get_gallery_images(
         if asset.created_at
         else None,
 
+
         "display_order":
         asset.display_order,
 
-        }
+    }
 
-        for asset in assets
+    for asset in assets
 
-        ]
+]

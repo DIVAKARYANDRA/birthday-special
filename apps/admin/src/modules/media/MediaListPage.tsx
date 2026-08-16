@@ -30,6 +30,10 @@ const mediaUsages = [
     label: "Gallery",
   },
   {
+ value:"game",
+ label:"Game Images"
+},
+  {
     value: "background",
     label: "Background",
   },
@@ -238,6 +242,70 @@ useState("");
                 </option>
               ))}
             </select>
+
+           {
+usage === "game" && (
+
+<>
+
+<label className="mt-4 block">
+
+Game Category
+
+</label>
+
+
+<select
+
+value={category}
+
+onChange={(e)=>
+setCategory(e.target.value)
+}
+
+
+className="
+w-full
+rounded-md
+border
+p-2
+"
+
+>
+
+
+<option value="">
+Select Game
+</option>
+
+
+<option value="memory-match">
+Memory Match
+</option>
+
+
+<option value="jigsaw">
+Jigsaw Puzzle
+</option>
+
+
+<option value="hidden-objects">
+Hidden Objects
+</option>
+
+
+<option value="relationship-quiz">
+Relationship Quiz
+</option>
+
+
+</select>
+
+
+</>
+
+)
+}
 
             <p className="mt-1 text-xs text-gray-400">
               Choose where this media should be
