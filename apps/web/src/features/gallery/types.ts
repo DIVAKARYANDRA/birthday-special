@@ -4,16 +4,12 @@ export interface GalleryPhoto {
 
   url:string;
 
-  title:string | null;
+  title:string|null;
 
-  alt_text:string | null;
+  alt_text:string|null;
 
   caption:string;
 
   rotationDeg:number;
-
-  placeholderColor?:string;
-
-  placeholderEmoji?:string;
 
 }

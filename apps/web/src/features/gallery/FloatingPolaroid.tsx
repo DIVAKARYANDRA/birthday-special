@@ -23,7 +23,8 @@ export default function FloatingPolaroid(
 
 const [flipped,setFlipped]=
 useState(false);
-
+const [imageError,setImageError]=useState(false);
+const [dragging,setDragging]=useState(false);
 
 const reducedMotion =
 useReducedMotion();
@@ -33,6 +34,20 @@ useReducedMotion();
 return (
 
 <motion.div
+
+drag
+
+onDragStart={()=>
+setDragging(true)
+}
+
+onDragEnd={()=>
+setTimeout(
+()=>setDragging(false),
+100
+)
+}
+
 
 className="
 relative
@@ -86,6 +101,19 @@ animate={
 
 <motion.div
 
+drag
+
+onDragStart={()=>
+setDragging(true)
+}
+
+onDragEnd={()=>
+setTimeout(
+()=>setDragging(false),
+100
+)
+}
+
 
 className="
 relative
@@ -111,49 +139,43 @@ duration:0.5
 }}
 
 
-onClick={()=>
-setFlipped(
-value=>!value
-)
+onClick={()=>{
+if(!dragging){
+ setFlipped(
+ value=>!value
+ );
 }
-
+}}
 
 
 >
 
 
 {/* FRONT */}
+{
+imageError ? (
 
 <div
-
 className="
-absolute
-inset-0
-rounded-sm
-border-4
-border-b-8
-border-white
-bg-white
-p-2
-shadow-xl
-overflow-hidden
+flex
+h-full
+w-full
+items-center
+justify-center
+bg-purple-100
+text-4xl
 "
-
-
-style={{
-backfaceVisibility:
-"hidden"
-}}
-
 >
+📸
+</div>
 
+)
+
+:
 
 <img
 
-src={
-photo.url
-}
-
+src={photo.url}
 
 alt={
 photo.alt_text ??
@@ -161,9 +183,11 @@ photo.title ??
 "Memory"
 }
 
-
 loading="lazy"
 
+onError={()=>
+setImageError(true)
+}
 
 className="
 h-full
@@ -174,9 +198,7 @@ rounded-sm
 
 />
 
-
-</div>
-
+}
 
 
 
@@ -245,9 +267,7 @@ onClick={(e)=>{
 
 e.stopPropagation();
 
-onOpen(
-photo.id
-);
+onOpen();
 
 }}
 
