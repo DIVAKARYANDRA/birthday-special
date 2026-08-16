@@ -408,11 +408,50 @@ text-white
 
 </h1>
 
+{
+loading &&
 
+<p
+
+className="
+text-center
+text-white/60
+"
+
+>
+
+Opening hidden memories... ❤️
+
+</p>
+
+}
+
+{
+!loading
+&&
+images.length===0
+&&
+
+<p
+
+className="
+text-center
+text-white/60
+"
+
+>
+
+No hidden object memories added yet ❤️
+
+</p>
+
+}
 
 
 
 {
+!loading
+&&
 currentImage &&
 
 <HiddenObjectsBoard
