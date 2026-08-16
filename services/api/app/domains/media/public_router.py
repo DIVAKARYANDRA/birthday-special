@@ -143,7 +143,6 @@ def get_gallery_images(
         if asset.created_at
         else None,
 
-
         "display_order":
         asset.display_order,
 

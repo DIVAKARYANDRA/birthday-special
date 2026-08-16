@@ -49,13 +49,14 @@ interface GalleryResponse {
   alt_text:string|null;
 
   category:string|null;
+
   featured:boolean;
 
   display_order:number;
 
+  created_at:string;
+
 }
-
-
 
 
 export default function GalleryScene(){
@@ -118,7 +119,6 @@ const data:
 GalleryResponse[] =
 await response.json();
 
-
 const mappedPhotos:
 GalleryPhoto[] =
 
@@ -130,30 +130,29 @@ data.map(
 id:
 photo.id,
 
-
 url:
 photo.url,
-
 
 title:
 photo.title,
 
-
 alt_text:
 photo.alt_text,
 
-
 category:
- photo.category ?? null,
+photo.category ?? null,
 
 featured:
- photo.featured ?? false,
+photo.featured ?? false,
+
+created_at:
+photo.created_at,
+
 
 caption:
 photo.alt_text ??
 photo.title ??
 "Beautiful memory",
-
 
 
 rotationDeg:
@@ -166,8 +165,6 @@ rotationDeg:
 ][
 index % 5
 ],
-
-
 
 }
 
