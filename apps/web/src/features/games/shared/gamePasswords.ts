@@ -20,6 +20,16 @@ export const GAME_PASSWORDS: Record<string, GamePasswordConfig> = {
 
   },
 
+  "story-puzzle":{
+
+    password:"PUZZLE000",
+
+    title:"Our Story Puzzle",
+
+    hint:"Put our memories back together ❤️"
+
+    }
+
 
   "guess-memory": {
 

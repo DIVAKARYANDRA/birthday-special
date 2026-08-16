@@ -23,7 +23,7 @@ const GAMES = [
  emoji:"🧩",
  description:"Put our memories back together",
  route:"/games/story-puzzle",
- available:false
+ available:true
 },
 
 
@@ -274,7 +274,7 @@ game.available
 
 ?
 
-"Play ❤️"
+"Play Now ❤️"
 
 :
 

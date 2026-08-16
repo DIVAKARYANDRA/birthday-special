@@ -45,6 +45,23 @@ Record<string,GameGift>
 
   },
 
+  "story-puzzle":{
+
+
+  title:
+  "Our Story Rebuilt 🧩❤️",
+
+
+  message:
+  "You successfully put our memories back together. A special surprise is waiting for you ❤️ Take a screenshot and send it to me 🎁",
+
+
+  emoji:
+  "🧩"
+
+
+},
+
 
 
   "guess-memory":{

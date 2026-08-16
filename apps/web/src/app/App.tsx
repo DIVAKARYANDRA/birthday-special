@@ -45,7 +45,9 @@ const MemoryMatchScene = lazy(
 const GameHubScene = lazy(
 ()=>import("@/scenes/games/GameHubScene")
 );
-
+const StoryPuzzleScene = lazy(
+()=>import("@/scenes/games/StoryPuzzleScene")
+);
 /** Ambient, in-world loading fallback — per
  * docs/02-design-system.md, Section 7: "loading indicators are
  * ambient/thematic... rather than generic spinners." A minimal shimmer
@@ -84,6 +86,10 @@ function AnimatedRoutes() {
             <Route
               path="/games"
               element={<GameHubScene />}
+              />
+            <Route
+              path="/games/story-puzzle"
+              element={<StoryPuzzleScene />}
               />
           <Route path="*" element={<LandingScene />} />
         </Routes>
