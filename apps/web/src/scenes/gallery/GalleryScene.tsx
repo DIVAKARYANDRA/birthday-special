@@ -27,11 +27,6 @@ import type {
 } from "@/features/gallery/types";
 
 
-import {
-  staggerContainer,
-} from "@/animations/motionPrimitives";
-
-
 
 const API =
   import.meta.env.VITE_API_BASE_URL ?? "";
