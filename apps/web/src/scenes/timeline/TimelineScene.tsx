@@ -21,30 +21,158 @@
  * scrolls, functioning as a lightweight table of contents without a
  * separate nav UI competing for the small viewport.
  */
-import { useState } from "react";
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
-
+import TrainStation from "@/features/timeline/TrainStation";
 import SceneLayout from "@/components/global/SceneLayout";
 import Breadcrumb from "@/components/ui/Breadcrumb";
-import { DEMO_CHAPTERS } from "@/features/timeline/data";
+import {useEffect,useState} from "react";
+import {
+ getTimeline,
+ type TimelineChapter,
+ type TimelineStation
+} from "@/api/timelineApi";
 import { EASE_OUT } from "@/animations/motionPrimitives";
+import StationModal from "@/features/timeline/StationModal";
 
 export default function TimelineScene() {
-  const [activeChapter, setActiveChapter] = useState(DEMO_CHAPTERS[0]?.title ?? "");
+  const [chapters,setChapters] =
+useState<TimelineChapter[]>([]);
+
+
+const [activeChapter,setActiveChapter] =
+useState("");
+const [selectedStation,setSelectedStation]
+=
+useState<TimelineStation | null>(null);
+const [loading,setLoading]
+=
+useState(true);
+
+useEffect(()=>{
+
+ async function load(){
+
+ try {
+
+ const data =
+ await getTimeline();
+
+
+ if(data.length>0){
+
+  setChapters(
+    data[0].chapters
+  );
+
+  setActiveChapter(
+    data[0].chapters[0]?.title ?? ""
+  );
+
+ }
+
+ }
+ finally{
+
+ setLoading(false);
+
+ }
+
+}
+
+
+ void load();
+
+},[]);
 
   return (
     <SceneLayout mode="twilight">
       <Breadcrumb label="Timeline Train" />
+
+      <motion.div
+
+initial={{
+y:-30,
+opacity:0
+}}
+
+animate={{
+y:0,
+opacity:1
+}}
+
+className="
+text-center
+mb-6
+"
+
+>
+
+<div
+className="
+text-5xl
+animate-pulse
+"
+>
+🚂
+</div>
+
+
+<h1
+className="
+font-display
+text-2xl
+text-white
+"
+
+>
+
+Our Journey
+
+</h1>
+
+
+<p
+className="
+text-white/50
+text-sm
+"
+
+>
+
+Every station holds a memory
+
+</p>
+
+
+</motion.div>
 
       <div className="sticky top-0 z-10 -mt-1 bg-gradient-to-b from-[#1d1533] to-transparent px-5 pb-3 pt-2 text-center">
         <p className="text-xs uppercase tracking-[0.3em] text-white/40">Now Arriving</p>
         <h1 className="font-display text-lg text-white">{activeChapter}</h1>
       </div>
 
+      if(loading){
+
+return (
+
+<SceneLayout mode="twilight">
+
+<div className="flex h-full items-center justify-center text-white">
+
+Loading our journey 🚂
+
+</div>
+
+</SceneLayout>
+
+)
+
+}
+
       <div className="flex-1 px-6 pb-8">
         <div className="relative ml-4 border-l-2 border-white/15 pl-8">
-          {DEMO_CHAPTERS.map((chapter) => (
+          {chapters.map((chapter)=>(
             <motion.section
               key={chapter.id}
               onViewportEnter={() => setActiveChapter(chapter.title)}
@@ -66,18 +194,48 @@ export default function TimelineScene() {
                       aria-hidden="true"
                       className="absolute -left-[2.55rem] flex h-8 w-8 items-center justify-center rounded-full border-2 border-white/30 bg-[#1d1533] text-sm"
                     >
-                      {station.emoji}
+                      {station.image ? "📸" : "🚉"}
                     </span>
-                    <div className="rounded-xl border border-white/10 bg-white/[0.06] px-4 py-3">
-                      <p className="text-sm font-medium text-white">{station.title}</p>
-                      <p className="text-xs text-white/50">{station.memoryTitle}</p>
-                    </div>
+                    <button
+onClick={()=>
+ setSelectedStation(station)
+}
+className="w-full text-left"
+>
+
+<TrainStation
+
+title={station.title}
+
+memoryTitle={station.memoryTitle}
+
+/>
+
+</button>
                   </motion.div>
+
+                  
                 ))}
+               
               </div>
             </motion.section>
           ))}
         </div>
+
+         {
+selectedStation &&
+
+<StationModal
+
+station={selectedStation}
+
+onClose={()=>
+setSelectedStation(null)
+}
+
+/>
+
+}
 
         <Link
           to="/memories"
