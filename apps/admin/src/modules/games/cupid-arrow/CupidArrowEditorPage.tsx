@@ -420,12 +420,17 @@ media.map(
 
 key={image.id}
 
-onClick={()=>
-setSelectedImage(image)
-}
+onClick={()=>{
+    console.log("Selected image:", image);
+    setSelectedImage(image);
+}}
 
 
-className="cursor-pointer rounded-xl border bg-white p-3"
+className={`cursor-pointer rounded-xl border bg-white p-3 ${
+    selectedImage?.id === image.id
+        ? "border-purple-600 ring-2 ring-purple-300"
+        : "border-gray-200"
+}`}
 
 >
 

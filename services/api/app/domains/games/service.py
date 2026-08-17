@@ -128,8 +128,11 @@ class CupidArrowService:
         payload:CupidArrowLevelCreate
     ):
 
+
         existing = (
-            self.db.query(CupidArrowLevel)
+            self.db.query(
+                CupidArrowLevel
+            )
             .filter(
                 CupidArrowLevel.level == payload.level
             )
@@ -149,25 +152,25 @@ class CupidArrowService:
 
             level=payload.level,
 
-            target_type=payload.target_type,
+            target_type="emoji",
 
-            target_emoji=payload.target_emoji,
+            target_emoji="❤️",
 
-            target_name=payload.target_name,
+            target_name=f"Level {payload.level} Target",
 
-            target_size=payload.target_size,
+            target_size=10,
 
-            start_x=payload.start_x,
+            start_x=50,
 
-            start_y=payload.start_y,
+            start_y=30,
 
-            velocity_x=payload.velocity_x,
+            velocity_x=0.4,
 
-            velocity_y=payload.velocity_y,
+            velocity_y=0,
 
-            points=payload.points,
+            points=100,
 
-            is_face_level=payload.is_face_level
+            is_face_level=False
 
         )
 

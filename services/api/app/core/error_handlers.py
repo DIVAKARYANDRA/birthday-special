@@ -78,7 +78,9 @@ def register_exception_handlers(app: FastAPI) -> None:
                 "request_validation_error",
                 "The request could not be validated.",
                 request,
-                details={"errors": exc.errors(include_url=False)},
+                details={
+                        "errors": exc.errors()
+                    },
             ),
         )
 

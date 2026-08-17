@@ -51,26 +51,6 @@ class CupidArrowLevelCreate(BaseModel):
 
     level: int
 
-    target_type: str = "emoji"
-
-    target_emoji: str | None = None
-
-    target_name: str
-
-    target_size: float = 10
-
-    start_x: float = 50
-
-    start_y: float = 30
-
-    velocity_x: float = 0.4
-
-    velocity_y: float = 0
-
-    points: int = 100
-
-    is_face_level: bool = False
-
 
 
 
