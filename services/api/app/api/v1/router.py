@@ -38,6 +38,9 @@ from app.domains.audio.public_router import router as audio_public_router
 from app.domains.memories.public_router import router as memories_public_router
 from app.domains.timeline.public_router import router as timeline_public_router
 from app.domains.letters import public_router as letters_public_router
+from app.api.v1.experience import hidden_objects
+from app.domains.games import router as games_router
+
 api_router = APIRouter()
 
 api_router.include_router(platform.router)
@@ -70,6 +73,11 @@ api_router.include_router(
     tags=["experience:media"],
 )
 api_router.include_router(
+    games_router.router,
+    prefix="/admin/games",
+    tags=["admin:games"]
+)
+api_router.include_router(
     memories_public_router,
     prefix="/experience/memories",
     tags=["experience:memories"],
@@ -83,6 +91,11 @@ api_router.include_router(
     letters_public_router.router,
     prefix="/experience/letters",
     tags=["experience:letters"],
+)
+api_router.include_router(
+    hidden_objects.router,
+    prefix="/experience/hidden-objects",
+    tags=["experience:hidden-objects"]
 )
 # ------------------------------------------------------------------
 # Future domain router registration (uncomment as each is implemented,

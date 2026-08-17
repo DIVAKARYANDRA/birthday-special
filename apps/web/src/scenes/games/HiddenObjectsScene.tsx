@@ -26,18 +26,10 @@ import {
 
 import HiddenObjectsBoard from "@/features/games/hidden-objects/HiddenObjectsBoard";
 
-import {
-  DEFAULT_HIDDEN_TARGETS,
-  POINTS_PER_OBJECT,
-} from "@/features/games/hidden-objects/levels";
 
 import {
  useEffect,
 } from "react";
-
-import type {
- HiddenObjectImage,
-} from "@/features/games/hidden-objects/types";
 
 
 
@@ -50,12 +42,11 @@ const gameId =
 
 
 const [
-images,
-setImages
+currentLevelData,
+setCurrentLevelData
 ]
 =
-useState<HiddenObjectImage[]>([]);
-
+useState<any>(null);
 
 const [
 loading,
@@ -94,11 +85,10 @@ setCompleted
 useState(false);
 
 
-
 useEffect(()=>{
 
 
-async function loadImages(){
+async function loadHiddenLevel(){
 
 
 try{
@@ -106,89 +96,44 @@ try{
 
 const response =
 await fetch(
-`${import.meta.env.VITE_API_BASE_URL ?? ""}/api/v1/experience/media/gallery`
+`${import.meta.env.VITE_API_BASE_URL ?? ""}/api/v1/experience/hidden-objects/${level}`
 );
+
+
+if(!response.ok){
+
+throw new Error(
+"Unable to load hidden object level"
+);
+
+}
 
 
 const data =
 await response.json();
 
 
-
-const gameImages =
-data
-.filter(
-(item:any)=>
-
-item.usage==="game"
-
-&&
-
-item.category==="hidden-objects"
-
-)
-.sort(
-(a:any,b:any)=>
-(a.display_order ?? 999)
--
-(b.display_order ?? 999)
-);
-
-
-
-setImages(
-
-gameImages.map(
-(item:any)=>(
-
-{
-
-id:item.id,
-
-url:item.url,
-
-title:item.title,
-
-alt_text:item.alt_text,
-
-display_order:item.display_order
-
-}
-
-)
-
-)
-
-);
+setCurrentLevelData(data);
 
 
 }
-
 catch(error){
 
 console.error(
-"Hidden objects loading failed",
+"Hidden object level loading failed",
 error
 );
 
-
-}
-
-finally{
-
-setLoading(false);
-
 }
 
 
 }
 
 
-void loadImages();
+void loadHiddenLevel();
 
 
-},[]);
-
+},[level]);
 
 
 function handleLevelComplete(
@@ -275,7 +220,7 @@ window.location.reload();
 
 
 const currentImage =
-images[level - 1] ?? null;
+currentLevelData?.image ?? null;
 
 const hasLevelImage =
 currentImage !== null;
@@ -425,7 +370,7 @@ Opening hidden memories... ❤️
 {
 !loading
 &&
-images.length===0
+!currentLevelData?.image
 &&
 
 <p
@@ -444,11 +389,12 @@ No hidden object memories added yet ❤️
 }
 
 
-
 {
 !loading
 &&
-hasLevelImage
+currentLevelData?.image
+&&
+currentLevelData?.targets?.length > 0
 &&
 
 <HiddenObjectsBoard
@@ -457,16 +403,14 @@ image={
 currentImage
 }
 
-
 targets={
-DEFAULT_HIDDEN_TARGETS
+currentLevelData.targets
 }
 
 
 pointsPerObject={
-POINTS_PER_OBJECT
+currentLevelData.pointsPerObject
 }
-
 
 onLevelComplete={
 handleLevelComplete

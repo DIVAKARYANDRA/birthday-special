@@ -1,7 +1,45 @@
-"""
-games — Pydantic request/response schema placeholder.
+import uuid
 
-Domain purpose: Universal mini-game backend — Game/GameLevel catalog, GameProgress tracking, score submission validation.
+from pydantic import BaseModel
 
-No schemas are defined yet. Will hold this domain's API Layer request/response shapes once implemented, per docs/04-backend-architecture.md, Section 1.
-"""
+
+
+class HiddenObjectTargetCreate(BaseModel):
+
+    media_id: uuid.UUID
+
+    level: int
+
+    name: str
+
+    emoji: str
+
+    x_position: float
+
+    y_position: float
+
+    radius: float = 8
+
+
+
+class HiddenObjectTargetRead(BaseModel):
+
+    id: uuid.UUID
+
+    media_id: uuid.UUID
+
+    level: int
+
+    name: str
+
+    emoji: str
+
+    x_position: float
+
+    y_position: float
+
+    radius: float
+
+
+    class Config:
+        from_attributes = True

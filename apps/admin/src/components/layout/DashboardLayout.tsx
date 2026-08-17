@@ -22,6 +22,10 @@ const NAV_ITEMS = [
   { to: "/quotes", label: "Quotes" },
   { to: "/achievements", label: "Achievements" },
   { to: "/unlocks", label: "Unlock Conditions" },
+  { 
+    to: "/games/hidden-objects",
+    label: "Hidden Objects 🔍"
+  },
   
 ];
 

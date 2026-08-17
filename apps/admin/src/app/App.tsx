@@ -29,6 +29,8 @@ import QuotesListPage from "@/modules/quotes/QuotesListPage";
 import TimelineListPage from "@/modules/timeline/TimelineListPage";
 import UnlocksListPage from "@/modules/unlock-conditions/UnlocksListPage";
 import { useAuthStore } from "@/stores/authStore";
+import HiddenObjectEditorPage 
+from "@/modules/games/hidden-objects/HiddenObjectEditorPage";
 
 function useSessionHydration() {
   useEffect(() => {
@@ -56,6 +58,10 @@ export default function App() {
           <Route element={<DashboardLayout />}>
             <Route path="/" element={<DashboardPage />} />
             <Route path="/media" element={<MediaListPage />} />
+            <Route
+              path="/games/hidden-objects"
+              element={<HiddenObjectEditorPage />}
+              />
             <Route path="/memories" element={<MemoriesListPage />} />
             <Route path="/timeline" element={<TimelineListPage />} />
             <Route path="/letters" element={<LettersListPage />} />

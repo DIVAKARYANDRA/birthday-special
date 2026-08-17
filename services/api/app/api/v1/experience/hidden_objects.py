@@ -2,8 +2,11 @@ from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 
 from app.db.session import get_db
+
 from app.domains.media.models import MediaAsset
 from app.domains.games.models import HiddenObjectTarget
+
+from app.domains.media.public_router import build_cloudinary_url
 
 
 router = APIRouter()
@@ -13,7 +16,7 @@ router = APIRouter()
 @router.get("/{level}")
 def get_hidden_object_level(
     level:int,
-    db:Session=Depends(get_db)
+    db:Session = Depends(get_db)
 ):
 
 
@@ -24,62 +27,104 @@ def get_hidden_object_level(
         .filter(
             HiddenObjectTarget.level == level
         )
+        .order_by(
+            HiddenObjectTarget.id.asc()
+        )
         .all()
     )
 
 
     if not targets:
-        return None
-
-
-
-    media_id = targets[0].media_id
+        return {
+            "level":level,
+            "image":None,
+            "targets":[]
+        }
 
 
 
     media = (
-        db.query(MediaAsset)
+        db.query(
+            MediaAsset
+        )
         .filter(
-            MediaAsset.id == media_id
+            MediaAsset.id == targets[0].media_id
         )
         .first()
     )
 
 
+    if not media:
+        return {
+            "level":level,
+            "image":None,
+            "targets":[]
+        }
+
+
 
     return {
+
 
         "level":level,
 
 
         "image":{
+
             "id":str(media.id),
 
-            "url":media.url,
+            "url":
+            build_cloudinary_url(
+                media.external_reference
+            ),
 
-            "title":media.original_filename
+            "title":
+            media.original_filename,
+
+            "alt_text":
+            media.alt_text
+
         },
+
 
 
         "targets":[
 
+
             {
-                "id":str(item.id),
 
-                "name":item.name,
+                "id":
+                str(target.id),
 
-                "emoji":item.emoji,
 
-                "x":item.x,
+                "name":
+                target.name,
 
-                "y":item.y,
 
-                "radius":item.radius,
+                "emoji":
+                target.emoji,
 
-                "found":False
+
+                "x":
+                target.x_position,
+
+
+                "y":
+                target.y_position,
+
+
+                "radius":
+                target.radius,
+
+
+                "found":
+                False
+
             }
 
-            for item in targets
+
+            for target in targets
+
         ],
 
 
