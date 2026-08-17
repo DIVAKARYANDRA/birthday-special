@@ -184,11 +184,6 @@ class CupidArrowService:
 
         return level
 
-
-
-
-
-
     def list_levels(
         self
     ):
@@ -262,6 +257,7 @@ class CupidArrowTargetService:
 
     def create_target(
         self,
+        level_id,
         payload:CupidArrowTargetCreate
     ):
 
@@ -270,7 +266,7 @@ class CupidArrowTargetService:
 
             id=str(uuid.uuid4()),
 
-            level_id=payload.level_id,
+            level_id=level_id,
 
             media_id=payload.media_id,
 

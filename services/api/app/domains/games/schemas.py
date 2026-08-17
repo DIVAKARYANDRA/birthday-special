@@ -92,8 +92,6 @@ class CupidArrowLevelRead(BaseModel):
 
 class CupidArrowTargetCreate(BaseModel):
 
-    level_id: uuid.UUID
-
     media_id: uuid.UUID | None = None
 
     target_type: str = "emoji"
