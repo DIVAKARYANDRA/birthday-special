@@ -186,14 +186,22 @@ export default function HiddenObjectEditorPage() {
 
                 onClick={()=>{
 
-                  setSelectedImage(image);
+                  setSelectedImage({
+
+                  ...image,
+
+                  url:getCloudinaryUrl(
+                    image.external_reference
+                  )
+
+                  });
+
 
                   setExistingTargets([]);
 
                   setSelectedPosition(null);
 
-                }}
-
+                  }}
 
                 className={`
                 rounded-xl
