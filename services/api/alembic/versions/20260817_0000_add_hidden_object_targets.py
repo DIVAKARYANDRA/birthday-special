@@ -8,6 +8,8 @@ Create Date: 2026-08-17
 from alembic import op
 import sqlalchemy as sa
 
+from sqlalchemy.dialects import postgresql
+
 
 revision = "add_hidden_object_targets"
 

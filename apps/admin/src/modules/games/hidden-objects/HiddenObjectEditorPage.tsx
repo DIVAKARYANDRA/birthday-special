@@ -207,13 +207,15 @@ key={
 image.id
 }
 
-onClick={()=>
-setSelectedImage(image);
+onClick={() => {
 
-setExistingTargets([]);
+  setSelectedImage(image);
 
-setSelectedPosition(null);
-}
+  setExistingTargets([]);
+
+  setSelectedPosition(null);
+
+}}
 
 className={`
 rounded-xl
@@ -307,7 +309,7 @@ image.display_order
 
 </div>
 {
-selectedImage && 
+selectedImage && (
 
 <div
 
@@ -368,8 +370,8 @@ y
 
 />
 
-{
-existingTargets.length > 0 &&
+{ 
+existingTargets.length > 0 && (
 
 <div
 className="
@@ -477,13 +479,13 @@ Delete
 }
 
 </div>
-
+)
 }
 
 
 
 {
-selectedPosition &&
+selectedPosition &&  (
 
 <div
 
@@ -681,9 +683,13 @@ Save Object
 
 </div>
 
+)
 }
 
+
 </div>
+
+)
 
 }
 
