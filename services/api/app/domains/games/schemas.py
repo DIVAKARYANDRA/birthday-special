@@ -109,10 +109,14 @@ class CupidArrowLevelRead(BaseModel):
 
     is_face_level: bool
 
+    movement_speed: str
+
+    time_limit: int
+
+    completion_score: int
 
 
     class Config:
-
         from_attributes = True
 
 
