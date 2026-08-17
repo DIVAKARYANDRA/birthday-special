@@ -114,6 +114,7 @@ await response.json();
 
 
 setCurrentLevelData(data);
+setLoading(false);
 
 
 }
@@ -123,7 +124,7 @@ console.error(
 "Hidden object level loading failed",
 error
 );
-
+setLoading(false);
 }
 
 

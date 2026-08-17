@@ -27,14 +27,14 @@ def upgrade():
 
         sa.Column(
             "id",
-            sa.String(),
+            postgresql.UUID(as_uuid=True),
             primary_key=True
         ),
 
 
         sa.Column(
             "media_id",
-            sa.String(),
+            postgresql.UUID(as_uuid=True),
             nullable=False
         ),
 

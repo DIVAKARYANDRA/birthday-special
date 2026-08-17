@@ -208,7 +208,11 @@ image.id
 }
 
 onClick={()=>
-setSelectedImage(image)
+setSelectedImage(image);
+
+setExistingTargets([]);
+
+setSelectedPosition(null);
 }
 
 className={`
@@ -303,7 +307,7 @@ image.display_order
 
 </div>
 {
-selectedImage &&
+selectedImage && 
 
 <div
 
@@ -679,15 +683,13 @@ Save Object
 
 }
 
-
 </div>
 
 }
 
-
-
 </div>
 
+</div>
 
 );
 

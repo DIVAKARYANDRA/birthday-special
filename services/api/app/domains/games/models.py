@@ -2,7 +2,9 @@ from sqlalchemy import Column, String, Float, Integer, ForeignKey
 from sqlalchemy.orm import relationship
 
 from app.db.base import Base
+import uuid
 
+from sqlalchemy.dialects.postgresql import UUID
 
 class HiddenObjectTarget(Base):
 
@@ -10,13 +12,14 @@ class HiddenObjectTarget(Base):
 
 
     id = Column(
-        String,
-        primary_key=True
+        UUID(as_uuid=True),
+        primary_key=True,
+        default=uuid.uuid4
     )
 
 
     media_id = Column(
-        String,
+        UUID(as_uuid=True),
         ForeignKey(
             "media_assets.id"
         ),
@@ -56,5 +59,6 @@ class HiddenObjectTarget(Base):
 
     radius = Column(
         Float,
+        nullable=False,
         default=8
     )
