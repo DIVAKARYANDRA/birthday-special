@@ -39,6 +39,7 @@ from app.domains.memories.public_router import router as memories_public_router
 from app.domains.timeline.public_router import router as timeline_public_router
 from app.domains.letters import public_router as letters_public_router
 from app.api.v1.experience import hidden_objects
+from app.api.v1.experience import cupid_arrow
 from app.domains.games import router as games_router
 
 api_router = APIRouter()
@@ -96,6 +97,11 @@ api_router.include_router(
     hidden_objects.router,
     prefix="/experience/hidden-objects",
     tags=["experience:hidden-objects"]
+)
+api_router.include_router(
+    cupid_arrow.router,
+    prefix="/experience/cupid-arrow",
+    tags=["experience:cupid-arrow"]
 )
 # ------------------------------------------------------------------
 # Future domain router registration (uncomment as each is implemented,

@@ -40,6 +40,18 @@ export const GAME_PASSWORDS: Record<string, GamePasswordConfig> = {
 
 },
 
+"cupid-arrow": {
+
+  password: "CUPID777",
+
+  title:
+    "Cupid Arrow Challenge 💘",
+
+  hint:
+    "Aim carefully and hit every heart ❤️"
+
+},
+
 
   "guess-memory": {
 

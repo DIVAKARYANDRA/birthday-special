@@ -36,6 +36,15 @@ const GAMES = [
 },
 
 {
+ id:"cupid-arrow",
+ title:"Cupid Arrow Challenge",
+ emoji:"💘",
+ description:"Hit the hearts to win the game",
+ route:"/games/cupid-arrow",
+ available:true
+},
+
+{
  id:"love-quiz",
  title:"Love Quiz",
  emoji:"💌",

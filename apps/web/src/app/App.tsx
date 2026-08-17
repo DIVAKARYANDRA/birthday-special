@@ -32,6 +32,7 @@ import SceneTransition from "@/components/global/SceneTransition";
 import LandingScene from "@/scenes/landing/LandingScene";
 import BackgroundMusicPlayer from "@/features/audio/BackgroundMusicPlayer";
 import LetterDetailScene from "@/scenes/letters/LetterDetailScene";
+import CupidArrowScene from "@/scenes/games/CupidArrowScene";
 
 const IntroSequence = lazy(() => import("@/scenes/landing/IntroSequence"));
 const WorldMapScene = lazy(() => import("@/scenes/world-map/WorldMapScene"));
@@ -99,6 +100,10 @@ function AnimatedRoutes() {
               path="/games/story-puzzle"
               element={<StoryPuzzleScene />}
               />
+            <Route
+            path="/games/cupid-arrow"
+            element={<CupidArrowScene />}
+            />
 
            
           <Route path="*" element={<LandingScene />} />

@@ -31,6 +31,8 @@ import UnlocksListPage from "@/modules/unlock-conditions/UnlocksListPage";
 import { useAuthStore } from "@/stores/authStore";
 import HiddenObjectEditorPage 
 from "@/modules/games/hidden-objects/HiddenObjectEditorPage";
+import CupidArrowEditorPage
+from "@/modules/games/cupid-arrow/CupidArrowEditorPage";
 
 function useSessionHydration() {
   useEffect(() => {
@@ -62,6 +64,10 @@ export default function App() {
               path="/games/hidden-objects"
               element={<HiddenObjectEditorPage />}
               />
+            <Route
+              path="/games/cupid-arrow"
+              element={<CupidArrowEditorPage />}
+            />
             <Route path="/memories" element={<MemoriesListPage />} />
             <Route path="/timeline" element={<TimelineListPage />} />
             <Route path="/letters" element={<LettersListPage />} />

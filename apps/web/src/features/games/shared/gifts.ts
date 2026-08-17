@@ -16,9 +16,6 @@ export interface GameGift {
 }
 
 
-
-
-
 export const GAME_GIFTS:
 Record<string,GameGift>
 ={
@@ -73,6 +70,21 @@ Record<string,GameGift>
 
 },
 
+
+"cupid-arrow":{
+
+  title:
+  "Cupid Champion 💘",
+
+
+  message:
+  "You hit every heart and completed the Cupid challenge ❤️ Take a screenshot and send it to me 🎁",
+
+
+  emoji:
+  "🏹"
+
+},
 
   "guess-memory":{
 

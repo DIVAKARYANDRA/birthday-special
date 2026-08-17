@@ -26,6 +26,10 @@ const NAV_ITEMS = [
     to: "/games/hidden-objects",
     label: "Hidden Objects 🔍"
   },
+  {
+    to: "/games/cupid-arrow",
+    label: "Cupid Arrow 🏹❤️"
+  },
   
 ];
 

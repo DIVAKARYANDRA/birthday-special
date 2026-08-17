@@ -7,12 +7,19 @@ from app.db.session import get_db
 from app.domains.games.schemas import (
     HiddenObjectTargetCreate,
     HiddenObjectTargetRead,
+
+    CupidArrowLevelCreate,
+    CupidArrowLevelRead,
+
+    CupidArrowTargetCreate,
+    CupidArrowTargetRead,
 )
 
 from app.domains.games.service import (
-    HiddenObjectService
+    HiddenObjectService,
+    CupidArrowService,
+    CupidArrowTargetService,
 )
-
 
 
 router = APIRouter()
@@ -58,5 +65,87 @@ def delete_hidden_object(
 ):
 
     return HiddenObjectService(db).delete_target(
+        target_id
+    )
+
+
+@router.post(
+    "/cupid-arrow",
+    response_model=CupidArrowLevelRead
+)
+def create_cupid_arrow_level(
+    payload:CupidArrowLevelCreate,
+    db:Session=Depends(get_db)
+):
+
+    return CupidArrowService(db).create_level(
+        payload
+    )
+
+@router.get(
+    "/cupid-arrow",
+    response_model=list[CupidArrowLevelRead]
+)
+def list_cupid_arrow_levels(
+    db:Session=Depends(get_db)
+):
+
+    return CupidArrowService(db).list_levels()
+
+@router.delete(
+    "/cupid-arrow/{level_id}"
+)
+def delete_cupid_arrow_level(
+    level_id:str,
+    db:Session=Depends(get_db)
+):
+
+    return CupidArrowService(db).delete_level(
+        level_id
+    )
+
+
+@router.post(
+    "/cupid-arrow/{level_id}/targets",
+    response_model=CupidArrowTargetRead
+)
+def create_cupid_arrow_target(
+    level_id:str,
+    payload:CupidArrowTargetCreate,
+    db:Session=Depends(get_db)
+):
+
+    payload.level_id = level_id
+
+    return CupidArrowTargetService(db).create_target(
+        payload
+    )
+
+
+
+@router.get(
+    "/cupid-arrow/{level_id}/targets",
+    response_model=list[CupidArrowTargetRead]
+)
+def list_cupid_arrow_targets(
+    level_id:str,
+    db:Session=Depends(get_db)
+):
+
+    return CupidArrowTargetService(db).list_targets(
+        level_id
+    )
+
+
+
+@router.delete(
+    "/cupid-arrow/targets/{target_id}"
+)
+def delete_cupid_arrow_target(
+    target_id:str,
+    db:Session=Depends(get_db)
+):
+
+    return CupidArrowTargetService(db).delete_target(
         target_id
     )
