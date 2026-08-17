@@ -128,6 +128,18 @@ class CupidArrowService:
         payload:CupidArrowLevelCreate
     ):
 
+        existing = (
+            self.db.query(CupidArrowLevel)
+            .filter(
+                CupidArrowLevel.level == payload.level
+            )
+            .first()
+        )
+
+
+        if existing:
+            return existing
+
 
         level = CupidArrowLevel(
 
