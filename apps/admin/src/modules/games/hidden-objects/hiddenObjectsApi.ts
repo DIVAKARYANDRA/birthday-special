@@ -1,24 +1,25 @@
-import { apiClient } from "@/api/client";
+import {
+  apiRequest,
+} from "@/api/client";
 
 
 export interface HiddenObjectTarget {
 
+  id:string;
 
-    id:string;
+  media_id:string;
 
-    media_id:string;
+  level:number;
 
-    level:number;
+  name:string;
 
-    name:string;
+  emoji:string;
 
-    emoji:string;
+  x_position:number;
 
-    x_position:number;
+  y_position:number;
 
-    y_position:number;
-
-    radius:number;
+  radius:number;
 
 }
 
@@ -26,13 +27,16 @@ export interface HiddenObjectTarget {
 
 
 export async function createHiddenObjectTarget(
-payload:any
+  payload:any
 ){
 
-return apiClient.post(
-"/admin/games/hidden-objects",
-payload
-);
+  return apiRequest(
+    "/api/v1/admin/games/hidden-objects",
+    {
+      method:"POST",
+      body:payload,
+    }
+  );
 
 }
 
@@ -40,23 +44,30 @@ payload
 
 
 export async function getHiddenObjectTargets(
-mediaId:string
+  mediaId:string
 ){
 
-return apiClient.get<HiddenObjectTarget[]>(
-`/admin/games/hidden-objects/${mediaId}`
-);
+  return apiRequest<HiddenObjectTarget[]>(
+    `/api/v1/admin/games/hidden-objects/${mediaId}`,
+    {
+      method:"GET",
+    }
+  );
 
 }
 
 
 
+
 export async function deleteHiddenObjectTarget(
-id:string
+  id:string
 ){
 
-return apiClient.delete(
-`/admin/games/hidden-objects/${id}`
-);
+  return apiRequest(
+    `/api/v1/admin/games/hidden-objects/${id}`,
+    {
+      method:"DELETE",
+    }
+  );
 
 }
