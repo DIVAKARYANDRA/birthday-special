@@ -73,7 +73,11 @@ setTargets
 useState<any[]>([]);
 
 
-
+const [
+selectedTargetImage,
+setSelectedTargetImage
+]
+= useState<any>(null);
 
 
 const [
@@ -146,7 +150,12 @@ setPoints
 =
 useState(100);
 
-
+const [
+size,
+setSize
+]
+=
+useState(10);
 
 
 
@@ -198,18 +207,33 @@ if(!selectedImage)
 return;
 
 
-
 await createCupidArrowLevel({
 
+ media_id:selectedImage.id,
 
-media_id:selectedImage.id,
+ level,
 
+ target_type:targetType,
 
-level
+ target_emoji:emoji,
 
+ target_name:name,
+
+target_size:size,
+
+ start_x:x,
+
+ start_y:y,
+
+ velocity_x:velocity,
+
+ velocity_y:0,
+
+ points,
+
+ is_face_level:false
 
 });
-
 
 
 const updated =
@@ -271,15 +295,20 @@ await createCupidArrowTarget(
 selectedLevel.id,
 
 {
-
-
 target_type:targetType,
-
 
 target_emoji:
 targetType==="emoji"
 ?
 emoji
+:
+null,
+
+
+media_id:
+targetType==="image"
+?
+selectedTargetImage?.id
 :
 null,
 
@@ -496,6 +525,24 @@ className="border rounded p-2"
 
 />
 
+<input
+
+type="number"
+
+value={size}
+
+onChange={
+e=>
+setSize(
+Number(e.target.value)
+)
+}
+
+placeholder="Target Size"
+
+className="border rounded p-2"
+
+/>
 
 <button
 
@@ -634,7 +681,66 @@ Image
 </select>
 
 
+{
+targetType==="image" &&
 
+<div className="grid grid-cols-3 gap-3">
+
+{
+media.map((image:any)=>(
+
+<div
+
+key={image.id}
+
+onClick={()=>
+setSelectedTargetImage(image)
+}
+
+className={`
+cursor-pointer
+border
+rounded
+p-2
+
+${
+selectedTargetImage?.id===image.id
+?
+"border-purple-600"
+:
+""
+}
+
+`}
+
+>
+
+<img
+
+src={
+getCloudinaryUrl(
+image.external_reference
+)
+}
+
+className="
+h-24
+w-full
+object-cover
+rounded
+"
+
+/>
+
+</div>
+
+))
+
+}
+
+</div>
+
+}
 
 
 <input

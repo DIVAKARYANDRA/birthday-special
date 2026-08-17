@@ -115,9 +115,8 @@ def create_cupid_arrow_target(
     db:Session=Depends(get_db)
 ):
 
-    payload.level_id = level_id
-
     return CupidArrowTargetService(db).create_target(
+        level_id,
         payload
     )
 
