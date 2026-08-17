@@ -97,8 +97,6 @@ setLoading
 =
 useState(true);
 
-
-
 useEffect(()=>{
 
 
@@ -114,9 +112,8 @@ level
 );
 
 
-
 setCurrentLevelData(
-mappedData
+data
 );
 
 
@@ -140,12 +137,10 @@ setLoading(false);
 }
 
 
-
 void loadLevel();
 
 
 },[level]);
-
 
 function handleLevelComplete(
 score:number

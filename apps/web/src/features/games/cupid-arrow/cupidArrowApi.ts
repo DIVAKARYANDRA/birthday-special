@@ -1,221 +1,42 @@
-import {
-  apiRequest,
-} from "@/api/client";
-
-
-
-export interface CupidArrowTargetResponse {
-
-
-  id:string;
-
-
-  level_id:string;
-
-
-  media_id?:string | null;
-
-
-  target_type:string;
-
-
-  target_emoji?:string | null;
-
-
-  target_name:string;
-
-
-  x_position:number;
-
-
-  y_position:number;
-
-
-  velocity_x:number;
-
-
-  velocity_y:number;
-
-
-  target_size:number;
-
-
-  points:number;
-
-}
-
-
-
 export interface CupidArrowLevelResponse {
 
+    level:number;
 
-  id:string;
+    image:any;
 
+    targets:any[];
 
-  level:number;
+    targetCount:number;
 
+    movementSpeed:string;
 
-  media_id:string;
+    timeLimit:number;
 
+    completionScore:number;
 
 }
 
 
 
-
-/*
- Create Cupid Arrow Level
-*/
-
-export async function createCupidArrowLevel(
-payload:any
+export async function getCupidArrowLevel(
+    level:number
 ){
 
+    const response =
+    await fetch(
+        `${import.meta.env.VITE_API_BASE_URL ?? ""}/api/v1/experience/cupid-arrow/${level}`
+    );
 
-return apiRequest<CupidArrowLevelResponse>(
 
-"/api/v1/admin/games/cupid-arrow",
+    if(!response.ok){
 
-{
+        throw new Error(
+            "Unable to load Cupid Arrow level"
+        );
 
-method:"POST",
+    }
 
-body:payload
 
-}
-
-);
-
-
-}
-
-
-
-/*
- List Levels
-*/
-
-export async function listCupidArrowLevels(){
-
-
-return apiRequest<CupidArrowLevelResponse[]>(
-
-"/api/v1/admin/games/cupid-arrow"
-
-);
-
-
-}
-
-
-
-/*
- Delete Level
-*/
-
-export async function deleteCupidArrowLevel(
-id:string
-){
-
-
-return apiRequest(
-
-`/api/v1/admin/games/cupid-arrow/${id}`,
-
-{
-
-method:"DELETE"
-
-}
-
-);
-
-
-}
-
-
-
-
-
-/*
- Add Target To Level
-*/
-
-export async function createCupidArrowTarget(
-
-levelId:string,
-
-payload:any
-
-){
-
-
-return apiRequest<CupidArrowTargetResponse>(
-
-`/api/v1/admin/games/cupid-arrow/${levelId}/targets`,
-
-{
-
-method:"POST",
-
-body:payload
-
-}
-
-);
-
-
-}
-
-
-
-
-
-/*
- List Targets For Level
-*/
-
-export async function listCupidArrowTargets(
-
-levelId:string
-
-){
-
-
-return apiRequest<CupidArrowTargetResponse[]>(
-
-`/api/v1/admin/games/cupid-arrow/${levelId}/targets`
-
-);
-
-
-}
-
-
-
-
-/*
- Delete Target
-*/
-
-export async function deleteCupidArrowTarget(
-
-targetId:string
-
-){
-
-
-return apiRequest(
-
-`/api/v1/admin/games/cupid-arrow/targets/${targetId}`,
-
-{
-
-method:"DELETE"
-
-}
-
-);
-
+    return response.json() as Promise<CupidArrowLevelResponse>;
 
 }
