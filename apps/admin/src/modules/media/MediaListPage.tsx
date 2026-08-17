@@ -323,6 +323,9 @@ Love Quiz 💌
 Hidden Objects 🔍
 </option>
 
+<option value="cupid-arrow">
+ Cupid Arrow 🏹
+</option>
 
 <option value="treasure-hunt">
 Treasure Hunt 🔐
