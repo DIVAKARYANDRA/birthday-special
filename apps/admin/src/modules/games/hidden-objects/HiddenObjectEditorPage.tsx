@@ -1,22 +1,19 @@
 import {
   useQuery,
 } from "@tanstack/react-query";
+
 import {
- getCloudinaryUrl,
+  getCloudinaryUrl,
 } from "@/utils/mediaUrl";
 
 import {
   mediaApi,
 } from "@/api/mediaApi";
 
-import HiddenObjectCanvas 
-from "./HiddenObjectCanvas";
+import HiddenObjectCanvas from "./HiddenObjectCanvas";
 
 import {
   useState,
-} from "react";
-
-import {
   useEffect,
 } from "react";
 
@@ -24,680 +21,646 @@ import {
   createHiddenObjectTarget,
   getHiddenObjectTargets,
   deleteHiddenObjectTarget,
+} from "./hiddenObjectsApi";
 
-} 
-from "./hiddenObjectsApi";
 
-export default function HiddenObjectEditorPage(){
+export default function HiddenObjectEditorPage() {
 
 
+  const {
+    data: media,
+  } = useQuery({
 
-const {
- data:media
-}
-=
-useQuery({
+    queryKey: [
+      "hidden-object-images",
+    ],
 
-queryKey:[
-"hidden-object-images"
-],
+    queryFn: () =>
+      mediaApi.list(),
 
+  });
 
-queryFn:
-()=>mediaApi.list()
 
 
-});
+  const [
+    selectedImage,
+    setSelectedImage,
+  ] = useState<any>(null);
 
 
-const [
-selectedImage,
-setSelectedImage
-]
-=
-useState<any>(null);
 
-const [
-selectedPosition,
-setSelectedPosition
-]
-=
-useState<{
-x:number;
-y:number;
-}
-|null>(null);
+  const [
+    selectedPosition,
+    setSelectedPosition,
+  ] = useState<{
+    x:number;
+    y:number;
+  } | null>(null);
 
 
 
-const [
-objectName,
-setObjectName
-]
-=
-useState("");
+  const [
+    objectName,
+    setObjectName,
+  ] = useState("");
 
 
 
-const [
-emoji,
-setEmoji
-]
-=
-useState("❤️");
+  const [
+    emoji,
+    setEmoji,
+  ] = useState("❤️");
 
 
 
-const [
-radius,
-setRadius
-]
-=
-useState(8);
+  const [
+    radius,
+    setRadius,
+  ] = useState(8);
 
-const [
-existingTargets,
-setExistingTargets
-]
-=
-useState<any[]>([]);
 
-const images =
-media?.filter(
-(item:any)=>
 
-item.usage==="game"
+  const [
+    existingTargets,
+    setExistingTargets,
+  ] = useState<any[]>([]);
 
-&&
 
-item.category==="hidden-objects"
 
-);
+  const images =
+    media?.filter(
+      (item:any)=>
+        item.usage==="game"
+        &&
+        item.category==="hidden-objects"
+    );
 
-useEffect(()=>{
 
 
-async function loadTargets(){
+  useEffect(()=>{
 
 
-if(!selectedImage)
-return;
+    async function loadTargets(){
 
 
-const data =
-await getHiddenObjectTargets(
-selectedImage.id
-);
+      if(!selectedImage){
+        return;
+      }
 
 
-setExistingTargets(
-data
-);
+      const data =
+        await getHiddenObjectTargets(
+          selectedImage.id
+        );
 
 
-}
+      setExistingTargets(data);
 
+    }
 
 
-void loadTargets();
+    void loadTargets();
 
 
-},[
-selectedImage
-]);
+  },[
+    selectedImage
+  ]);
 
 
-return (
 
-<div
-className="
-space-y-6
-p-6
-"
->
 
 
-<h1
-className="
-text-2xl
-font-semibold
-"
->
+  return (
 
-Hidden Object Editor 🔍
+    <div
+      className="
+      space-y-6
+      p-6
+      "
+    >
 
-</h1>
 
+      <h1
+        className="
+        text-2xl
+        font-semibold
+        "
+      >
+        Hidden Object Editor 🔍
+      </h1>
 
 
-<p
-className="
-text-gray-500
-"
->
 
-Select a memory image and place hidden objects.
+      <p
+        className="
+        text-gray-500
+        "
+      >
+        Select a memory image and place hidden objects.
+      </p>
 
-</p>
 
 
 
+      <div
+        className="
+        grid
+        grid-cols-1
+        md:grid-cols-3
+        gap-6
+        "
+      >
 
-<div
 
-className="
-grid
-grid-cols-1
-md:grid-cols-3
-gap-6
-"
+        {
+          images?.map(
+            (image:any)=>(
 
->
 
+              <div
 
-{
+                key={
+                  image.id
+                }
 
-images?.map(
-(image:any)=>(
 
+                onClick={()=>{
 
-<div
+                  setSelectedImage(image);
 
-key={
-image.id
-}
+                  setExistingTargets([]);
 
-onClick={() => {
+                  setSelectedPosition(null);
 
-  setSelectedImage(image);
+                }}
 
-  setExistingTargets([]);
 
-  setSelectedPosition(null);
+                className={`
+                rounded-xl
+                border
+                bg-white
+                p-4
+                cursor-pointer
 
-}}
+                ${
+                  selectedImage?.id === image.id
+                  ?
+                  "border-purple-600 ring-2 ring-purple-300"
+                  :
+                  ""
+                }
+                `}
+              >
 
-className={`
-rounded-xl
-border
-bg-white
-p-4
-cursor-pointer
 
-${
-selectedImage?.id === image.id
-?
-"border-purple-600 ring-2 ring-purple-300"
-:
-""
-}
+                <img
 
-`}
+                  src={
+                    getCloudinaryUrl(
+                      image.external_reference
+                    )
+                  }
 
->
+                  alt={
+                    image.alt_text ?? "memory"
+                  }
 
 
-<img
-src={
-getCloudinaryUrl(
-image.external_reference
-)
-}
-alt={
-image.alt_text ?? "memory"
-}
+                  className="
+                  h-48
+                  w-full
+                  rounded-lg
+                  object-cover
+                  "
 
+                />
 
-className="
-h-48
-w-full
-rounded-lg
-object-cover
-"
 
+                <p
+                  className="
+                  mt-3
+                  font-medium
+                  "
+                >
+                  {
+                    image.original_filename
+                  }
+                </p>
 
-/>
 
+                <p
+                  className="
+                  text-sm
+                  text-gray-500
+                  "
+                >
+                  Level:
+                  {" "}
+                  {
+                    image.display_order
+                  }
+                </p>
 
 
-<p
+              </div>
 
-className="
-mt-3
-font-medium
-"
+            )
+          )
+        }
 
->
 
-{
-image.original_filename
-}
+      </div>
 
-</p>
 
 
-<p
 
-className="
-text-sm
-text-gray-500
-"
 
->
+      {
+        selectedImage && (
 
-Level:
-{
-image.display_order
-}
+          <div
 
-</p>
+            className="
+            mt-8
+            rounded-xl
+            border
+            bg-white
+            p-6
+            "
+          >
 
 
+            <h2
+              className="
+              mb-4
+              text-xl
+              font-semibold
+              "
+            >
 
-</div>
+              Editing:
+              {" "}
+              {
+                selectedImage.original_filename
+              }
 
+            </h2>
 
-)
 
-)
 
-}
 
+            <HiddenObjectCanvas
 
+              image={
+                selectedImage
+              }
 
+              markers={
+                existingTargets
+              }
 
+              onPositionSelect={
+                (x,y)=>{
 
-</div>
-{
-selectedImage && (
+                  setSelectedPosition({
+                    x,
+                    y
+                  });
 
-<div
+                }
+              }
 
-className="
-mt-8
-rounded-xl
-border
-bg-white
-p-6
-"
+            />
 
->
 
-<h2
 
-className="
-mb-4
-text-xl
-font-semibold
-"
 
->
 
-Editing:
+            {
+              existingTargets.length > 0 && (
 
-{
-selectedImage.original_filename
-}
+                <div
+                  className="
+                  mt-6
+                  space-y-3
+                  rounded-xl
+                  border
+                  p-5
+                  "
+                >
 
-</h2>
+                  <h3
+                    className="
+                    font-semibold
+                    "
+                  >
+                    Existing Hidden Objects
+                  </h3>
 
 
-<HiddenObjectCanvas
+                  {
+                    existingTargets.map(
+                      (target:any)=>(
 
-image={
-selectedImage
-}
 
+                        <div
 
-markers={
-existingTargets
-}
+                          key={
+                            target.id
+                          }
 
+                          className="
+                          flex
+                          items-center
+                          justify-between
+                          rounded-lg
+                          bg-gray-50
+                          p-3
+                          "
 
-onPositionSelect={
-(x,y)=>{
+                        >
 
 
-setSelectedPosition({
-x,
-y
-});
+                          <div>
 
+                            {target.emoji}
+                            {" "}
+                            {target.name}
 
-}
+                          </div>
 
-}
 
-/>
 
-{ 
-existingTargets.length > 0 && (
+                          <button
 
-<div
-className="
-mt-6
-space-y-3
-rounded-xl
-border
-p-5
-"
->
+                            className="
+                            rounded-lg
+                            bg-red-600
+                            px-3
+                            py-1
+                            text-white
+                            "
 
-<h3
-className="
-font-semibold
-"
->
-Existing Hidden Objects
-</h3>
+                            onClick={
+                              async()=>{
 
+                                await deleteHiddenObjectTarget(
+                                  target.id
+                                );
 
-{
-existingTargets.map(
-(target:any)=>(
 
+                                const updated =
+                                  await getHiddenObjectTargets(
+                                    selectedImage.id
+                                  );
 
-<div
 
-key={target.id}
+                                setExistingTargets(
+                                  updated
+                                );
 
-className="
-flex
-items-center
-justify-between
-rounded-lg
-bg-gray-50
-p-3
-"
+                              }
+                            }
 
->
+                          >
+                            Delete
 
+                          </button>
 
-<div>
 
-<span>
-{target.emoji}
-</span>
+                        </div>
 
-{" "}
 
-{target.name}
+                      )
+                    )
+                  }
 
 
-</div>
+                </div>
 
+              )
+            }
 
 
-<button
 
-className="
-rounded-lg
-bg-red-600
-px-3
-py-1
-text-white
-"
 
-onClick={
-async()=>{
 
 
-await deleteHiddenObjectTarget(
-target.id
-);
+            {
+              selectedPosition && (
 
+                <div
 
-const updated =
-await getHiddenObjectTargets(
-selectedImage.id
-);
+                  className="
+                  mt-6
+                  space-y-4
+                  rounded-xl
+                  border
+                  p-5
+                  "
+                >
 
 
-setExistingTargets(
-updated
-);
+                  <h3
+                    className="
+                    font-semibold
+                    "
+                  >
+                    Add Hidden Object
+                  </h3>
 
 
-}
 
-}
 
->
+                  <input
 
-Delete
+                    value={
+                      objectName
+                    }
 
-</button>
+                    onChange={
+                      e=>
+                      setObjectName(
+                        e.target.value
+                      )
+                    }
 
+                    placeholder="Object name"
 
-</div>
+                    className="
+                    w-full
+                    rounded-lg
+                    border
+                    p-2
+                    "
 
+                  />
 
-)
 
-)
 
-}
 
-</div>
-)
-}
+                  <input
 
+                    value={
+                      emoji
+                    }
 
+                    onChange={
+                      e=>
+                      setEmoji(
+                        e.target.value
+                      )
+                    }
 
-{
-selectedPosition &&  (
+                    placeholder="Emoji"
 
-<div
+                    className="
+                    w-full
+                    rounded-lg
+                    border
+                    p-2
+                    "
 
-className="
-mt-6
-space-y-4
-rounded-xl
-border
-p-5
-"
+                  />
 
->
 
 
-<h3
-className="
-font-semibold
-"
 
->
+                  <input
 
-Add Hidden Object
+                    type="number"
 
-</h3>
+                    value={
+                      radius
+                    }
 
+                    onChange={
+                      e=>
+                      setRadius(
+                        Number(
+                          e.target.value
+                        )
+                      )
+                    }
 
 
-<input
+                    className="
+                    w-full
+                    rounded-lg
+                    border
+                    p-2
+                    "
 
-value={
-objectName
-}
+                  />
 
-onChange={
-e=>
-setObjectName(
-e.target.value
-)
-}
 
-placeholder="Object name"
 
-className="
-w-full
-rounded-lg
-border
-p-2
-"
 
-/>
+                  <p
+                    className="
+                    text-sm
+                    text-gray-500
+                    "
+                  >
 
+                    Position:
+                    {" "}
+                    {selectedPosition.x}
+                    ,
+                    {" "}
+                    {selectedPosition.y}
 
+                  </p>
 
 
-<input
 
-value={
-emoji
-}
 
-onChange={
-e=>
-setEmoji(
-e.target.value
-)
-}
+                  <button
 
-placeholder="Emoji"
+                    className="
+                    rounded-lg
+                    bg-purple-700
+                    px-5
+                    py-2
+                    text-white
+                    "
 
-className="
-w-full
-rounded-lg
-border
-p-2
-"
 
-/>
+                    onClick={
+                      async()=>{
 
 
+                        await createHiddenObjectTarget({
 
-<input
+                          media_id:
+                            selectedImage.id,
 
-type="number"
 
-value={
-radius
-}
+                          level:
+                            selectedImage.display_order ?? 1,
 
-onChange={
-e=>
-setRadius(
-Number(e.target.value)
-)
-}
 
-placeholder="Radius"
+                          name:
+                            objectName,
 
-className="
-w-full
-rounded-lg
-border
-p-2
-"
 
-/>
+                          emoji,
 
 
+                          x_position:
+                            selectedPosition.x,
 
-<p
-className="
-text-sm
-text-gray-500
-"
 
->
+                          y_position:
+                            selectedPosition.y,
 
-Position:
 
-{x:
-selectedPosition.x}
+                          radius,
 
-,
+                        });
 
-{y:
-selectedPosition.y}
 
-</p>
 
+                        const updated =
+                          await getHiddenObjectTargets(
+                            selectedImage.id
+                          );
 
 
-<button
+                        setExistingTargets(
+                          updated
+                        );
 
-className="
-rounded-lg
-bg-purple-700
-px-5
-py-2
-text-white
-"
 
-onClick={async()=>{
+                        setSelectedPosition(null);
 
+                        setObjectName("");
 
-await createHiddenObjectTarget({
+                      }
+                    }
 
-media_id:
-selectedImage.id,
+                  >
 
+                    Save Object
 
-level:
-selectedImage.display_order ?? 1,
+                  </button>
 
 
-name:
-objectName,
+                </div>
 
+              )
+            }
 
-emoji,
 
 
-x_position:
-selectedPosition.x,
+          </div>
 
+        )
+      }
 
-y_position:
-selectedPosition.y,
 
+    </div>
 
-radius
-
-
-});
-
-const updated =
-await getHiddenObjectTargets(
-selectedImage.id
-);
-
-setExistingTargets(
-updated
-);
-
-setSelectedPosition(null);
-
-setObjectName("");
-
-}}
-
->
-
-Save Object
-
-</button>
-
-
-</div>
-
-)
-}
-
-
-</div>
-
-)
-
-}
-
-</div>
-
-</div>
-
-);
-
+  );
 
 }
