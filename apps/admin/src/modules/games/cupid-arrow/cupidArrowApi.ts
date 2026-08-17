@@ -29,6 +29,12 @@ export interface CupidArrowLevel {
 
     is_face_level:boolean;
 
+    movement_speed:string;
+
+    time_limit:number;
+
+    completion_score:number;
+
 }
 
 
