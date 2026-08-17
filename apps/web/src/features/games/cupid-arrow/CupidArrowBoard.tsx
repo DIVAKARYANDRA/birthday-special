@@ -612,7 +612,7 @@ item.id===id
 
 ...item,
 
-status:"hit"
+status:"hit" as const
 
 }
 
@@ -653,8 +653,7 @@ item.id===id
 
 ...item,
 
-status:"broken"
-
+status:"broken" as const
 }
 
 :
