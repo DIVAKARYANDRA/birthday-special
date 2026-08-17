@@ -3,6 +3,7 @@ import {
   useState,
 } from "react";
 
+
 import {
   getGameGift,
 } from "@/features/games/shared/gifts";
@@ -13,9 +14,16 @@ import {
   updateGameProgress,
 } from "@/features/games/shared/gameStorage";
 
+
 import {
   getCupidArrowLevel,
 } from "@/features/games/cupid-arrow/cupidArrowApi";
+
+
+import type {
+  CupidArrowLevel,
+} from "@/features/games/cupid-arrow/cupidArrowTypes";
+
 
 import GamePasswordGate from "@/features/games/shared/GamePasswordGate";
 
@@ -31,437 +39,532 @@ import SceneLayout from "@/components/global/SceneLayout";
 import Breadcrumb from "@/components/ui/Breadcrumb";
 
 
-import CupidArrowBoard 
+import CupidArrowBoard
 from "@/features/games/cupid-arrow/CupidArrowBoard";
-
 
 
 
 export default function CupidArrowScene(){
 
 
+  const gameId =
+    "cupid-arrow";
 
-const gameId =
-"cupid-arrow";
 
+  const progress =
+    getGameProgress(
+      gameId
+    );
 
 
-const progress =
-getGameProgress(
-gameId
-);
+  const [
+    level,
+    setLevel
+  ]
+  =
+  useState(
+    progress.level
+  );
 
 
+  const [
+    totalScore,
+    setTotalScore
+  ]
+  =
+  useState(
+    progress.score
+  );
 
-const [
-level,
-setLevel
-]
-=
-useState(
-progress.level
-);
 
+  const [
+    completed,
+    setCompleted
+  ]
+  =
+  useState(false);
 
 
-const [
-totalScore,
-setTotalScore
-]
-=
-useState(
-progress.score
-);
+  const [
+    currentLevelData,
+    setCurrentLevelData
+  ]
+  =
+  useState<CupidArrowLevel | null>(
+    null
+  );
 
 
+  const [
+    loading,
+    setLoading
+  ]
+  =
+  useState(true);
 
-const [
-completed,
-setCompleted
-]
-=
-useState(false);
 
-const [
-currentLevelData,
-setCurrentLevelData
-]
-=
-useState<any>(null);
+  const [
+    loadError,
+    setLoadError
+  ]
+  =
+  useState(false);
 
 
-const [
-loading,
-setLoading
-]
-=
-useState(true);
 
-useEffect(()=>{
+  useEffect(()=>{
 
+    let cancelled = false;
 
-async function loadLevel(){
 
+    async function loadLevel(){
 
-try{
+      setLoading(true);
 
+      setLoadError(false);
 
-const data =
-await getCupidArrowLevel(
-level
-);
+      setCurrentLevelData(null);
 
 
-setCurrentLevelData(
-data
-);
+      try{
 
+        const data =
+          await getCupidArrowLevel(
+            level
+          );
 
-}
-catch(error){
 
-console.error(
-"Cupid Arrow level loading failed",
-error
-);
+        if(cancelled)
+          return;
 
 
-}
-finally{
+        setCurrentLevelData(
+          data
+        );
 
-setLoading(false);
+      }
+      catch(error){
 
-}
+        console.error(
+          "Cupid Arrow level loading failed",
+          error
+        );
 
 
-}
+        if(!cancelled){
 
+          setLoadError(
+            true
+          );
 
-void loadLevel();
+        }
 
+      }
+      finally{
 
-},[level]);
+        if(!cancelled){
 
-function handleLevelComplete(
-score:number
-){
+          setLoading(
+            false
+          );
 
+        }
 
+      }
 
-const updatedScore =
-totalScore + score;
+    }
 
 
+    void loadLevel();
 
-setTotalScore(
-updatedScore
-);
 
+    return ()=>{
 
+      cancelled=true;
 
-if(level>=10){
+    };
 
 
-updateGameProgress(
+  },[level]);
 
-gameId,
 
-{
 
-level:10,
+  function handleLevelComplete(
+    score:number
+  ){
 
-score:updatedScore
+    if(!currentLevelData)
+      return;
 
-}
 
-);
+    const updatedScore =
+      totalScore +
+      score;
 
 
+    setTotalScore(
+      updatedScore
+    );
 
-setCompleted(true);
 
+    if(
+      currentLevelData.isFinalLevel
+    ){
 
-return;
+      updateGameProgress(
 
+        gameId,
 
-}
+        {
 
+          level:
+          level,
 
+          score:
+          updatedScore
 
+        }
 
-const nextLevel =
-level+1;
+      );
 
 
+      setCompleted(
+        true
+      );
 
-updateGameProgress(
 
-gameId,
+      return;
 
-{
+    }
 
-level:nextLevel,
 
-score:updatedScore
 
-}
+    const nextLevel =
+      level + 1;
 
-);
 
+    updateGameProgress(
 
+      gameId,
 
-setLevel(
-nextLevel
-);
+      {
 
+        level:
+        nextLevel,
 
+        score:
+        updatedScore
 
-}
+      }
 
+    );
 
 
+    setLevel(
+      nextLevel
+    );
 
+  }
 
 
 
-function resetGame(){
+  function resetGame(){
 
+    sessionStorage.removeItem(
+      `game-progress-${gameId}`
+    );
 
-sessionStorage.removeItem(
-`game-progress-${gameId}`
-);
 
+    window.location.reload();
 
-window.location.reload();
+  }
 
 
-}
 
+  function retryLevel(){
 
+    setCurrentLevelData(
+      null
+    );
 
+    setLoading(
+      true
+    );
 
+    setLoadError(
+      false
+    );
 
 
-return (
+    /*
+     Changing the level is intentionally
+     avoided here because retrying should
+     reload the same Admin-configured level.
+    */
 
+    setTimeout(()=>{
 
-<SceneLayout mode="twilight">
+      void getCupidArrowLevel(
+        level
+      )
+      .then(
+        data=>{
 
+          setCurrentLevelData(
+            data
+          );
 
-<Breadcrumb
+          setLoading(
+            false
+          );
 
-label="Cupid Arrow 💘"
+        }
+      )
+      .catch(
+        error=>{
 
-/>
+          console.error(
+            "Cupid Arrow retry failed",
+            error
+          );
 
+          setLoadError(
+            true
+          );
 
+          setLoading(
+            false
+          );
 
+        }
+      );
 
-<GamePasswordGate
+    },50);
 
-gameId={gameId}
+  }
 
->
 
 
+  return (
 
-<div
+    <SceneLayout mode="twilight">
 
-className="
 
-flex
+      <Breadcrumb
+        label="Cupid Arrow 💘"
+      />
 
-flex-1
 
-flex-col
 
-overflow-y-auto
+      <GamePasswordGate
+        gameId={gameId}
+      >
 
-px-5
 
-pb-20
+        <div
+          className="
+            flex
+            flex-1
+            flex-col
+            overflow-y-auto
+            px-5
+            pb-20
+            pt-6
+          "
+        >
 
-pt-6
 
-"
+          <GameHeader
 
->
+             level={
+    currentLevelData?.level ?? level
+  }
 
+            totalScore={
+              totalScore
+            }
 
+            music={
 
+              <GameMusicPlayer
+                gameId={gameId}
+              />
 
-<GameHeader
+            }
 
+            onReset={
+              resetGame
+            }
 
-level={
-Math.min(level,10)
-}
+          />
 
 
-totalScore={
-totalScore
-}
 
+          {
+            completed
 
-music={
+            ?
 
+            (
 
-<GameMusicPlayer
+              <GiftReveal
+                gift={
+                  getGameGift(
+                    gameId
+                  )
+                }
+              />
 
-gameId={gameId}
+            )
 
-/>
+            :
 
+            (
 
-}
+              <>
 
+                <h1
+                  className="
+                    mb-6
+                    text-center
+                    text-3xl
+                    font-semibold
+                    text-white
+                  "
+                >
 
+                  🏹 Cupid Arrow Challenge 💘
 
-onReset={
-resetGame
-}
+                </h1>
 
 
-/>
 
+                {
+                  loading &&
 
+                  <p
+                    className="
+                      text-center
+                      text-white/60
+                    "
+                  >
 
+                    Preparing Cupid arrows ❤️
 
+                  </p>
 
+                }
 
-{
 
-completed
 
-?
+                {
+                  !loading &&
+                  loadError &&
 
+                  <div
+                    className="
+                      mx-auto
+                      mt-8
+                      max-w-md
+                      rounded-2xl
+                      bg-white/10
+                      p-6
+                      text-center
+                      text-white
+                    "
+                  >
 
-(
+                    <p className="mb-4">
 
-<GiftReveal
+                      Cupid could not prepare
+                      this level. ❤️
 
-gift={
-getGameGift(gameId)
-}
+                    </p>
 
-/>
 
-)
+                    <button
+                      type="button"
+                      onClick={
+                        retryLevel
+                      }
+                      className="
+                        rounded-xl
+                        bg-white
+                        px-5
+                        py-2
+                        font-semibold
+                        text-purple-700
+                      "
+                    >
 
+                      Try Again
 
-:
+                    </button>
 
+                  </div>
 
-(
+                }
 
 
-<>
 
+                {
+                  !loading &&
+                  !loadError &&
+                  currentLevelData &&
+                  currentLevelData.targets.length > 0 &&
 
-<h1
+                  <CupidArrowBoard
 
-className="
+                    levelData={
+                      currentLevelData
+                    }
 
-mb-6
+                    onLevelComplete={
+                      handleLevelComplete
+                    }
 
-text-center
+                  />
 
-text-3xl
+                }
 
-font-semibold
 
-text-white
 
-"
+                {
+                  !loading &&
+                  !loadError &&
+                  currentLevelData &&
+                  currentLevelData.targets.length === 0 &&
 
->
+                  <p
+                    className="
+                      mt-8
+                      text-center
+                      text-white/60
+                    "
+                  >
 
-🏹 Cupid Arrow Challenge 💘
+                    Cupid is preparing more
+                    surprises ❤️
 
-</h1>
+                  </p>
 
+                }
 
+              </>
 
-{
-loading &&
+            )
 
-<p
-className="
-text-center
-text-white/60
-"
->
+          }
 
-Preparing Cupid arrows ❤️
 
-</p>
+        </div>
 
-}
 
+      </GamePasswordGate>
 
-{
-!loading &&
-currentLevelData &&
-currentLevelData.targets?.length > 0 &&
 
-<CupidArrowBoard
+    </SceneLayout>
 
-levelData={
-currentLevelData
-}
-
-onLevelComplete={
-handleLevelComplete
-}
-
-/>
-
-}
-
-{
-!loading &&
-currentLevelData &&
-currentLevelData.targets?.length === 0 &&
-
-<p
-className="
-text-center
-text-white/60
-mt-8
-"
->
-
-Cupid is preparing more surprises ❤️
-
-</p>
-
-}
-
-
-</>
-
-
-)
-
-}
-
-
-
-
-
-</div>
-
-
-
-</GamePasswordGate>
-
-
-
-</SceneLayout>
-
-
-);
-
-
+  );
 
 }

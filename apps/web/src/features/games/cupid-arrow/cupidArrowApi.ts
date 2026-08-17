@@ -1,42 +1,27 @@
-export interface CupidArrowLevelResponse {
-
-    level:number;
-
-    image:any;
-
-    targets:any[];
-
-    targetCount:number;
-
-    movementSpeed:string;
-
-    timeLimit:number;
-
-    completionScore:number;
-
-}
-
+import type {
+  CupidArrowLevelResponse,
+} from "./cupidArrowTypes";
 
 
 export async function getCupidArrowLevel(
-    level:number
+  level:number
 ){
 
-    const response =
+  const response =
     await fetch(
-        `${import.meta.env.VITE_API_BASE_URL ?? ""}/api/v1/experience/cupid-arrow/${level}`
+      `${import.meta.env.VITE_API_BASE_URL ?? ""}/api/v1/experience/cupid-arrow/${level}`
     );
 
 
-    if(!response.ok){
+  if(!response.ok){
 
-        throw new Error(
-            "Unable to load Cupid Arrow level"
-        );
+    throw new Error(
+      "Unable to load Cupid Arrow level"
+    );
 
-    }
+  }
 
 
-    return response.json() as Promise<CupidArrowLevelResponse>;
+  return response.json() as Promise<CupidArrowLevelResponse>;
 
 }

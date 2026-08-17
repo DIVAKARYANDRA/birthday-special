@@ -71,6 +71,12 @@ class CupidArrowLevelCreate(BaseModel):
 
     is_face_level: bool = False
 
+    movement_speed:str="medium"
+
+    time_limit:int=60
+
+    completion_score:int=500
+
 
 
 

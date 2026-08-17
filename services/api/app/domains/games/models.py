@@ -6,12 +6,16 @@ from sqlalchemy import (
     ForeignKey,
     Boolean,
 )
+
 from sqlalchemy.orm import relationship
 
-from app.db.base import Base
+from sqlalchemy.dialects.postgresql import UUID
+
 import uuid
 
-from sqlalchemy.dialects.postgresql import UUID
+from app.db.base import Base
+
+
 
 class HiddenObjectTarget(Base):
 
@@ -70,6 +74,10 @@ class HiddenObjectTarget(Base):
         default=8
     )
 
+
+
+
+
 class CupidArrowLevel(Base):
 
     __tablename__ = "cupid_arrow_levels"
@@ -98,6 +106,10 @@ class CupidArrowLevel(Base):
     )
 
 
+    #
+    # Default target configuration
+    # kept for backward compatibility
+    #
     target_type = Column(
         String,
         nullable=False,
@@ -164,6 +176,35 @@ class CupidArrowLevel(Base):
         nullable=False,
         default=False
     )
+
+
+
+    #
+    # Game difficulty controls
+    # Managed from admin
+    #
+    movement_speed = Column(
+        String,
+        nullable=False,
+        default="medium"
+    )
+
+
+    time_limit = Column(
+        Integer,
+        nullable=False,
+        default=60
+    )
+
+
+    completion_score = Column(
+        Integer,
+        nullable=False,
+        default=500
+    )
+
+
+
 
 
 class CupidArrowTarget(Base):

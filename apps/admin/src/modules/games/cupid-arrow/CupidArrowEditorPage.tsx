@@ -151,6 +151,29 @@ setPoints
 useState(100);
 
 const [
+timeLimit,
+setTimeLimit
+]
+=
+useState(60);
+
+
+const [
+completionScore,
+setCompletionScore
+]
+=
+useState(500);
+
+
+const [
+movementSpeed,
+setMovementSpeed
+]
+=
+useState("medium");
+
+const [
 size,
 setSize
 ]
@@ -231,7 +254,18 @@ target_size:size,
 
  points,
 
- is_face_level:false
+ is_face_level:false,
+
+ movement_speed:
+movementSpeed,
+
+
+time_limit:
+timeLimit,
+
+
+completion_score:
+completionScore,
 
 });
 
@@ -251,23 +285,48 @@ updated
 
 
 
-
 async function selectLevel(
 item:any
 ){
 
 
-setSelectedLevel(
-item
+setSelectedLevel(item);
+
+
+setLevel(
+item.level
 );
 
+
+setMovementSpeed(
+item.movement_speed ?? "medium"
+);
+
+
+setTimeLimit(
+item.time_limit ?? 60
+);
+
+
+setCompletionScore(
+item.completion_score ?? 500
+);
+
+
+setSize(
+item.target_size ?? 10
+);
+
+
+setVelocity(
+item.velocity_x ?? 0.4
+);
 
 
 const data =
 await listCupidArrowTargets(
 item.id
 );
-
 
 
 setTargets(
@@ -289,6 +348,20 @@ if(!selectedLevel)
 return;
 
 
+if(
+targetType==="image"
+&&
+!selectedTargetImage
+){
+
+alert(
+"Please select target image"
+);
+
+return;
+
+}
+
 
 await createCupidArrowTarget(
 
@@ -303,6 +376,8 @@ targetType==="emoji"
 emoji
 :
 null,
+
+
 
 
 media_id:
@@ -328,7 +403,7 @@ velocity_x:velocity,
 velocity_y:0,
 
 
-target_size:10,
+target_size:size,
 
 
 points
@@ -525,6 +600,72 @@ className="border rounded p-2"
 
 />
 
+
+<select
+
+value={movementSpeed}
+
+onChange={
+e=>setMovementSpeed(
+e.target.value
+)
+}
+
+className="border rounded p-2"
+
+>
+
+<option value="slow">
+Slow
+</option>
+
+<option value="medium">
+Medium
+</option>
+
+<option value="fast">
+Fast
+</option>
+
+
+</select>
+
+<input
+
+type="number"
+
+value={timeLimit}
+
+onChange={
+e=>setTimeLimit(
+Number(e.target.value)
+)
+}
+
+placeholder="Time limit seconds"
+
+className="border rounded p-2"
+
+/>
+
+<input
+
+type="number"
+
+value={completionScore}
+
+onChange={
+e=>setCompletionScore(
+Number(e.target.value)
+)
+}
+
+placeholder="Completion score"
+
+className="border rounded p-2"
+
+/>
+
 <input
 
 type="number"
@@ -649,15 +790,24 @@ Add Target To Level {selectedLevel.level}
 </h2>
 
 
-
 <select
 
 value={targetType}
 
 onChange={
-e=>setTargetType(
-e.target.value
-)
+e=>{
+
+const value=e.target.value;
+
+setTargetType(value);
+
+
+if(value==="emoji"){
+setSelectedTargetImage(null);
+}
+
+}
+
 }
 
 className="border rounded p-2"
@@ -742,6 +892,8 @@ rounded
 
 }
 
+{
+targetType==="emoji" &&
 
 <input
 
@@ -757,6 +909,7 @@ className="border rounded p-2"
 
 />
 
+}
 
 
 
@@ -900,13 +1053,41 @@ className="flex justify-between border rounded p-3"
 >
 
 
-<div>
+<div className="flex items-center gap-3">
 
+
+{
+target.media?.url &&
+
+<img
+
+src={target.media.url}
+
+className="
+h-12
+w-12
+rounded-full
+object-cover
+"
+
+/>
+
+}
+
+
+{
+target.target_emoji &&
+<span>
 {target.target_emoji}
+</span>
 
-{" "}
+}
 
+
+<span>
 {target.target_name}
+</span>
+
 
 </div>
 

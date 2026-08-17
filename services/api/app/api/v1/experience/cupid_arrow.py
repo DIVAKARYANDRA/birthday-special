@@ -14,22 +14,17 @@ from app.domains.media.models import MediaAsset
 from app.domains.media.public_router import build_cloudinary_url
 
 
-
 router = APIRouter()
-
-
-
 
 
 @router.get("/{level}")
 def get_cupid_arrow_level(
 
-    level:int,
+    level: int,
 
-    db:Session = Depends(get_db)
+    db: Session = Depends(get_db)
 
 ):
-
 
     cupid_level = (
 
@@ -46,20 +41,27 @@ def get_cupid_arrow_level(
     )
 
 
-
     if not cupid_level:
 
         return {
 
-            "level":level,
+            "level": level,
 
-            "image":None,
+            "image": None,
 
-            "targets":[]
+            "targets": [],
+
+            "targetCount": 0,
+
+            "movementSpeed": "medium",
+
+            "timeLimit": 0,
+
+            "completionScore": 0,
+
+            "isFinalLevel": True
 
         }
-
-
 
 
     media = (
@@ -77,21 +79,27 @@ def get_cupid_arrow_level(
     )
 
 
-
     if not media:
 
         return {
 
-            "level":level,
+            "level": level,
 
-            "image":None,
+            "image": None,
 
-            "targets":[]
+            "targets": [],
+
+            "targetCount": 0,
+
+            "movementSpeed": cupid_level.movement_speed,
+
+            "timeLimit": cupid_level.time_limit,
+
+            "completionScore": cupid_level.completion_score,
+
+            "isFinalLevel": True
 
         }
-
-
-
 
 
     targets = (
@@ -104,26 +112,35 @@ def get_cupid_arrow_level(
             CupidArrowTarget.level_id == cupid_level.id
         )
 
+        .order_by(
+            CupidArrowTarget.id
+        )
+
         .all()
 
     )
 
-
+    next_level_exists = (
+        db.query(
+            CupidArrowLevel
+        )
+        .filter(
+            CupidArrowLevel.level > cupid_level.level
+        )
+        .first()
+        is not None
+    )
 
 
     response_targets = []
 
 
-
     for target in targets:
-
 
         target_media = None
 
 
-
         if target.media_id:
-
 
             target_asset = (
 
@@ -147,16 +164,13 @@ def get_cupid_arrow_level(
                     "id":
                     str(target_asset.id),
 
-
                     "url":
                     build_cloudinary_url(
                         target_asset.external_reference
                     ),
 
-
                     "title":
                     target_asset.original_filename,
-
 
                     "alt_text":
                     target_asset.alt_text
@@ -164,117 +178,90 @@ def get_cupid_arrow_level(
                 }
 
 
-
         response_targets.append(
 
-
             {
-
 
                 "id":
                 str(target.id),
 
-
-
                 "type":
                 target.target_type,
-
-
 
                 "emoji":
                 target.target_emoji,
 
-
-
                 "name":
                 target.target_name,
-
-
 
                 "x":
                 target.x_position,
 
-
-
                 "y":
                 target.y_position,
-
-
 
                 "size":
                 target.target_size,
 
-
-
                 "velocityX":
                 target.velocity_x,
-
-
 
                 "velocityY":
                 target.velocity_y,
 
-
-
                 "points":
                 target.points,
-
-
 
                 "status":
                 "idle",
 
-
-
                 "media":
                 target_media
 
-
             }
-
 
         )
 
 
-
-
-
     return {
-
 
         "level":
         cupid_level.level,
 
-
-
-        "image":{
-
+        "image": {
 
             "id":
             str(media.id),
-
 
             "url":
             build_cloudinary_url(
                 media.external_reference
             ),
 
-
             "title":
             media.original_filename,
-
 
             "alt_text":
             media.alt_text
 
-
         },
 
-
-
         "targets":
-        response_targets
+        response_targets,
 
+        "targetCount":
+        len(response_targets),
 
+        "movementSpeed":
+        cupid_level.movement_speed,
+
+        "timeLimit":
+        cupid_level.time_limit,
+
+        "completionScore":
+        cupid_level.completion_score,
+
+        "isFinalLevel":
+        not next_level_exists
 
     }

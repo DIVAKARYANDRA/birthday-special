@@ -3,12 +3,10 @@ export type CupidTargetType =
   | "image";
 
 
-
 export type CupidMovementSpeed =
   | "slow"
   | "medium"
   | "fast";
-
 
 
 export type CupidTargetStatus =
@@ -32,6 +30,20 @@ export interface CupidTargetMedia {
 
 
 
+export interface CupidArrowImage {
+
+  id:string;
+
+  url:string;
+
+  title?:string | null;
+
+  alt_text?:string | null;
+
+}
+
+
+
 export interface CupidArrowTarget {
 
 
@@ -39,79 +51,106 @@ export interface CupidArrowTarget {
 
 
   /**
-   * Target type controlled by admin
+   * Target type controlled by Admin.
    *
    * emoji:
    * ❤️ 💖 💝
    *
    * image:
-   * personal photos
+   * personal photo / face image
    */
   type:CupidTargetType;
 
 
 
   /**
-   * Used when target type = emoji
+   * Used when target type = emoji.
    */
-  emoji?:string;
+  emoji?:string | null;
 
 
 
   /**
-   * Used when target type = image
+   * Used when target type = image.
    */
-  media?:CupidTargetMedia;
+  media?:CupidTargetMedia | null;
 
+
+  /**
+   * Optional media ID when needed by the frontend.
+   */
   imageId?:string;
 
 
 
   /**
-   * Current position %
-   * relative to game board
+   * Target display name.
+   */
+  name:string;
+
+
+
+  /**
+   * Current horizontal position.
+   *
+   * Percentage relative to game board.
    */
   x:number;
 
+
+
+  /**
+   * Current vertical position.
+   *
+   * Percentage relative to game board.
+   */
   y:number;
 
 
 
   /**
-   * Movement direction
+   * Horizontal movement velocity.
    */
   velocityX:number;
 
+
+
+  /**
+   * Vertical movement velocity.
+   */
   velocityY:number;
 
 
 
   /**
-   * Target size percentage
+   * Target size as percentage of game board.
+   *
+   * Controlled by Admin.
    */
   size:number;
 
 
 
   /**
-   * Animation state
+   * Current target animation state.
    */
   status:CupidTargetStatus;
 
 
 
   /**
-   * Points earned when hit
+   * Points awarded when this target is hit.
+   *
+   * Controlled by Admin.
    */
   points:number;
 
 
 
   /**
-   * Optional personal message
+   * Optional personal message.
    *
-   * Example:
-   * "You found me ❤️"
+   * Reserved for future target-hit messaging.
    */
   hitMessage?:string;
 
@@ -122,63 +161,71 @@ export interface CupidArrowTarget {
 export interface CupidArrowLevel {
 
 
-
   /**
-   * Level number
+   * Current level number.
    */
   level:number;
 
 
 
   /**
-   * Number of targets
+   * Background image configured by Admin.
    */
-  targetCount:number;
+  image:CupidArrowImage | null;
 
 
 
   /**
-   * Target configurations
+   * Targets configured for this level.
    */
   targets:CupidArrowTarget[];
 
 
 
   /**
-   * Movement difficulty
+   * Number of configured targets.
+   */
+  targetCount:number;
+
+
+
+  /**
+   * Level movement difficulty.
    */
   movementSpeed:CupidMovementSpeed;
 
 
 
   /**
-   * Time limit in seconds
+   * Maximum time allowed for the level.
+   *
+   * Controlled by Admin.
    */
   timeLimit:number;
 
 
 
   /**
-   * Points required
+   * Minimum score required to complete the level.
+   *
+   * Controlled by Admin.
    */
   completionScore:number;
 
 
 
   /**
-   * Admin controlled background
-   * future support
+   * True when this is the last configured level.
+   *
+   * Determined by the backend.
    */
-  backgroundUrl?:string;
-
-
+  isFinalLevel:boolean;
 
 }
 
 
 
 export interface CupidArrowState {
-
 
 
   level:number;
@@ -190,14 +237,10 @@ export interface CupidArrowState {
   combo:number;
 
 
-
   arrowsRemaining:number;
 
 
-
   isGameCompleted:boolean;
-
-
 
 }
 
@@ -210,9 +253,7 @@ export interface CupidArrowPosition {
 
   y:number;
 
-
 }
-
 
 
 
@@ -229,7 +270,7 @@ export interface CupidParticle {
 
 
   /**
-   * Particle symbol
+   * Particle symbol.
    *
    * ❤️
    * ✨
@@ -239,8 +280,10 @@ export interface CupidParticle {
 
 
 
+  /**
+   * Particle lifetime in seconds.
+   */
   lifetime:number;
-
 
 }
 
@@ -249,41 +292,78 @@ export interface CupidParticle {
 export interface CupidArrowLevelResponse {
 
 
+  /**
+   * Current level number.
+   */
   level:number;
 
 
-  targetCount:number;
+
+  /**
+   * Admin-configured background image.
+   */
+  image:CupidArrowImage | null;
 
 
+
+  /**
+   * Targets configured for the level.
+   */
   targets:CupidArrowTarget[];
 
 
+
+  /**
+   * Number of targets returned by backend.
+   */
+  targetCount:number;
+
+
+
+  /**
+   * Movement difficulty configured for level.
+   */
   movementSpeed:CupidMovementSpeed;
 
 
+
+  /**
+   * Time limit configured for level.
+   */
   timeLimit:number;
 
 
+
+  /**
+   * Completion score configured for level.
+   */
   completionScore:number;
 
 
-  backgroundUrl?:string;
 
-
-  musicUrl?:string;
-
+  /**
+   * Whether this is the final configured level.
+   */
+  isFinalLevel:boolean;
 
 }
 
+
+
 export interface CupidProjectile {
+
 
   x:number;
 
+
   y:number;
+
 
   velocityX:number;
 
+
   velocityY:number;
+
 
   active:boolean;
 

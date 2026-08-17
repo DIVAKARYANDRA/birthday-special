@@ -1,4 +1,5 @@
 import {
+  useRef,
   useState,
 } from "react";
 
@@ -18,6 +19,8 @@ interface CupidArrowProps {
 
 
 }
+
+
 
 
 
@@ -44,7 +47,7 @@ angle,
 setAngle
 ]
 =
-useState(-180);
+useState(-90);
 
 
 
@@ -57,7 +60,8 @@ useState(0);
 
 
 
-
+const powerRef =
+useRef(0);
 
 function calculateAim(
 event:React.PointerEvent<HTMLDivElement>
@@ -80,12 +84,15 @@ rect.height / 2;
 
 
 
+
 const dx =
 event.clientX - centerX;
 
 
+
 const dy =
 event.clientY - centerY;
+
 
 
 
@@ -110,6 +117,7 @@ degrees
 
 
 
+
 const distance =
 Math.sqrt(
 dx * dx +
@@ -117,17 +125,27 @@ dy * dy
 );
 
 
-
-setPower(
+const calculatedPower =
 Math.min(
 distance,
 150
-)
 );
+
+
+setPower(
+calculatedPower
+);
+
+
+powerRef.current =
+calculatedPower;
 
 
 
 }
+
+
+
 
 
 
@@ -146,12 +164,14 @@ event.pointerId
 );
 
 
+
 calculateAim(
 event
 );
 
 
 }
+
 
 
 
@@ -177,6 +197,7 @@ event
 
 
 
+
 function handlePointerUp(){
 
 
@@ -188,19 +209,32 @@ setDragging(false);
 
 
 
-if(power < 20)
+
+if(powerRef.current < 20)
 return;
 
-if(angle > -10 && angle < 170)
+
+
+if(
+angle > -10 &&
+angle < 170
+)
 return;
 
-navigator.vibrate?.(30);
+
+
+
+navigator.vibrate?.(
+30
+);
+
+
 
 onShoot(
 
 angle,
 
-power
+powerRef.current
 
 );
 
@@ -211,6 +245,88 @@ setPower(0);
 
 
 }
+
+
+
+
+
+
+function getTrajectoryPoints(){
+
+
+const points=[];
+
+
+const speed =
+power / 6;
+
+
+
+const radians =
+angle *
+(Math.PI / 180);
+
+
+
+let x=50;
+
+let y=85;
+
+
+
+let velocityX =
+Math.cos(radians)
+*
+speed;
+
+
+
+let velocityY =
+Math.sin(radians)
+*
+speed
+*
+-1;
+
+
+
+for(
+let i=1;
+i<=8;
+i++
+){
+
+
+x += velocityX * 2;
+
+
+y += velocityY * 2;
+
+
+velocityY +=0.15;
+
+
+
+points.push({
+
+x,
+
+y
+
+});
+
+
+}
+
+
+
+return points;
+
+
+}
+
+
+
 
 
 
@@ -230,7 +346,9 @@ bottom-8
 
 left-1/2
 
-z-30
+z-40
+
+touch-none
 
 "
 
@@ -258,25 +376,107 @@ handlePointerUp
 }
 
 
+onPointerCancel={
+handlePointerUp
+}
+
+
+
 >
+
+
+
+
+
+{
+dragging &&
+
+<>
+
+{
+getTrajectoryPoints().map(
+(point,index)=>(
+
+
+<div
+
+key={index}
+
+className="
+
+absolute
+
+h-3
+
+w-3
+
+rounded-full
+
+bg-white/70
+
+"
+
+style={{
+
+
+left:
+`${point.x - 50}%`,
+
+
+top:
+`${point.y - 85}%`
+
+
+}}
+
+
+>
+
+
+</div>
+
+
+)
+
+)
+
+}
+
+</>
+
+}
+
+
+
+
 
 
 
 <motion.div
 
 
+
 animate={{
+
 
 rotate:
 angle + 90,
 
 
+
 scale:
+
 dragging
+
 ?
+
 1.25
+
 :
+
 1
+
+
 
 }}
 
@@ -300,7 +500,6 @@ text-6xl
 
 "
 
-
 >
 
 
@@ -313,10 +512,10 @@ text-6xl
 
 
 
+
+
 {
-
 dragging &&
-
 
 <div
 
@@ -331,6 +530,7 @@ top-1/2
 h-40
 
 w-1
+
 origin-bottom
 
 bg-white/50
@@ -339,9 +539,11 @@ bg-white/50
 
 style={{
 
+
 transform:
 
 `rotate(${angle}deg)`
+
 
 }}
 
@@ -351,32 +553,130 @@ transform:
 
 }
 
+
+
+
+
+
+
+
 {
 dragging &&
 
 <div
+
 className="
+
 absolute
+
 top-20
+
 left-1/2
+
 -translate-x-1/2
+
 text-white
+
 text-sm
+
+bg-black/40
+
+px-3
+
+py-1
+
+rounded-lg
+
 "
+
 >
 
+
 Power:
+
 {
-Math.round(power)
+Math.round(
+power
+)
 }
+
+
 
 </div>
 
 }
 
 
+
+
+
+
+
+
+{
+dragging &&
+
+<div
+
+className="
+
+absolute
+
+top-28
+
+left-1/2
+
+-translate-x-1/2
+
+w-32
+
+h-2
+
+bg-white/30
+
+rounded-full
+
+overflow-hidden
+
+"
+
+>
+
+
+<div
+
+
+className="
+
+h-full
+
+bg-white
+
+"
+
+style={{
+
+width:
+`${Math.min(
+(power/150)*100,
+100
+)}%`
+
+}}
+
+
+/>
+
+
+
 </div>
 
+}
+
+
+
+
+</div>
 
 
 

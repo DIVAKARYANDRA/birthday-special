@@ -11,52 +11,27 @@ import type {
 
 interface CupidTargetProps {
 
-
   target:CupidArrowTarget;
-
-
-  onHit:(id:string)=>void;
-
 
 }
 
 
 
-
 export default function CupidTarget(
 {
- target,
- onHit
+ target
 
 }:CupidTargetProps
 ){
 
 
 
-function handleClick(){
-
-
-if(target.status !== "idle")
-return;
-
-
-onHit(
-target.id
-);
-
-
-}
-
-
-
-
-
 const isHit =
-target.status === "hit";
+target.status==="hit";
 
 
 const isBroken =
-target.status === "broken";
+target.status==="broken";
 
 
 
@@ -64,18 +39,12 @@ target.status === "broken";
 
 return (
 
-
-<motion.button
-
-
-type="button"
+<motion.div
 
 
-onClick={
-handleClick
-}
-
-
+initial={{
+  scale:1
+}}
 
 
 animate={
@@ -87,9 +56,9 @@ isBroken
 
 {
 
-scale:[1,1.5,0],
+scale:[1,1.4,0],
 
-rotate:[0,45,-45,90],
+rotate:[0,30,-30,90],
 
 opacity:[1,1,0]
 
@@ -104,7 +73,7 @@ isHit
 
 {
 
-scale:[1,1.3,1],
+scale:[1,1.35,1],
 
 rotate:[0,15,-15,0]
 
@@ -114,6 +83,8 @@ rotate:[0,15,-15,0]
 :
 
 {
+
+y:[0,-5,0],
 
 scale:[1,1.05,1]
 
@@ -125,13 +96,33 @@ scale:[1,1.05,1]
 
 
 
-transition={{
+transition={
 
-duration:1,
-repeat:Infinity
 
-}}
+isBroken || isHit
 
+?
+
+{
+
+duration:0.5
+
+}
+
+
+:
+
+{
+
+duration:2,
+
+repeat:Infinity,
+
+ease:"easeInOut"
+
+}
+
+}
 
 
 
@@ -166,59 +157,42 @@ zIndex:20
 
 
 className="
-
 flex
-
 items-center
-
 justify-center
-
-cursor-crosshair
-
-rounded-full
 overflow-hidden
 select-none
-
 "
-
 
 >
 
 
+
 {
-
-
-target.type === "emoji"
+target.type==="emoji"
 
 &&
-
 
 <span
 
 className="
-
 text-5xl
-
 drop-shadow-xl
-
 "
 
 >
 
-{
-
-target.emoji
-
-}
+{target.emoji}
 
 </span>
 
-
 }
 
 
+
+
 {
-target.type === "image"
+target.type==="image"
 
 &&
 
@@ -226,30 +200,27 @@ target.media
 
 &&
 
+
 <img
 
 src={
 target.media.url
 }
 
-
 alt={
-target.media.alt_text ?? "Cupid target"
+target.media.alt_text ??
+"Cupid target"
 }
 
 
 className="
-
 h-full
-
 w-full
-
 rounded-full
-
 object-cover
-
-shadow-xl
-
+shadow-2xl
+ring-4
+ring-white/50
 "
 
 />
@@ -257,18 +228,19 @@ shadow-xl
 }
 
 
+
 {
-target.type === "image"
-
+target.type==="image"
 &&
-
 !target.media
 
 &&
 
 <span
 
-className="text-4xl"
+className="
+text-4xl
+"
 
 >
 
@@ -280,40 +252,72 @@ className="text-4xl"
 
 
 
+
+
 {
-
-
-isBroken
+isHit
 
 &&
-
 
 <motion.span
 
 initial={{
-
 scale:0,
-
 opacity:0
-
 }}
-
 
 animate={{
 
 scale:[0,1.5,1],
 
-opacity:1
+opacity:[0,1,0]
 
 }}
 
+transition={{
+duration:0.6
+}}
 
 className="
-
 absolute
-
 text-4xl
+"
 
+>
+
+✨
+
+</motion.span>
+
+}
+
+
+
+
+
+{
+isBroken
+
+&&
+
+<motion.span
+
+
+initial={{
+scale:0
+}}
+
+animate={{
+scale:[0,1.5,0]
+}}
+
+transition={{
+duration:0.5
+}}
+
+className="
+absolute
+text-4xl
 "
 
 >
@@ -322,15 +326,12 @@ text-4xl
 
 </motion.span>
 
-
 }
 
 
 
 
-
-</motion.button>
-
+</motion.div>
 
 );
 
