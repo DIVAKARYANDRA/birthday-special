@@ -274,16 +274,11 @@ window.location.reload();
 
 
 
-
-
 const currentImage =
-images.find(
-(image)=>
-image.display_order===level
-)
-||
-null;
+images[level - 1] ?? null;
 
+const hasLevelImage =
+currentImage !== null;
 
 
 
@@ -453,7 +448,8 @@ No hidden object memories added yet ❤️
 {
 !loading
 &&
-currentImage &&
+hasLevelImage
+&&
 
 <HiddenObjectsBoard
 
@@ -479,6 +475,65 @@ handleLevelComplete
 
 />
 
+
+}
+
+
+{
+!loading
+&&
+!hasLevelImage
+&&
+
+<div
+
+className="
+rounded-3xl
+bg-white/10
+p-8
+text-center
+text-white
+backdrop-blur-md
+"
+
+>
+
+<div
+className="
+text-5xl
+mb-4
+"
+>
+🔍
+</div>
+
+
+<h2
+className="
+text-xl
+font-semibold
+"
+>
+
+More memories are being prepared
+
+</h2>
+
+
+<p
+className="
+mt-3
+text-sm
+text-white/60
+"
+>
+
+Level {level} image is not added yet ❤️
+
+</p>
+
+
+</div>
 
 }
 

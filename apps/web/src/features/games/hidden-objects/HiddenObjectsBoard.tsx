@@ -1,5 +1,6 @@
 import {
   useState,
+  useEffect,
 } from "react";
 
 import {
@@ -87,7 +88,18 @@ setCompleted
 useState(false);
 
 
+useEffect(()=>{
 
+setObjects(
+  targets
+);
+
+setScore(0);
+
+setCompleted(false);
+
+
+},[targets]);
 
 
 
@@ -284,7 +296,8 @@ font-bold
 
 
 
-
+{
+!completed &&
 <div
 
 className="
@@ -313,6 +326,8 @@ className="
 w-full
 object-cover
 "
+
+loading="lazy"
 
  />
 
@@ -356,7 +371,7 @@ handleFound
 
 
 </div>
-
+}
 
 
 

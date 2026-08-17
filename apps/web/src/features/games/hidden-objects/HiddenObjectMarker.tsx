@@ -98,7 +98,6 @@ duration:0.4
 
 
 
-
 style={{
 
 position:"absolute",
@@ -107,9 +106,9 @@ left:`${target.x}%`,
 
 top:`${target.y}%`,
 
-width:`${target.radius * 2}%`,
+width:`${target.radius}%`,
 
-height:`${target.radius * 2}%`,
+height:`${target.radius}%`,
 
 transform:"translate(-50%,-50%)"
 
