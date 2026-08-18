@@ -206,11 +206,6 @@ class CupidArrowService:
 
         )
 
-
-
-
-
-
     def delete_level(
         self,
         level_id
@@ -232,13 +227,30 @@ class CupidArrowService:
         )
 
 
+        if not level:
 
-        if level:
+            return None
 
 
-            self.db.delete(level)
 
-            self.db.commit()
+        # Delete all child targets first
+        self.db.query(
+            CupidArrowTarget
+        ).filter(
+            CupidArrowTarget.level_id == level.id
+        ).delete(
+            synchronize_session=False
+        )
+
+
+
+        # Delete parent level
+        self.db.delete(
+            level
+        )
+
+
+        self.db.commit()
 
 
 

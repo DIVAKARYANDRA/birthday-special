@@ -159,6 +159,14 @@ useState<ScorePopup[]>([]);
   =
   useState(false);
 
+  const [
+failureReason,
+setFailureReason
+]
+=
+useState<
+"timeout" | "score" | null
+>(null);
 
 
   const targetsRef =
@@ -318,6 +326,10 @@ useState<ScorePopup[]>([]);
 
                 failedRef.current =
                   true;
+
+                  setFailureReason(
+ "timeout"
+);
 
                 setFailed(
                   true
@@ -982,36 +994,26 @@ newScore
 
           else if(
 
-            remaining.length === 0 &&
+ remaining.length === 0 &&
 
-            newScore <
-            levelData.completionScore &&
+ newScore <
+ levelData.completionScore &&
 
-            !completedRef.current &&
+ !completedRef.current &&
 
-            !failedRef.current
+ !failedRef.current
 
-          ){
+){
 
-            failedRef.current =
-              true;
+    failedRef.current = true;
 
+    setFailureReason(
+ "score"
+);
 
-            setFailed(
-              true
-            );
+    setFailed(true);
 
-
-            setProjectile(
-              null
-            );
-
-
-            setArrowTrail(
-              []
-            );
-
-          }
+}
 
 
           return updated;
@@ -1250,6 +1252,10 @@ lifetime:0.8
     setFailed(
       false
     );
+
+    setFailureReason(
+ null
+);
 
 
     scoreRef.current =
@@ -1731,9 +1737,14 @@ Amazing shot! 💘
               "
             >
 
-              Time's Up!
-
-            </h2>
+{
+failureReason === "timeout"
+?
+"Time's Up!"
+:
+"Need More Points!"
+}
+</h2>
 
 
             <p
