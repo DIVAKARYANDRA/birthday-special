@@ -1,7 +1,7 @@
 import {
-  useRef,
   useState,
 } from "react";
+
 
 import {
   motion,
@@ -22,8 +22,6 @@ interface CupidArrowProps {
 
 
 
-
-
 export default function CupidArrow(
 {
  onShoot
@@ -32,10 +30,17 @@ export default function CupidArrow(
 ){
 
 
-
 const [
 dragging,
 setDragging
+]
+=
+useState(false);
+
+
+const [
+shooting,
+setShooting
 ]
 =
 useState(false);
@@ -60,39 +65,44 @@ useState(0);
 
 
 
-const powerRef =
-useRef(0);
 
 function calculateAim(
 event:React.PointerEvent<HTMLDivElement>
 ){
 
 
-const rect =
-event.currentTarget.getBoundingClientRect();
+const board =
+event.currentTarget.parentElement
+?.getBoundingClientRect();
 
 
 
-const centerX =
-rect.left +
-rect.width / 2;
+if(!board)
+return;
 
 
-const centerY =
-rect.top +
-rect.height / 2;
 
+const shooterX =
+board.left +
+(board.width * 0.5);
+
+
+
+const shooterY =
+board.top +
+(board.height * 0.85);
 
 
 
 const dx =
-event.clientX - centerX;
+event.clientX -
+shooterX;
 
 
 
 const dy =
-event.clientY - centerY;
-
+event.clientY -
+shooterY;
 
 
 
@@ -116,8 +126,6 @@ degrees
 
 
 
-
-
 const distance =
 Math.sqrt(
 dx * dx +
@@ -125,27 +133,18 @@ dy * dy
 );
 
 
-const calculatedPower =
-Math.min(
-distance,
-150
-);
-
 
 setPower(
-calculatedPower
+
+Math.min(
+distance / 2,
+150
+)
+
 );
-
-
-powerRef.current =
-calculatedPower;
-
 
 
 }
-
-
-
 
 
 
@@ -164,15 +163,12 @@ event.pointerId
 );
 
 
-
 calculateAim(
 event
 );
 
 
 }
-
-
 
 
 
@@ -195,9 +191,6 @@ event
 
 
 
-
-
-
 function handlePointerUp(){
 
 
@@ -209,33 +202,29 @@ setDragging(false);
 
 
 
-
-if(powerRef.current < 20)
+if(power < 20)
 return;
 
 
 
-if(
-angle > -10 &&
-angle < 170
-)
-return;
+navigator.vibrate?.(30);
 
 
 
+setShooting(true);
 
-navigator.vibrate?.(
-30
-);
+
+setTimeout(()=>{
+
+setShooting(false);
+
+},200);
 
 
 
 onShoot(
-
 angle,
-
-powerRef.current
-
+power
 );
 
 
@@ -243,11 +232,7 @@ powerRef.current
 setPower(0);
 
 
-
 }
-
-
-
 
 
 
@@ -258,7 +243,7 @@ const points=[];
 
 
 const speed =
-power / 6;
+power / 10;
 
 
 
@@ -292,15 +277,15 @@ speed
 
 for(
 let i=1;
-i<=8;
+i<=20;
 i++
 ){
 
 
-x += velocityX * 2;
+x += velocityX * 1.5;
 
 
-y += velocityY * 2;
+y += velocityY * 1.5;
 
 
 velocityY +=0.15;
@@ -319,7 +304,6 @@ y
 }
 
 
-
 return points;
 
 
@@ -329,11 +313,7 @@ return points;
 
 
 
-
-
-
 return (
-
 
 <div
 
@@ -381,22 +361,59 @@ handlePointerUp
 }
 
 
-
 >
 
 
 
+{/* Bow string */}
 
 
 {
 dragging &&
 
-<>
+<div
+
+className="
+
+absolute
+
+left-1/2
+
+top-1/2
+
+h-24
+
+w-1
+
+bg-white/60
+
+origin-bottom
+
+"
+
+style={{
+
+transform:
+
+`rotate(${angle + 90}deg)`
+
+}}
+
+
+/>
+
+}
+
+
+
+{/* trajectory dots */}
 
 {
+
+dragging &&
+
 getTrajectoryPoints().map(
 (point,index)=>(
-
 
 <div
 
@@ -406,47 +423,36 @@ className="
 
 absolute
 
-h-3
+h-2
 
-w-3
+w-2
 
 rounded-full
 
-bg-white/70
+bg-white/80
 
 "
 
 style={{
 
-
 left:
-`${point.x - 50}%`,
+`${point.x-50}%`,
 
 
 top:
-`${point.y - 85}%`
+`${point.y-85}%`
 
 
 }}
 
 
->
-
-
-</div>
-
+/>
 
 )
 
 )
 
 }
-
-</>
-
-}
-
-
 
 
 
@@ -455,16 +461,21 @@ top:
 <motion.div
 
 
-
 animate={{
-
 
 rotate:
 angle + 90,
 
 
-
 scale:
+
+shooting
+
+?
+
+0.8
+
+:
 
 dragging
 
@@ -476,10 +487,7 @@ dragging
 
 1
 
-
-
 }}
-
 
 
 transition={{
@@ -512,54 +520,6 @@ text-6xl
 
 
 
-
-
-{
-dragging &&
-
-<div
-
-className="
-
-absolute
-
-left-1/2
-
-top-1/2
-
-h-40
-
-w-1
-
-origin-bottom
-
-bg-white/50
-
-"
-
-style={{
-
-
-transform:
-
-`rotate(${angle}deg)`
-
-
-}}
-
-
-/>
-
-
-}
-
-
-
-
-
-
-
-
 {
 dragging &&
 
@@ -575,32 +535,27 @@ left-1/2
 
 -translate-x-1/2
 
-text-white
+rounded-lg
 
-text-sm
-
-bg-black/40
+bg-black/50
 
 px-3
 
 py-1
 
-rounded-lg
+text-sm
+
+text-white
 
 "
 
 >
-
 
 Power:
 
 {
-Math.round(
-power
-)
+Math.round(power)
 }
-
-
 
 </div>
 
@@ -608,76 +563,7 @@ power
 
 
 
-
-
-
-
-
-{
-dragging &&
-
-<div
-
-className="
-
-absolute
-
-top-28
-
-left-1/2
-
--translate-x-1/2
-
-w-32
-
-h-2
-
-bg-white/30
-
-rounded-full
-
-overflow-hidden
-
-"
-
->
-
-
-<div
-
-
-className="
-
-h-full
-
-bg-white
-
-"
-
-style={{
-
-width:
-`${Math.min(
-(power/150)*100,
-100
-)}%`
-
-}}
-
-
-/>
-
-
-
 </div>
-
-}
-
-
-
-
-</div>
-
 
 
 );

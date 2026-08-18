@@ -11,9 +11,7 @@ import type {
 
 interface CupidParticlesProps {
 
-
   particles:CupidParticle[];
-
 
 }
 
@@ -27,16 +25,43 @@ export default function CupidParticles(
 ){
 
 
-
 return (
-
 
 <>
 
 {
-
 particles.map(
-(particle)=>(
+(particle)=>{
+
+
+const angle =
+Math.random() * 360;
+
+
+const distance =
+40 + Math.random() * 50;
+
+
+
+const endX =
+Math.cos(
+angle * Math.PI / 180
+)
+*
+distance;
+
+
+
+const endY =
+Math.sin(
+angle * Math.PI / 180
+)
+*
+distance;
+
+
+
+return (
 
 
 <motion.span
@@ -50,48 +75,77 @@ particle.id
 
 initial={{
 
-opacity:1,
+opacity:0,
 
-scale:0.5,
+scale:0.2,
 
 x:0,
 
-y:0
+y:0,
+
+rotate:0
 
 }}
+
+
 
 animate={{
 
 
-opacity:[1,0],
+opacity:[0,1,0],
 
 
-scale:[0.5,1.8],
+scale:[
 
-rotate:[
-0,
-360
+0.2,
+
+1.4,
+
+0.8
+
 ],
 
+
 x:[
+
 0,
-Math.random()*80-40
+
+endX
+
 ],
 
 
 y:[
+
 0,
-Math.random()*80-40
+
+endY
+
+],
+
+
+rotate:[
+
+0,
+
+360
+
 ]
 
 
 }}
 
 
+
 transition={{
 
+
 duration:
-particle.lifetime
+particle.lifetime,
+
+
+ease:"easeOut"
+
 
 }}
 
@@ -108,7 +162,9 @@ left:`${particle.x}%`,
 
 top:`${particle.y}%`,
 
-zIndex:50,
+
+zIndex:60,
+
 
 pointerEvents:"none"
 
@@ -123,6 +179,8 @@ text-3xl
 
 select-none
 
+drop-shadow-xl
+
 "
 
 
@@ -130,21 +188,21 @@ select-none
 
 
 {
-
 particle.emoji
-
 }
 
 
 </motion.span>
 
 
-)
+);
+
+
+}
 
 )
 
 }
-
 
 </>
 

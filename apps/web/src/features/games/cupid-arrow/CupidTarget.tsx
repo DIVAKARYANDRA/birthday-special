@@ -35,8 +35,6 @@ target.status==="broken";
 
 
 
-
-
 return (
 
 <motion.div
@@ -46,9 +44,7 @@ initial={{
   scale:1
 }}
 
-
 animate={
-
 
 isBroken
 
@@ -56,11 +52,11 @@ isBroken
 
 {
 
-scale:[1,1.4,0],
+scale:[1,1.6,0],
 
-rotate:[0,30,-30,90],
+rotate:[0,40,-40,90],
 
-opacity:[1,1,0]
+opacity:[1,1,0],
 
 }
 
@@ -73,9 +69,15 @@ isHit
 
 {
 
-scale:[1,1.35,1],
+scale:[1,1.45,1],
 
-rotate:[0,15,-15,0]
+rotate:[0,20,-20,0],
+
+filter:[
+"brightness(1)",
+"brightness(1.8)",
+"brightness(1)"
+]
 
 }
 
@@ -84,17 +86,13 @@ rotate:[0,15,-15,0]
 
 {
 
-y:[0,-5,0],
+y:[0,-6,0],
 
 scale:[1,1.05,1]
 
 }
 
-
 }
-
-
-
 
 transition={
 

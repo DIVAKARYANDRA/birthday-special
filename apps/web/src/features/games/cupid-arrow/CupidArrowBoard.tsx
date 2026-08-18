@@ -358,7 +358,6 @@ useState<ScorePopup[]>([]);
 
   },[
     levelData,
-    failed
   ]);
 
 
@@ -701,7 +700,7 @@ useState<ScorePopup[]>([]);
 
 
     const speed =
-      power / 6;
+      power / 10;
 
 
     setProjectile({
@@ -778,12 +777,12 @@ useState<ScorePopup[]>([]);
          */
 
         return (
-          distance <
-          Math.max(
-            target.size / 2,
-            2
-          )
-        );
+  distance <
+  Math.max(
+    target.size * 0.45,
+    1.5
+  )
+);
 
       }
     );
@@ -1155,9 +1154,54 @@ item.id!==popup.id
 
     window.setTimeout(()=>{
 
-      setParticles(
-        []
-      );
+      setParticles([
+
+{
+id:crypto.randomUUID(),
+x,
+y,
+emoji:"💥",
+lifetime:0.5
+},
+
+
+{
+id:crypto.randomUUID(),
+x:x+5,
+y:y-5,
+emoji:"❤️",
+lifetime:0.8
+},
+
+
+{
+id:crypto.randomUUID(),
+x:x-5,
+y:y+5,
+emoji:"💖",
+lifetime:0.8
+},
+
+
+{
+id:crypto.randomUUID(),
+x:x+8,
+y:y+3,
+emoji:"✨",
+lifetime:0.8
+},
+
+
+{
+id:crypto.randomUUID(),
+x:x-8,
+y:y-3,
+emoji:"✨",
+lifetime:0.8
+}
+
+
+]);
 
     },1000);
 
