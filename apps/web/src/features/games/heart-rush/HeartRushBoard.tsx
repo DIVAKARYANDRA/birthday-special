@@ -522,10 +522,7 @@ export default function HeartRushBoard(
 
 
         const availableObjects =
-          levelData.objects.filter(
-            item=>
-              true
-          );
+          levelData.objects;
 
 
         if(
