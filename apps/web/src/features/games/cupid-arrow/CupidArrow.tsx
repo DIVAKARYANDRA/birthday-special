@@ -63,18 +63,24 @@ setPower
 =
 useState(0);
 
-
+const [
+aimVector,
+setAimVector
+]
+=
+useState({
+x:0,
+y:-1
+});
 
 
 function calculateAim(
 event:React.PointerEvent<HTMLDivElement>
 ){
 
-
 const board =
 event.currentTarget.parentElement
 ?.getBoundingClientRect();
-
 
 
 if(!board)
@@ -100,16 +106,45 @@ shooterX;
 
 
 
+// IMPORTANT:
+// invert Y because screen coordinates are opposite
 const dy =
-event.clientY -
-shooterY;
+shooterY -
+event.clientY;
+
+
+
+const distance =
+Math.sqrt(
+dx * dx +
+dy * dy
+);
+
+
+
+const normalizedX =
+dx / distance;
+
+
+const normalizedY =
+dy / distance;
+
+
+
+setAimVector({
+
+x:normalizedX,
+
+y:normalizedY
+
+});
 
 
 
 const radians =
 Math.atan2(
-dy,
-dx
+normalizedY,
+normalizedX
 );
 
 
@@ -126,28 +161,20 @@ degrees
 
 
 
-const distance =
-Math.sqrt(
-dx * dx +
-dy * dy
-);
-
-
-
 setPower(
 
 Math.min(
+
 distance / 2,
+
 150
+
 )
 
 );
 
 
 }
-
-
-
 
 
 function handlePointerDown(
@@ -223,8 +250,17 @@ setShooting(false);
 
 
 onShoot(
-angle,
+
+Math.atan2(
+aimVector.y,
+aimVector.x
+)
+*
+(180 / Math.PI),
+
+
 power
+
 );
 
 
@@ -235,21 +271,13 @@ setPower(0);
 }
 
 
-
 function getTrajectoryPoints(){
-
 
 const points=[];
 
 
 const speed =
 power / 10;
-
-
-
-const radians =
-angle *
-(Math.PI / 180);
 
 
 
@@ -260,18 +288,14 @@ let y=85;
 
 
 let velocityX =
-Math.cos(radians)
-*
+aimVector.x *
 speed;
 
 
 
 let velocityY =
-Math.sin(radians)
-*
-speed
-*
--1;
+aimVector.y *
+speed;
 
 
 
@@ -285,10 +309,11 @@ i++
 x += velocityX * 1.5;
 
 
-y += velocityY * 1.5;
+y -= velocityY * 1.5;
 
 
-velocityY +=0.15;
+// gravity pulls down
+velocityY -= 0.15;
 
 
 
@@ -306,9 +331,7 @@ y
 
 return points;
 
-
 }
-
 
 
 

@@ -569,7 +569,7 @@ useState<ScorePopup[]>([]);
 
 
             const gravity =
-              0.15;
+              0.08;
 
 
             const next:CupidProjectile =
@@ -716,11 +716,9 @@ useState<ScorePopup[]>([]);
         speed,
 
       velocityY:
-        Math.sin(
-          radians
-        ) *
-        speed *
-        -1,
+Math.sin(radians)
+*
+speed
 
       active:true
 
