@@ -10,7 +10,7 @@ export const GAME_PASSWORDS: Record<string, GamePasswordConfig> = {
 
   "memory-match": {
 
-    password: "LOVE123",
+    password: "MEMORY2006",
 
     title:
       "Memory Match ❤️",
@@ -22,7 +22,7 @@ export const GAME_PASSWORDS: Record<string, GamePasswordConfig> = {
 
   "story-puzzle":{
 
-    password:"PUZZLE000",
+    password:"STORY2006",
 
     title:"Our Story Puzzle",
 
@@ -32,7 +32,7 @@ export const GAME_PASSWORDS: Record<string, GamePasswordConfig> = {
 
     "hidden-objects":{
 
-  password:"DIVA000",
+  password:"HIDDEN2006",
 
   title:"Hidden Objects 🔍",
 
@@ -42,7 +42,7 @@ export const GAME_PASSWORDS: Record<string, GamePasswordConfig> = {
 
 "heart-rush": {
 
-  password: "HEART777",
+  password: "HEART2006",
 
   title:
     "Heart Rush 💖",
@@ -54,7 +54,7 @@ export const GAME_PASSWORDS: Record<string, GamePasswordConfig> = {
 
 "cupid-arrow": {
 
-  password: "CUPID777",
+  password: "CUPID2006",
 
   title:
     "Cupid Arrow Challenge 💘",
@@ -67,7 +67,7 @@ export const GAME_PASSWORDS: Record<string, GamePasswordConfig> = {
 
   "guess-memory": {
 
-    password: "HEART456",
+    password: "GUESS2006",
 
     title:
       "Guess The Memory 📸",
@@ -80,7 +80,7 @@ export const GAME_PASSWORDS: Record<string, GamePasswordConfig> = {
 
   "love-quiz": {
 
-    password: "FOREVER789",
+    password: "LOVE2006",
 
     title:
       "Love Quiz 💌",
