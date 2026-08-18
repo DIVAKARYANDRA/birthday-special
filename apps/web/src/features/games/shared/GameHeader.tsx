@@ -74,7 +74,7 @@ tracking-wide
 "
 >
 
-❤️ Memory Match
+🎮 Love Game Zone
 
 </h1>
 
@@ -87,7 +87,7 @@ text-white/50
 "
 >
 
-A journey of memories
+A journey of memories ❤️
 
 </p>
 
