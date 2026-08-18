@@ -340,27 +340,18 @@ return (
 
 <div
 
-
 className="
-
 absolute
-
-bottom-8
-
 left-1/2
-
+top-[85%]
 z-40
-
 touch-none
-
 "
 
 style={{
-
-transform:
-"translateX(-50%)"
-
+transform:"translate(-50%,-50%)"
 }}
+
 
 
 
@@ -388,47 +379,6 @@ handlePointerUp
 
 
 
-{/* Bow string */}
-
-
-{
-dragging &&
-
-<div
-
-className="
-
-absolute
-
-left-1/2
-
-top-1/2
-
-h-24
-
-w-1
-
-bg-white/60
-
-origin-bottom
-
-"
-
-style={{
-
-transform:
-
-`rotate(${angle + 90}deg)`
-
-}}
-
-
-/>
-
-}
-
-
-
 {/* trajectory dots */}
 
 {
@@ -443,31 +393,23 @@ getTrajectoryPoints().map(
 key={index}
 
 className="
-
 absolute
-
 h-2
-
 w-2
-
 rounded-full
-
 bg-white/80
-
 "
 
 style={{
 
 left:
-`${point.x-50}%`,
+`${point.x}%`,
 
 
 top:
-`${point.y-85}%`
-
+`${point.y}%`
 
 }}
-
 
 />
 
@@ -487,8 +429,7 @@ top:
 animate={{
 
 rotate:
-angle + 90,
-
+angle,
 
 scale:
 

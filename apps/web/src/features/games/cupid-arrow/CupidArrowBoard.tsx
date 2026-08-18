@@ -1428,7 +1428,7 @@ lifetime:0.8
             transform:
               `translate(-50%,-50%) rotate(${
                 Math.atan2(
-                  projectile.velocityY,
+                  -projectile.velocityY,
                   projectile.velocityX
                 ) *
                 (180 / Math.PI)
