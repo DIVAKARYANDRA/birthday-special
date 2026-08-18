@@ -40,6 +40,18 @@ export const GAME_PASSWORDS: Record<string, GamePasswordConfig> = {
 
 },
 
+"heart-rush": {
+
+  password: "HEART777",
+
+  title:
+    "Heart Rush 💖",
+
+  hint:
+    "Catch the hearts and avoid the bombs ❤️"
+
+},
+
 "cupid-arrow": {
 
   password: "CUPID777",

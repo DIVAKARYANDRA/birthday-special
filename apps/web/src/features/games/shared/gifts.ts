@@ -59,6 +59,18 @@ Record<string,GameGift>
 
 },
 
+"heart-rush":{
+
+  title:
+    "Heart Rush Champion 💖",
+
+  message:
+    "You caught the hearts, survived the bombs and conquered the Heart Rush challenge ❤️ Take a screenshot and send it to me 🎁",
+
+  emoji:
+    "💖"
+
+},
 
 "hidden-objects":{
 

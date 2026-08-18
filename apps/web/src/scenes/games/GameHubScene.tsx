@@ -27,6 +27,15 @@ const GAMES = [
 },
 
 {
+  id:"heart-rush",
+  title:"Heart Rush",
+  emoji:"💖",
+  description:"Catch the falling hearts and avoid the bombs",
+  route:"/games/heart-rush",
+  available:true
+},
+
+{
  id:"hidden-objects",
  title:"Hidden Objects",
  emoji:"🔍",
@@ -43,6 +52,7 @@ const GAMES = [
  route:"/games/cupid-arrow",
  available:true
 },
+
 
 {
  id:"love-quiz",

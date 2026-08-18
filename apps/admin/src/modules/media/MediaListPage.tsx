@@ -327,6 +327,10 @@ Hidden Objects 🔍
  Cupid Arrow 🏹
 </option>
 
+<option value="heart-rush">
+Hear Rush
+</option>
+
 <option value="treasure-hunt">
 Treasure Hunt 🔐
 </option>
