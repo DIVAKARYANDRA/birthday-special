@@ -718,7 +718,7 @@ useState<ScorePopup[]>([]);
       velocityY:
 Math.sin(radians)
 *
-speed
+speed,
 
       active:true
 
