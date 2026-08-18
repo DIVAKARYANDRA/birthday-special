@@ -71,14 +71,14 @@ StoryPuzzleLevel[] = [
 
 {
  level:9,
- gridSize:5,
+ gridSize:6,
  points:160
 },
 
 
 {
  level:10,
- gridSize:5,
+ gridSize:6,
  points:200
 }
 
