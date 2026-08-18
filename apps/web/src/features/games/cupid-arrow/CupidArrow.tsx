@@ -38,6 +38,7 @@ setDragging
 useState(false);
 
 
+
 const [
 shooting,
 setShooting
@@ -63,24 +64,34 @@ setPower
 =
 useState(0);
 
+
+
 const [
 aimVector,
 setAimVector
 ]
 =
 useState({
+
 x:0,
+
 y:-1
+
 });
+
+
+
 
 
 function calculateAim(
 event:React.PointerEvent<HTMLDivElement>
 ){
 
+
 const board =
 event.currentTarget.parentElement
 ?.getBoundingClientRect();
+
 
 
 if(!board)
@@ -106,8 +117,7 @@ shooterX;
 
 
 
-// IMPORTANT:
-// invert Y because screen coordinates are opposite
+// convert screen Y to game Y
 const dy =
 shooterY -
 event.clientY;
@@ -122,8 +132,14 @@ dy * dy
 
 
 
+if(distance===0)
+return;
+
+
+
 const normalizedX =
 dx / distance;
+
 
 
 const normalizedY =
@@ -141,23 +157,24 @@ y:normalizedY
 
 
 
-const radians =
+
+
+// IMPORTANT:
+// CSS rotation uses screen coordinates
+const visualAngle =
 Math.atan2(
-normalizedY,
-normalizedX
-);
-
-
-
-const degrees =
-radians *
-(180 / Math.PI);
+-dy,
+dx
+)
+*
+(180/Math.PI);
 
 
 
 setAngle(
-degrees
+visualAngle
 );
+
 
 
 
@@ -177,6 +194,11 @@ distance / 2,
 }
 
 
+
+
+
+
+
 function handlePointerDown(
 event:React.PointerEvent<HTMLDivElement>
 ){
@@ -190,12 +212,16 @@ event.pointerId
 );
 
 
+
 calculateAim(
 event
 );
 
 
 }
+
+
+
 
 
 
@@ -218,11 +244,17 @@ event
 
 
 
+
+
+
+
+
 function handlePointerUp(){
 
 
 if(!dragging)
 return;
+
 
 
 setDragging(false);
@@ -241,6 +273,7 @@ navigator.vibrate?.(30);
 setShooting(true);
 
 
+
 setTimeout(()=>{
 
 setShooting(false);
@@ -251,13 +284,7 @@ setShooting(false);
 
 onShoot(
 
-Math.atan2(
-aimVector.y,
-aimVector.x
-)
-*
-(180 / Math.PI),
-
+angle,
 
 power
 
@@ -268,12 +295,21 @@ power
 setPower(0);
 
 
+
 }
+
+
+
+
+
+
 
 
 function getTrajectoryPoints(){
 
+
 const points=[];
+
 
 
 const speed =
@@ -299,6 +335,7 @@ speed;
 
 
 
+
 for(
 let i=1;
 i<=20;
@@ -309,11 +346,14 @@ i++
 x += velocityX * 1.5;
 
 
+
+// game coordinates
 y -= velocityY * 1.5;
 
 
-// gravity pulls down
-velocityY -= 0.15;
+
+// gravity pulls downward
+velocityY -=0.15;
 
 
 
@@ -329,9 +369,13 @@ y
 }
 
 
+
 return points;
 
+
 }
+
+
 
 
 
@@ -349,9 +393,11 @@ touch-none
 "
 
 style={{
-transform:"translate(-50%,-50%)"
-}}
 
+transform:
+"translate(-50%,-50%)"
+
+}}
 
 
 
@@ -379,14 +425,14 @@ handlePointerUp
 
 
 
-{/* trajectory dots */}
 
 {
-
 dragging &&
 
 getTrajectoryPoints().map(
+
 (point,index)=>(
+
 
 <div
 
@@ -402,16 +448,15 @@ bg-white/80
 
 style={{
 
-left:
-`${point.x}%`,
+left:`${point.x}%`,
 
-
-top:
-`${point.y}%`
+top:`${point.y}%`
 
 }}
 
+
 />
+
 
 )
 
@@ -423,13 +468,16 @@ top:
 
 
 
+
 <motion.div
 
 
 animate={{
 
+
 rotate:
 angle,
+
 
 scale:
 
@@ -451,7 +499,9 @@ dragging
 
 1
 
+
 }}
+
 
 
 transition={{
@@ -463,13 +513,9 @@ duration:0.1
 
 
 className="
-
 cursor-pointer
-
 select-none
-
 text-6xl
-
 "
 
 >
@@ -484,33 +530,24 @@ text-6xl
 
 
 
+
+
 {
 dragging &&
 
 <div
 
 className="
-
 absolute
-
 top-20
-
 left-1/2
-
 -translate-x-1/2
-
 rounded-lg
-
 bg-black/50
-
 px-3
-
 py-1
-
 text-sm
-
 text-white
-
 "
 
 >
@@ -521,9 +558,11 @@ Power:
 Math.round(power)
 }
 
+
 </div>
 
 }
+
 
 
 
