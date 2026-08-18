@@ -103,13 +103,13 @@ setShowLevelComplete
 useState(false);
 
   const [
-    timeRemaining,
-    setTimeRemaining
-  ]
-  =
-  useState(
-    levelData.timeLimit
-  );
+ timeRemaining,
+ setTimeRemaining
+]
+=
+useState(
+ levelData.timeLimit ?? 60
+);
 
 
   const [
@@ -357,7 +357,6 @@ useState<ScorePopup[]>([]);
 
 
   },[
-    levelData,
   ]);
 
 
