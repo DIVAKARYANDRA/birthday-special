@@ -52,7 +52,8 @@ const StoryPuzzleScene = lazy(
 const HiddenObjectsScene = lazy(
 ()=>import("@/scenes/games/HiddenObjectsScene")
 );
-
+import HeartRushScene
+from "@/scenes/games/HeartRushScene";
 /** Ambient, in-world loading fallback — per
  * docs/02-design-system.md, Section 7: "loading indicators are
  * ambient/thematic... rather than generic spinners." A minimal shimmer
@@ -104,6 +105,12 @@ function AnimatedRoutes() {
             path="/games/cupid-arrow"
             element={<CupidArrowScene />}
             />
+            <Route
+            path="/games/heart-rush"
+            element={
+              <HeartRushScene />
+            }
+          />
 
            
           <Route path="*" element={<LandingScene />} />

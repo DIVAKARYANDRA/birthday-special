@@ -30,6 +30,10 @@ const NAV_ITEMS = [
     to: "/games/cupid-arrow",
     label: "Cupid Arrow 🏹❤️"
   },
+  {
+    to: "/games/heart-rush",
+    label: "Heart Rush ❤️"
+  },
   
 ];
 

@@ -33,6 +33,8 @@ import HiddenObjectEditorPage
 from "@/modules/games/hidden-objects/HiddenObjectEditorPage";
 import CupidArrowEditorPage
 from "@/modules/games/cupid-arrow/CupidArrowEditorPage";
+import HeartRushEditorPage
+from "@/modules/games/heart-rush/HeartRushEditorPage";
 
 function useSessionHydration() {
   useEffect(() => {
@@ -67,6 +69,10 @@ export default function App() {
             <Route
               path="/games/cupid-arrow"
               element={<CupidArrowEditorPage />}
+            />
+            <Route
+              path="/games/heart-rush"
+              element={<HeartRushEditorPage />}
             />
             <Route path="/memories" element={<MemoriesListPage />} />
             <Route path="/timeline" element={<TimelineListPage />} />

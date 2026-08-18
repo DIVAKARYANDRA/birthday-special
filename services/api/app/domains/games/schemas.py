@@ -175,3 +175,96 @@ class CupidArrowTargetRead(BaseModel):
     class Config:
 
         from_attributes = True
+
+# ============================================================
+# Heart Rush
+# ============================================================
+
+class HeartRushLevelCreate(BaseModel):
+
+    media_id: uuid.UUID
+
+    level: int
+
+    time_limit: int = 60
+
+    completion_score: int = 500
+
+    spawn_speed: str = "medium"
+
+    spawn_frequency: int = 1500
+
+    max_objects: int = 5
+
+
+class HeartRushLevelRead(BaseModel):
+
+    id: uuid.UUID
+
+    media_id: uuid.UUID
+
+    level: int
+
+    time_limit: int
+
+    completion_score: int
+
+    spawn_speed: str
+
+    spawn_frequency: int
+
+    max_objects: int
+
+
+    class Config:
+        from_attributes = True
+
+
+class HeartRushObjectCreate(BaseModel):
+
+    visual_type: str = "emoji"
+
+    emoji: str | None = None
+
+    media_id: uuid.UUID | None = None
+
+    behavior_type: str = "normal"
+
+    name: str
+
+    points: int = 10
+
+    fall_speed: float = 2.0
+
+    rarity: str = "common"
+
+    is_active: bool = True
+
+
+class HeartRushObjectRead(BaseModel):
+
+    id: uuid.UUID
+
+    level_id: uuid.UUID
+
+    visual_type: str
+
+    emoji: str | None
+
+    media_id: uuid.UUID | None
+
+    behavior_type: str
+
+    name: str
+
+    points: int
+
+    fall_speed: float
+
+    rarity: str
+
+    is_active: bool
+
+
+    class Config:
+        from_attributes = True
