@@ -141,10 +141,12 @@ class CupidArrowService:
 
 
         if existing:
+
             raise HTTPException(
                 status_code=400,
                 detail="Level already exists"
             )
+
 
 
         level = CupidArrowLevel(
@@ -155,25 +157,44 @@ class CupidArrowService:
 
             level=payload.level,
 
+
             target_type=payload.target_type,
 
             target_emoji=payload.target_emoji,
 
             target_name=payload.target_name,
 
+
             target_size=payload.target_size,
+
 
             start_x=payload.start_x,
 
             start_y=payload.start_y,
 
+
             velocity_x=payload.velocity_x,
 
             velocity_y=payload.velocity_y,
 
+
             points=payload.points,
 
-            is_face_level=payload.is_face_level
+
+            is_face_level=payload.is_face_level,
+
+
+            # NEW FIELDS
+            movement_speed=
+                payload.movement_speed,
+
+
+            time_limit=
+                payload.time_limit,
+
+
+            completion_score=
+                payload.completion_score
 
         )
 
