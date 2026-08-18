@@ -8,18 +8,19 @@ import type {
 // ============================================================
 
 export async function getHeartRushLevel(
-  level:number
-):Promise<HeartRushLevel>{
+  level: number
+): Promise<HeartRushLevel> {
+
+  const baseUrl =
+    import.meta.env.VITE_API_BASE_URL ?? "";
 
   const response =
     await fetch(
-      `${
-        import.meta.env.VITE_API_BASE_URL ?? ""
-      }/api/v1/experience/heart-rush/${level}`
+      `${baseUrl}/api/v1/experience/heart-rush/${level}`
     );
 
 
-  if(!response.ok){
+  if (!response.ok) {
 
     throw new Error(
       "Unable to load Heart Rush level"
@@ -28,7 +29,10 @@ export async function getHeartRushLevel(
   }
 
 
-  return response.json()
-    as Promise<HeartRushLevel>;
+  const data =
+    await response.json();
+
+
+  return data as HeartRushLevel;
 
 }
