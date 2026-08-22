@@ -76,7 +76,7 @@ def create_media_asset(payload: MediaAssetCreate, db: Session = Depends(get_db))
 @router.get("", response_model=list[MediaAssetRead])
 def list_media_assets(
     status: MediaAssetStatus | None = None,
-    limit: int = 50,
+    limit: int = 5000,
     offset: int = 0,
     db: Session = Depends(get_db),
 ) -> list[MediaAssetRead]:

@@ -41,7 +41,6 @@ text-white
 "
 >
 
-
 {/* Top controls */}
 
 <div
@@ -74,7 +73,7 @@ tracking-wide
 "
 >
 
-🎮 Love Game Zone
+🎮 Game Zone
 
 </h1>
 
