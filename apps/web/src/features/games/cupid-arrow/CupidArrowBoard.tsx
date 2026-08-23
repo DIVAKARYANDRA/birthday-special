@@ -941,21 +941,18 @@ newCombo
             );
 
 
-          /*
-           * Completion requires:
-           *
-           * 1. Every target is broken.
-           * 2. Required score is reached.
-           */
 
           if(
+
 (
 remaining.length===0
+||
+newScore >= levelData.completionScore
+)
 
 &&
 
-newScore >=
-levelData.completionScore
+!completedRef.current
 
 )
 
@@ -966,6 +963,15 @@ levelData.completionScore
 
 completedRef.current=true;
 
+setTargets(
+previous =>
+previous.map(
+target=>({
+...target,
+status:"broken"
+})
+)
+);
 
 
 setShowLevelComplete(true);

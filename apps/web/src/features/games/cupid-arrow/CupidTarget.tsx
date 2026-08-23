@@ -158,7 +158,7 @@ className="
 flex
 items-center
 justify-center
-overflow-hidden
+overflow-visible
 select-none
 "
 
@@ -174,8 +174,9 @@ target.type==="emoji"
 <span
 
 className="
-text-5xl
+text-[clamp(1.5rem,5vw,3.5rem)]
 drop-shadow-xl
+leading-none
 "
 
 >
