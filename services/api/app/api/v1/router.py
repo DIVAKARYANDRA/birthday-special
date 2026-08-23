@@ -24,9 +24,7 @@ from app.domains.memories import router as memories_router
 from app.domains.quotes import router as quotes_router
 from app.domains.timeline import router as timeline_router
 from app.domains.unlocks import router as unlocks_router
-from app.api.v1.experience import (
-    pooja_kitchen
-)
+
 from app.domains.media.public_router import (
     router as media_public_router
 )
@@ -255,11 +253,7 @@ api_router.include_router(
 # Public Pooja Kitchen Game
 # ============================================================
 
-api_router.include_router(
-    pooja_kitchen.router,
-    prefix="/experience/pooja-kitchen",
-    tags=["experience:pooja-kitchen"]
-)
+
 
 # ------------------------------------------------------------------
 # Future domain router registration
