@@ -5,6 +5,7 @@ import {
 
 import {
   motion,
+  AnimatePresence,
 } from "framer-motion";
 
 
@@ -376,64 +377,158 @@ handleFound
 
 
 
-
-
 <div
-
 className="
 mt-5
-text-center
+rounded-3xl
+bg-white/10
+p-5
 text-white
+backdrop-blur-md
 "
-
 >
-
 
 <p
 className="
+text-center
 text-sm
-text-white/60
+font-semibold
+text-white/80
 "
 >
 
-Find the hidden memories ❤️
+🔍 Find these memories
 
 </p>
 
 
-
-<p
+<div
 className="
-mt-2
-text-xl
-font-semibold
+mt-4
+space-y-2
 "
 >
 
+<AnimatePresence>
+{
+
+objects
+.filter(
+object =>
+!object.found
+)
+.map(
+object => (
+
+<motion.div
+
+key={
+object.id
+}
+
+initial={{
+opacity:0,
+x:-10
+}}
+
+animate={{
+opacity:1,
+x:0
+}}
+
+exit={{
+opacity:0,
+x:-20
+}}
+
+className="
+flex
+items-center
+gap-3
+rounded-xl
+bg-white/5
+px-4
+py-3
+"
+
+>
+
+<span
+className="
+text-lg
+"
+>
+
+{object.emoji}
+
+</span>
+
+
+<span
+className="
+text-sm
+font-medium
+text-white/90
+"
+>
+
+{object.name}
+
+</span>
+
+
+</motion.div>
+
+)
+)
+
+}
+</AnimatePresence>
+
+</div>
+
+
+<div
+className="
+mt-4
+border-t
+border-white/10
+pt-4
+text-center
+"
+>
+
+<p
+className="
+text-xs
+text-white/50
+"
+>
+
+Found{" "}
+
 {
 objects.filter(
-object=>
+object =>
 object.found
 )
 .length
 }
 
-/
+{" / "}
 
 {
 objects.length
 }
 
-Found
-
 </p>
-
 
 
 <p
 className="
-mt-2
+mt-1
 text-2xl
+font-bold
 "
 >
 
@@ -441,10 +536,10 @@ text-2xl
 
 </p>
 
-
 </div>
 
 
+</div>
 
 
 
