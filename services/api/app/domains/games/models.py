@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from sqlalchemy import (
     Column,
     String,
@@ -10,7 +12,6 @@ from sqlalchemy import (
     UniqueConstraint,
     func,
 )
-from __future__ import annotations
 from datetime import datetime
 
 

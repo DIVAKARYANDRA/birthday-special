@@ -1,7 +1,8 @@
+from __future__ import annotations
+
 import uuid
 
 
-from __future__ import annotations
 
 from datetime import datetime
 

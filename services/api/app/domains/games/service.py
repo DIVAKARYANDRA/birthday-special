@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import uuid
 
 
@@ -27,7 +29,6 @@ from app.domains.games.schemas import (
     PlayerResponse,
 )
 
-from __future__ import annotations
 
 
 from fastapi import HTTPException, status
