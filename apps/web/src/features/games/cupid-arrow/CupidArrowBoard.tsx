@@ -945,18 +945,17 @@ newCombo
           if(
 
 (
-remaining.length===0
-||
-newScore >= levelData.completionScore
+  remaining.length === 0
+  ||
+  newScore >= levelData.completionScore
 )
 
 &&
 
 !completedRef.current
 
-)
-
 ){
+
 
 
 completedRef.current=true;
