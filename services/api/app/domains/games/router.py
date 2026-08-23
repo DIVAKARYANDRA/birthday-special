@@ -20,8 +20,7 @@ from app.domains.games.schemas import (
     HeartRushObjectCreate,
     HeartRushObjectRead,
 
-    PoojaKitchenLevelCreate,
-    PoojaKitchenLevelRead
+    LevelResponse
 )
 
 
@@ -273,7 +272,7 @@ def delete_heart_rush_object(
 
 @router.get(
     "/pooja-kitchen/{level_number}",
-    response_model=PoojaKitchenLevelRead
+    response_model=LevelResponse
 )
 def get_pooja_kitchen_level(
     level_number: int,
