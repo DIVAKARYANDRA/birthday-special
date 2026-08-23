@@ -113,9 +113,11 @@ function AnimatedRoutes() {
             }
             />
           <Route
-            path="/games/pooja-kitchen"
-            element={<PoojaKitchenGame />}
-            />
+          path="/games/pooja-kitchen"
+          element={
+            <PoojaKitchenGame levelNumber={1} />
+          }
+        />
 
            
           <Route path="*" element={<LandingScene />} />
