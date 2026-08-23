@@ -956,8 +956,6 @@ newScore >= levelData.completionScore
 
 )
 
-&&
-!completedRef.current
 ){
 
 
