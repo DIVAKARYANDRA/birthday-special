@@ -60,7 +60,7 @@ const GAMES = [
  emoji:"🍳",
  description:"Cook delicious dishes and build our kitchen story",
  route:"/games/pooja-kitchen",
- available:false
+ available:true
 },
 
 

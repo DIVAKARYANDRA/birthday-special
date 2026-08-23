@@ -110,7 +110,11 @@ function AnimatedRoutes() {
             element={
               <HeartRushScene />
             }
-          />
+            />
+          <Route
+            path="/games/pooja-kitchen"
+            element={<PoojaKitchenGame />}
+            />
 
            
           <Route path="*" element={<LandingScene />} />
