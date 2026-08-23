@@ -34,6 +34,10 @@ const NAV_ITEMS = [
     to: "/games/heart-rush",
     label: "Heart Rush ❤️"
   },
+  {
+    to: "/games/pooja-kitchen",
+    label: "Pooja Kitchen 🍳"
+  },
   
 ];
 

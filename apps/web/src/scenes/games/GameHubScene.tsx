@@ -55,13 +55,13 @@ const GAMES = [
 
 
 {
- id:"love-quiz",
- title:"Love Quiz",
- emoji:"💌",
- description:"How well do you know our journey?",
- route:"/games/love-quiz",
+ id:"pooja-kitchen",
+ title:"Pooja Kitchen",
+ emoji:"🍳",
+ description:"Cook delicious dishes and build our kitchen story",
+ route:"/games/pooja-kitchen",
  available:false
-}
+},
 
 
 ];

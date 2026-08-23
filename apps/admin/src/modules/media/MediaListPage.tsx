@@ -328,7 +328,11 @@ Hidden Objects 🔍
 </option>
 
 <option value="heart-rush">
-Hear Rush
+Heart Rush
+</option>
+
+<option value="pooja-kitchen">
+Pooja Kitchen 🍳
 </option>
 
 <option value="treasure-hunt">
