@@ -19,11 +19,17 @@ from app.domains.games.schemas import (
 
     HeartRushObjectCreate,
     HeartRushObjectRead,
+
+    PoojaKitchenLevelCreate,
+    PoojaKitchenLevelRead
 )
+
+
 
 
 from app.domains.games.service import (
     HiddenObjectService,
+    PoojaKitchenService,
 
     CupidArrowService,
     CupidArrowTargetService,
@@ -252,4 +258,28 @@ def delete_heart_rush_object(
 
     return HeartRushObjectService(db).delete_object(
         object_id
+    )
+
+
+# ============================================================
+# Pooja Kitchen
+# ============================================================
+
+
+# ============================================================
+# Pooja Kitchen
+# ============================================================
+
+
+@router.get(
+    "/pooja-kitchen/{level_number}",
+    response_model=PoojaKitchenLevelRead
+)
+def get_pooja_kitchen_level(
+    level_number: int,
+    db: Session = Depends(get_db)
+):
+
+    return PoojaKitchenService(db).load_level_configuration(
+        level_number
     )

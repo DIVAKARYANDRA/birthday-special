@@ -1,6 +1,5 @@
 import uuid
 
-from fastapi import HTTPException
 
 from sqlalchemy.orm import Session
 
@@ -10,6 +9,8 @@ from app.domains.games.models import (
     CupidArrowTarget,
     HeartRushLevel,
     HeartRushObject,
+    PoojaKitchenLevel,
+    PoojaKitchenProgress,
 )
 
 from app.domains.games.schemas import (
@@ -18,7 +19,36 @@ from app.domains.games.schemas import (
     CupidArrowTargetCreate,
     HeartRushLevelCreate,
     HeartRushObjectCreate,
+    CompleteLevelRequest,
+    CompleteLevelResponse,
+    GameStateResponse,
+    LevelResponse,
+    ProgressResponse,
+    PlayerResponse,
 )
+
+from __future__ import annotations
+
+
+from fastapi import HTTPException, status
+
+from app.domains.games.pooja_kitchen.constants import (
+    COINS_PER_SCORE_POINT,
+    FIRST_CLEAR_BONUS_COINS,
+    PASSING_SCORE_RATIO,
+    STARTING_LEVEL,
+    STARTING_COINS,
+    STARTING_SCORE,
+    TARGET_SCORE_BONUS_MULTIPLIER,
+)
+
+
+from app.domains.games.repository import (
+    PoojaKitchenRepository,
+)
+
+
+
 
 
 # ============================================================
@@ -815,3 +845,346 @@ class HeartRushObjectService:
 
 
         return object_item
+
+
+class PoojaKitchenService:
+    """
+    Handles Pooja Kitchen gameplay rules.
+    """
+
+    def __init__(
+        self,
+        db: Session
+    ):
+        self.repository = PoojaKitchenRepository(db)
+
+
+    # ============================================================
+    # Player Progress
+    # ============================================================
+
+    def get_or_create_progress(
+        self,
+        player_id: uuid.UUID
+    ) -> PoojaKitchenProgress:
+
+        progress = self.repository.get_player_progress(
+            player_id
+        )
+
+        if progress is None:
+
+            progress = self.repository.create_progress(
+                player_id=player_id,
+                current_level=STARTING_LEVEL,
+                highest_unlocked_level=STARTING_LEVEL,
+                coins=STARTING_COINS,
+                total_score=STARTING_SCORE,
+            )
+
+        return progress
+
+
+
+    def load_player_game_state(
+        self,
+        player
+    ) -> GameStateResponse:
+
+        progress = self.get_or_create_progress(
+            player.id
+        )
+
+        return GameStateResponse(
+            player=PlayerResponse.model_validate(
+                player
+            ),
+            progress=ProgressResponse.model_validate(
+                progress
+            ),
+        )
+
+
+
+    # ============================================================
+    # Level Loading
+    # ============================================================
+
+    def load_level_configuration(
+        self,
+        level_number:int
+    ) -> LevelResponse:
+
+
+        level = self.repository.get_level(
+            level_number
+        )
+
+
+        if level is None:
+
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail=f"Level {level_number} not found",
+            )
+
+
+        return LevelResponse.model_validate(
+            level
+        )
+
+
+
+    def validate_level_access(
+        self,
+        level:PoojaKitchenLevel,
+        progress:PoojaKitchenProgress
+    ):
+
+        if (
+            level.level_number
+            >
+            progress.highest_unlocked_level
+        ):
+
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN,
+                detail="Level is locked",
+            )
+
+
+
+    # ============================================================
+    # Gameplay Rules
+    # ============================================================
+
+
+    def validate_order_completion(
+        self,
+        level:PoojaKitchenLevel,
+        completed_orders:int
+    ) -> bool:
+
+
+        required_orders = len(
+            level.orders
+        )
+
+
+        return completed_orders >= required_orders
+
+
+
+
+    # ============================================================
+    # Rewards
+    # ============================================================
+
+
+    def calculate_rewards(
+        self,
+        level:PoojaKitchenLevel,
+        score:int,
+        is_first_clear:bool
+    ):
+
+
+        passing_score = (
+            level.target_score
+            *
+            PASSING_SCORE_RATIO
+        )
+
+
+        passed = score >= passing_score
+
+
+        coins = round(
+            score
+            *
+            COINS_PER_SCORE_POINT
+        )
+
+
+        if score >= level.target_score:
+
+            coins = round(
+                coins
+                *
+                TARGET_SCORE_BONUS_MULTIPLIER
+            )
+
+
+        if passed and is_first_clear:
+
+            coins += FIRST_CLEAR_BONUS_COINS
+
+
+        return coins, passed
+
+
+
+
+    # ============================================================
+    # Level Completion
+    # ============================================================
+
+
+    def unlock_next_level(
+        self,
+        progress:PoojaKitchenProgress,
+        completed_level:int
+    ):
+
+
+        next_level = (
+            self.repository
+            .get_next_level(
+                completed_level
+            )
+        )
+
+
+        if next_level is None:
+
+            return None
+
+
+
+        if (
+            next_level.level_number
+            >
+            progress.highest_unlocked_level
+        ):
+
+            self.repository.unlock_level(
+                progress,
+                next_level.level_number
+            )
+
+            return next_level.level_number
+
+
+        return None
+
+
+
+
+
+    def complete_level(
+        self,
+        player,
+        payload:CompleteLevelRequest
+    ) -> CompleteLevelResponse:
+
+
+        level = (
+            self.repository
+            .get_level(
+                payload.level_number
+            )
+        )
+
+
+        if level is None:
+
+            raise HTTPException(
+                status_code=404,
+                detail="Level not found"
+            )
+
+
+
+        progress = self.get_or_create_progress(
+            player.id
+        )
+
+
+
+        self.validate_level_access(
+            level,
+            progress
+        )
+
+
+
+        first_clear = (
+            level.level_number
+            >
+            progress.current_level
+        )
+
+
+
+        coins, passed = (
+            self.calculate_rewards(
+                level,
+                payload.score,
+                first_clear
+            )
+        )
+
+
+
+        progress.coins += coins
+
+        progress.total_score += (
+            payload.score
+        )
+
+
+
+        unlocked = None
+
+
+        if passed:
+
+            progress.current_level = max(
+                progress.current_level,
+                level.level_number + 1
+            )
+
+
+            unlocked = (
+                self.unlock_next_level(
+                    progress,
+                    level.level_number
+                )
+            )
+
+
+
+        progress = (
+            self.repository
+            .save_progress(
+                progress
+            )
+        )
+
+
+
+        return CompleteLevelResponse(
+
+            level_number=
+            level.level_number,
+
+            passed=
+            passed,
+
+            first_clear=
+            passed and first_clear,
+
+            coins_earned=
+            coins,
+
+            total_score_earned=
+            payload.score,
+
+            next_level_unlocked=
+            unlocked,
+
+            progress=
+            ProgressResponse.model_validate(
+                progress
+            )
+        )

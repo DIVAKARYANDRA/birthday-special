@@ -1,7 +1,17 @@
 import uuid
 
-from pydantic import BaseModel
 
+from __future__ import annotations
+
+from datetime import datetime
+
+from pydantic import BaseModel, ConfigDict, Field, field_validator
+
+from app.domains.games.pooja_kitchen.constants import (
+    JWT_TOKEN_TYPE,
+    VALID_CHARACTER_TYPES,
+    VALID_DIFFICULTIES,
+)
 
 
 class HiddenObjectTargetCreate(BaseModel):
@@ -268,3 +278,160 @@ class HeartRushObjectRead(BaseModel):
 
     class Config:
         from_attributes = True
+
+
+
+
+# ---------------------------------------------------------------------------
+# Authentication
+# ---------------------------------------------------------------------------
+
+
+class LoginRequest(BaseModel):
+    username: str = Field(..., min_length=1, max_length=64)
+    password: str = Field(..., min_length=1, max_length=255)
+
+    @field_validator("username")
+    @classmethod
+    def normalize_username(cls, value: str) -> str:
+        return value.strip().lower()
+
+
+class LoginResponse(BaseModel):
+    access_token: str
+    token_type: str = JWT_TOKEN_TYPE
+    expires_in: int = Field(..., description="Token lifetime in seconds")
+    player: "PlayerResponse"
+
+
+# ---------------------------------------------------------------------------
+# Player
+# ---------------------------------------------------------------------------
+
+
+class PlayerResponse(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
+    id: uuid.UUID
+    username: str
+    display_name: str
+    avatar_media_id: str | None = None
+    created_at: datetime
+
+
+class ProgressResponse(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
+    id: uuid.UUID
+    player_id: uuid.UUID
+    current_level: int
+    highest_unlocked_level: int
+    coins: int
+    total_score: int
+    updated_at: datetime
+
+
+class GameStateResponse(BaseModel):
+    """Combined payload returned by GET /game-state."""
+
+    player: PlayerResponse
+    progress: ProgressResponse
+
+
+# ---------------------------------------------------------------------------
+# Game content
+# ---------------------------------------------------------------------------
+
+
+class ThemeResponse(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
+    id: uuid.UUID
+    name: str
+    description: str | None = None
+    background_media_id: str | None = None
+    is_active: bool
+    created_at: datetime
+
+
+class FoodResponse(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
+    id: uuid.UUID
+    name: str
+    image_media_id: str | None = None
+    cook_time: int
+    sell_price: int
+
+
+class OrderResponse(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
+    id: uuid.UUID
+    level_id: uuid.UUID
+    food: FoodResponse
+    quantity: int
+    reward_points: int
+
+
+class CharacterResponse(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
+    id: uuid.UUID
+    name: str
+    image_media_id: str | None = None
+    character_type: str
+
+    @field_validator("character_type")
+    @classmethod
+    def validate_character_type(cls, value: str) -> str:
+        if value not in VALID_CHARACTER_TYPES:
+            raise ValueError(f"invalid character_type: {value!r}")
+        return value
+
+
+class LevelResponse(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
+    id: uuid.UUID
+    theme: ThemeResponse
+    level_number: int
+    difficulty: str
+    time_limit: int
+    target_score: int
+    customer_count: int
+    unlock_level: int | None
+    orders: list[OrderResponse] = Field(default_factory=list)
+
+    @field_validator("difficulty")
+    @classmethod
+    def validate_difficulty(cls, value: str) -> str:
+        if value not in VALID_DIFFICULTIES:
+            raise ValueError(f"invalid difficulty: {value!r}")
+        return value
+
+
+# ---------------------------------------------------------------------------
+# Level completion
+# ---------------------------------------------------------------------------
+
+
+class CompleteLevelRequest(BaseModel):
+    level_number: int = Field(..., ge=1)
+    score: int = Field(..., ge=0, description="Raw score earned during play")
+    orders_fulfilled: int = Field(
+        ..., ge=0, description="Number of orders successfully served"
+    )
+    time_remaining_seconds: int = Field(
+        default=0, ge=0, description="Seconds left on the clock when finished"
+    )
+
+
+class CompleteLevelResponse(BaseModel):
+    level_number: int
+    passed: bool
+    first_clear: bool
+    coins_earned: int
+    total_score_earned: int
+    next_level_unlocked: int | None
+    progress: ProgressResponse
