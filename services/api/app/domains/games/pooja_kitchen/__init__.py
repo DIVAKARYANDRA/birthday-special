@@ -1,20 +1,15 @@
 """
-Pooja Kitchen domain package.
+Pooja Kitchen game configuration package.
 
-A cooking time-management game module (Cooking Madness-style) with a
-fixed two-account roster ("pooja" and "divakar"), level-based progress,
-coin rewards, and content structured for future expansion to 200+ levels
-across multiple themes, restaurants, foods, and characters.
+Contains:
+- Game constants
+- Future game-specific configuration
+- Future seed data helpers
 
-Public surface:
-    - ``router``       FastAPI router, mount under the main API router.
-    - ``models``        SQLAlchemy ORM models (pooja_kitchen_* tables).
-    - ``schemas``        Pydantic request/response models.
-    - ``service``       Business logic (auth, scoring, unlock rules).
-    - ``repository``    All database access for this domain.
-    - ``constants``     Seed accounts, tunables, reward constants.
+Gameplay APIs are currently exposed through:
+app.domains.games.router
 """
 
-from app.domains.games.pooja_kitchen.router import router as pooja_kitchen_router
+from app.domains.games.pooja_kitchen.constants import *
 
-__all__ = ["pooja_kitchen_router"]
+__all__ = []
