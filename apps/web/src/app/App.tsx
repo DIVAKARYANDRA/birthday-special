@@ -40,7 +40,7 @@ const MemoriesScene = lazy(() => import("@/scenes/memories/MemoriesScene"));
 const TimelineScene = lazy(() => import("@/scenes/timeline/TimelineScene"));
 const GalleryScene = lazy(() => import("@/scenes/gallery/GalleryScene"));
 const LettersScene = lazy(() => import("@/scenes/letters/LettersScene"));
-import PoojaKitchenGame from "@/features/games/pooja-kitchen/PoojaKitchenGame";
+import { PoojaKitchenGame } from "@/features/games/pooja-kitchen/PoojaKitchenGame";
 const MemoryMatchScene = lazy(
   () => import("@/scenes/games/MemoryMatchScene")
 );
