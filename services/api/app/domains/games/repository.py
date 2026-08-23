@@ -26,6 +26,8 @@ from app.domains.games.models import (
     PoojaKitchenPlayer,
     PoojaKitchenProgress,
     PoojaKitchenTheme,
+    PoojaKitchenCustomer,
+    PoojaKitchenLevelCustomer,
 )
 
 
@@ -177,3 +179,133 @@ class PoojaKitchenRepository:
             PoojaKitchenCharacter.name.asc()
         )
         return list(self.db.execute(stmt).scalars().all())
+
+    # ------------------------------------------------------------------
+    # Customers
+    # ------------------------------------------------------------------
+
+    def create_customer(
+        self,
+        customer: PoojaKitchenCustomer
+    ) -> PoojaKitchenCustomer:
+
+        self.db.add(customer)
+        self.db.flush()
+        self.db.refresh(customer)
+
+        return customer
+
+
+
+    def get_customers(
+        self
+    ) -> list[PoojaKitchenCustomer]:
+
+        stmt = (
+            select(PoojaKitchenCustomer)
+            .where(
+                PoojaKitchenCustomer.is_active.is_(True)
+            )
+            .order_by(
+                PoojaKitchenCustomer.name.asc()
+            )
+        )
+
+        return list(
+            self.db.execute(stmt)
+            .scalars()
+            .all()
+        )
+
+
+
+    def get_customer_by_id(
+        self,
+        customer_id: uuid.UUID
+    ) -> PoojaKitchenCustomer | None:
+
+        stmt = (
+            select(PoojaKitchenCustomer)
+            .where(
+                PoojaKitchenCustomer.id == customer_id
+            )
+        )
+
+        return self.db.execute(stmt).scalar_one_or_none()
+
+
+
+    # ------------------------------------------------------------------
+    # Level Customer Assignment
+    # ------------------------------------------------------------------
+
+    def assign_customer_to_level(
+        self,
+        assignment: PoojaKitchenLevelCustomer
+    ) -> PoojaKitchenLevelCustomer:
+
+        self.db.add(assignment)
+
+        self.db.flush()
+
+        self.db.refresh(
+            assignment
+        )
+
+        return assignment
+
+
+
+    def get_level_customers(
+        self,
+        level_id: uuid.UUID
+    ) -> list[PoojaKitchenLevelCustomer]:
+
+        stmt = (
+            select(
+                PoojaKitchenLevelCustomer
+            )
+            .options(
+                joinedload(
+                    PoojaKitchenLevelCustomer.customer
+                )
+            )
+            .where(
+                PoojaKitchenLevelCustomer.level_id == level_id
+            )
+            .order_by(
+                PoojaKitchenLevelCustomer.display_order.asc()
+            )
+        )
+
+
+        return list(
+            self.db.execute(stmt)
+            .unique()
+            .scalars()
+            .all()
+        )
+
+
+
+    def remove_customer_from_level(
+        self,
+        assignment_id: uuid.UUID
+    ) -> bool:
+
+        assignment = self.db.get(
+            PoojaKitchenLevelCustomer,
+            assignment_id
+        )
+
+        if assignment is None:
+            return False
+
+
+        self.db.delete(
+            assignment
+        )
+
+        self.db.flush()
+
+        return True

@@ -343,6 +343,107 @@ class GameStateResponse(BaseModel):
 # Game content
 # ---------------------------------------------------------------------------
 
+# ---------------------------------------------------------------------------
+# Customers
+# ---------------------------------------------------------------------------
+
+
+class CustomerCreate(BaseModel):
+    """
+    Admin schema for creating a customer character.
+    """
+
+    name: str = Field(
+        ...,
+        min_length=1,
+        max_length=128
+    )
+
+    description: str | None = None
+
+    avatar_media_id: str | None = None
+
+    happy_media_id: str | None = None
+
+    angry_media_id: str | None = None
+
+    customer_type: str = "normal"
+
+    patience_seconds: int = Field(
+        default=45,
+        ge=5
+    )
+
+    is_active: bool = True
+
+
+
+class CustomerRead(BaseModel):
+    """
+    Customer response schema.
+    """
+
+    model_config = ConfigDict(
+        from_attributes=True
+    )
+
+    id: uuid.UUID
+
+    name: str
+
+    description: str | None
+
+    avatar_media_id: str | None
+
+    happy_media_id: str | None
+
+    angry_media_id: str | None
+
+    customer_type: str
+
+    patience_seconds: int
+
+    is_active: bool
+
+    created_at: datetime
+
+
+
+# ---------------------------------------------------------------------------
+# Level Customer Assignment
+# ---------------------------------------------------------------------------
+
+
+class LevelCustomerCreate(BaseModel):
+    """
+    Assign a customer to a cooking level.
+    """
+
+    level_id: uuid.UUID
+
+    customer_id: uuid.UUID
+
+    display_order: int = Field(
+        default=1,
+        ge=1
+    )
+
+
+
+class LevelCustomerRead(BaseModel):
+
+    model_config = ConfigDict(
+        from_attributes=True
+    )
+
+
+    id: uuid.UUID
+
+    level_id: uuid.UUID
+
+    customer_id: uuid.UUID
+
+    display_order: int
 
 class ThemeResponse(BaseModel):
     model_config = ConfigDict(from_attributes=True)
@@ -436,3 +537,6 @@ class CompleteLevelResponse(BaseModel):
     total_score_earned: int
     next_level_unlocked: int | None
     progress: ProgressResponse
+
+
+    

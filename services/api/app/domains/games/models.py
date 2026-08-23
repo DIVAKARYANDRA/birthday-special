@@ -757,6 +757,11 @@ class PoojaKitchenLevel(Base):
     orders: Mapped[list["PoojaKitchenOrder"]] = relationship(
         back_populates="level", cascade="all, delete-orphan"
     )
+    customers = relationship(
+        "PoojaKitchenLevelCustomer",
+        back_populates="level",
+        cascade="all, delete-orphan"
+    )
 
     def __repr__(self) -> str:  # pragma: no cover - debug helper
         return f"<PoojaKitchenLevel number={self.level_number!r}>"
@@ -820,3 +825,117 @@ class PoojaKitchenCharacter(Base):
 
     def __repr__(self) -> str:  # pragma: no cover - debug helper
         return f"<PoojaKitchenCharacter name={self.name!r} type={self.character_type!r}>"
+
+class PoojaKitchenCustomer(Base):
+    __tablename__ = "pooja_kitchen_customers"
+
+    id = Column(
+        UUID(as_uuid=True),
+        primary_key=True,
+        default=uuid.uuid4
+    )
+
+    name = Column(
+        String(128),
+        nullable=False
+    )
+
+    description = Column(
+        String(512),
+        nullable=True
+    )
+
+    avatar_media_id = Column(
+        String(255),
+        nullable=True
+    )
+
+    happy_media_id = Column(
+        String(255),
+        nullable=True
+    )
+
+    angry_media_id = Column(
+        String(255),
+        nullable=True
+    )
+
+    customer_type = Column(
+        String(32),
+        nullable=False,
+        default="normal"
+    )
+
+    patience_seconds = Column(
+        Integer,
+        nullable=False,
+        default=45
+    )
+
+    is_active = Column(
+        Boolean,
+        nullable=False,
+        default=True
+    )
+
+    created_at = Column(
+        DateTime(timezone=True),
+        server_default=func.now()
+    )
+
+
+    level_assignments = relationship(
+        "PoojaKitchenLevelCustomer",
+        back_populates="customer",
+        cascade="all, delete-orphan"
+    )
+
+
+class PoojaKitchenLevelCustomer(Base):
+    __tablename__ = "pooja_kitchen_level_customers"
+
+
+    id = Column(
+        UUID(as_uuid=True),
+        primary_key=True,
+        default=uuid.uuid4
+    )
+
+
+    level_id = Column(
+        UUID(as_uuid=True),
+        ForeignKey(
+            "pooja_kitchen_levels.id",
+            ondelete="CASCADE"
+        ),
+        nullable=False
+    )
+
+
+    customer_id = Column(
+        UUID(as_uuid=True),
+        ForeignKey(
+            "pooja_kitchen_customers.id",
+            ondelete="CASCADE"
+        ),
+        nullable=False
+    )
+
+
+    display_order = Column(
+        Integer,
+        nullable=False,
+        default=1
+    )
+
+
+    level = relationship(
+        "PoojaKitchenLevel",
+        back_populates="customers"
+    )
+
+
+    customer = relationship(
+        "PoojaKitchenCustomer",
+        back_populates="level_assignments"
+    )

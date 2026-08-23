@@ -13,6 +13,8 @@ from app.domains.games.models import (
     HeartRushObject,
     PoojaKitchenLevel,
     PoojaKitchenProgress,
+    PoojaKitchenCustomer,
+    PoojaKitchenLevelCustomer,
 )
 
 from app.domains.games.schemas import (
@@ -27,6 +29,10 @@ from app.domains.games.schemas import (
     LevelResponse,
     ProgressResponse,
     PlayerResponse,
+    CustomerCreate,
+    CustomerRead,
+    LevelCustomerCreate,
+    LevelCustomerRead,
 )
 
 
@@ -1189,3 +1195,177 @@ class PoojaKitchenService:
                 progress
             )
         )
+
+
+# ============================================================
+# Pooja Kitchen Customer Service
+# ============================================================
+
+
+class PoojaKitchenCustomerService:
+    """
+    Business logic for customer management.
+
+    Handles:
+    - creating customers
+    - listing customers
+    - assigning customers to levels
+    - retrieving level customer queue
+    """
+
+
+    def __init__(
+        self,
+        db: Session
+    ):
+
+        self.repository = PoojaKitchenRepository(
+            db
+        )
+
+
+    # --------------------------------------------------------
+    # Customers
+    # --------------------------------------------------------
+
+    def create_customer(
+        self,
+        payload: CustomerCreate
+    ) -> CustomerRead:
+
+
+        customer = PoojaKitchenCustomer(
+
+            name=payload.name,
+
+            description=payload.description,
+
+            avatar_media_id=payload.avatar_media_id,
+
+            happy_media_id=payload.happy_media_id,
+
+            angry_media_id=payload.angry_media_id,
+
+            customer_type=payload.customer_type,
+
+            patience_seconds=payload.patience_seconds,
+
+            is_active=payload.is_active,
+
+        )
+
+
+        customer = self.repository.create_customer(
+            customer
+        )
+
+
+        return CustomerRead.model_validate(
+            customer
+        )
+
+
+
+    def list_customers(
+        self
+    ) -> list[CustomerRead]:
+
+
+        customers = (
+            self.repository
+            .get_customers()
+        )
+
+
+        return [
+            CustomerRead.model_validate(
+                customer
+            )
+            for customer in customers
+        ]
+
+
+
+    def get_customer(
+        self,
+        customer_id: uuid.UUID
+    ) -> CustomerRead:
+
+
+        customer = (
+            self.repository
+            .get_customer_by_id(
+                customer_id
+            )
+        )
+
+
+        if customer is None:
+
+            raise HTTPException(
+                status_code=404,
+                detail="Customer not found"
+            )
+
+
+        return CustomerRead.model_validate(
+            customer
+        )
+
+
+    # --------------------------------------------------------
+    # Level Assignment
+    # --------------------------------------------------------
+
+
+    def assign_customer(
+        self,
+        payload: LevelCustomerCreate
+    ) -> LevelCustomerRead:
+
+
+        assignment = PoojaKitchenLevelCustomer(
+
+            level_id=payload.level_id,
+
+            customer_id=payload.customer_id,
+
+            display_order=payload.display_order,
+
+        )
+
+
+        assignment = (
+            self.repository
+            .assign_customer_to_level(
+                assignment
+            )
+        )
+
+
+        return LevelCustomerRead.model_validate(
+            assignment
+        )
+
+
+
+    def get_level_customers(
+        self,
+        level_id: uuid.UUID
+    ):
+
+
+        assignments = (
+            self.repository
+            .get_level_customers(
+                level_id
+            )
+        )
+
+
+        return [
+            LevelCustomerRead.model_validate(
+                item
+            )
+            for item in assignments
+        ]

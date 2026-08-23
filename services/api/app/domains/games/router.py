@@ -20,7 +20,12 @@ from app.domains.games.schemas import (
     HeartRushObjectCreate,
     HeartRushObjectRead,
 
-    LevelResponse
+    LevelResponse,
+
+    CustomerCreate,
+    CustomerRead,
+    LevelCustomerCreate,
+    LevelCustomerRead,
 )
 
 
@@ -35,6 +40,8 @@ from app.domains.games.service import (
 
     HeartRushService,
     HeartRushObjectService,
+
+    PoojaKitchenCustomerService,
 )
 
 
@@ -281,4 +288,86 @@ def get_pooja_kitchen_level(
 
     return PoojaKitchenService(db).load_level_configuration(
         level_number
+    )
+
+
+
+# ============================================================
+# Pooja Kitchen Customers
+# ============================================================
+
+
+@router.post(
+    "/pooja-kitchen/customers",
+    response_model=CustomerRead
+)
+def create_pooja_customer(
+    payload: CustomerCreate,
+    db: Session = Depends(get_db)
+):
+
+    return PoojaKitchenCustomerService(db).create_customer(
+        payload
+    )
+
+
+
+@router.get(
+    "/pooja-kitchen/customers",
+    response_model=list[CustomerRead]
+)
+def list_pooja_customers(
+    db: Session = Depends(get_db)
+):
+
+    return PoojaKitchenCustomerService(db).list_customers()
+
+
+
+@router.get(
+    "/pooja-kitchen/customers/{customer_id}",
+    response_model=CustomerRead
+)
+def get_pooja_customer(
+    customer_id: str,
+    db: Session = Depends(get_db)
+):
+
+    return PoojaKitchenCustomerService(db).get_customer(
+        customer_id
+    )
+
+
+
+# ============================================================
+# Level Customer Assignment
+# ============================================================
+
+
+@router.post(
+    "/pooja-kitchen/levels/customers",
+    response_model=LevelCustomerRead
+)
+def assign_customer_to_level(
+    payload: LevelCustomerCreate,
+    db: Session = Depends(get_db)
+):
+
+    return PoojaKitchenCustomerService(db).assign_customer(
+        payload
+    )
+
+
+
+@router.get(
+    "/pooja-kitchen/levels/{level_id}/customers",
+    response_model=list[LevelCustomerRead]
+)
+def list_level_customers(
+    level_id: str,
+    db: Session = Depends(get_db)
+):
+
+    return PoojaKitchenCustomerService(db).get_level_customers(
+        level_id
     )
