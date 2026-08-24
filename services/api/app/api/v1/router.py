@@ -255,6 +255,13 @@ api_router.include_router(
     tags=["pooja-kitchen-auth"]
 )
 
+from app.domains.auth.debug_router import router as debug_router
+
+api_router.include_router(
+    debug_router,
+    prefix="/api/v1/auth",
+    tags=["debug"]
+)
 # ------------------------------------------------------------------
 # Future domain router registration
 #
