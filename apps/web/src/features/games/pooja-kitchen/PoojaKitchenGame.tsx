@@ -172,6 +172,8 @@ resize
     flex
     items-center
     justify-center
+    bg-[#1F4D45]
+
   "
 >
 

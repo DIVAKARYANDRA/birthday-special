@@ -14,6 +14,13 @@
  * These are NOT the final design tokens — see docs/02-design-system.md
  * for the actual color/typography system.
  */
+html,
+body,
+#root {
+  width:100%;
+  height:100%;
+  overflow:hidden;
+}
 :root {
   --color-primary: #4b2e83;
   --color-secondary: #d8a7e0;
