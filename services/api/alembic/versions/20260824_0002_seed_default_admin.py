@@ -58,7 +58,7 @@ def upgrade() -> None:
             """
         ),
         {
-            "name": "admin"
+            "name": "Owner"
         },
     ).fetchone()
 

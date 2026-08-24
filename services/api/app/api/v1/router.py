@@ -259,10 +259,11 @@ from app.domains.auth.debug_router import router as debug_router
 
 api_router.include_router(
     debug_router,
-    prefix="/api/v1/auth",
+    prefix="/auth",
     tags=["debug"]
 )
-# ------------------------------------------------------------------
+
+#------------------------------------------------------------
 # Future domain router registration
 #
 # Additional public experience / progress / analytics APIs can be
