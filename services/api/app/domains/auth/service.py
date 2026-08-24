@@ -66,14 +66,45 @@ class AuthService:
         a standard defense against username enumeration.
         """
         try:
-            admin_user = self._user_service.get_by_username(credentials.username)
+            admin_user = self._user_service.get_by_username(
+                credentials.username
+            )
+
+            print(
+                "LOGIN DEBUG USER FOUND:",
+                admin_user.username,
+                admin_user.is_active,
+                admin_user.hashed_password[:20]
+            )
+
         except NotFoundError as exc:
-            raise UnauthorizedError("Invalid username or password.") from exc
+            print(
+                "LOGIN DEBUG USER NOT FOUND:",
+                credentials.username
+            )
+
+            raise UnauthorizedError(
+                "Invalid username or password."
+            ) from exc
 
         if not admin_user.is_active:
             raise UnauthorizedError("This account is inactive.")
-        if not verify_password(credentials.password, admin_user.hashed_password):
-            raise UnauthorizedError("Invalid username or password.")
+        password_ok = verify_password(
+            credentials.password,
+            admin_user.hashed_password
+        )
+
+
+        print(
+            "LOGIN DEBUG PASSWORD:",
+            password_ok
+        )
+
+
+        if not password_ok:
+            raise UnauthorizedError(
+                "Invalid username or password."
+            )
 
         self._user_service.record_login(admin_user.id)
         return self._issue_token_pair(admin_user)
