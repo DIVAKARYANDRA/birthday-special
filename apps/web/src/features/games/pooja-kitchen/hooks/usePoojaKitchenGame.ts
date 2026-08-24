@@ -72,6 +72,10 @@ export function usePoojaKitchenGame(
   // Subscribe once to engine state changes.
   useEffect(() => {
     const unsubscribe = engine.subscribe((next) => setGameState(next));
+    const unsubscribe = engine.subscribe((next)=>{
+        console.log("GAME STATE CUSTOMERS", next.customers);
+        setGameState(next);
+    });
     setGameState(engine.getState());
     return unsubscribe;
   }, [engine]);
@@ -147,6 +151,10 @@ export function usePoojaKitchenGame(
         currentLevelNumberRef.current = levelNumber;
 
         engine.loadLevel(level);
+        console.log(
+          "Loaded level customers:",
+          level.customers
+        );
       } catch (error) {
         setLoadError(
           error instanceof Error ? error.message : 'Failed to load level'
