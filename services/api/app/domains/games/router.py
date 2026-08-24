@@ -290,6 +290,18 @@ def get_pooja_kitchen_level(
         level_number
     )
 
+@router.get(
+    "/pooja-kitchen/levels/{level_number}",
+    response_model=LevelResponse
+)
+def get_pooja_kitchen_level_with_path(
+    level_number: int,
+    db: Session = Depends(get_db)
+):
+
+    return PoojaKitchenService(db).load_level_configuration(
+        level_number
+    )
 
 
 # ============================================================
