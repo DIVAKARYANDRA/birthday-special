@@ -71,7 +71,7 @@ export function usePoojaKitchenGame(
 
   // Subscribe once to engine state changes.
   useEffect(() => {
-    const unsubscribe = engine.subscribe((next) => setGameState(next));
+    // const unsubscribe = engine.subscribe((next) => setGameState(next));
     const unsubscribe = engine.subscribe((next)=>{
         console.log("GAME STATE CUSTOMERS", next.customers);
         setGameState(next);
