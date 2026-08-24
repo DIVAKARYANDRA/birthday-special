@@ -4,24 +4,20 @@ import type { Level, Food, KitchenStation } from "../data/types";
 export function mapBackendLevel(data:any):Level {
 
 
-    const foods:Food[] = Array.from(
-        new Map(
-            (
-                data.orders ?? []
-            )
-            .map((order:any)=>[
+    const foods: Food[] = Array.from(
+        new Map<string, Food>(
+            (data.orders ?? []).map((order: any) => [
                 order.food.id,
                 {
                     id: order.food.id,
                     name: order.food.name,
-                    image:"",
-                    cookTime:order.food.cook_time,
-                    price:order.food.sell_price
-                }
+                    image: "",
+                    cookTime: order.food.cook_time,
+                    price: order.food.sell_price,
+                } as Food,
             ])
         ).values()
     );
-
 
 
     const stations:KitchenStation[] = [
