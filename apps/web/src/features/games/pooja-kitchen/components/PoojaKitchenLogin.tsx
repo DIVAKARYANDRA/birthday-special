@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { login } from "@/api/authApi";
 import { setAuthToken } from "../api/authToken";
 
 interface Props {
