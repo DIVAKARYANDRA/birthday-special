@@ -124,7 +124,17 @@ export function PoojaKitchenGame({
   return (
     <OrientationGate>
       <div
-        className="relative mx-auto flex h-dvh w-full max-w-5xl flex-col overflow-hidden bg-gradient-to-b from-[#1F4D45] to-[#2F6F62]"
+        className="
+          relative
+          flex
+          h-[100dvh]
+          w-screen
+          flex-col
+          overflow-hidden
+          bg-gradient-to-b
+          from-[#1F4D45]
+          to-[#2F6F62]
+        "
         aria-label="Pooja Kitchen game screen"
       >
       {/* Background kitchen scene */}
@@ -189,7 +199,7 @@ export function PoojaKitchenGame({
         )}
       </AnimatePresence>
 
-      <div className="relative z-10 flex-1" />
+      <div className="relative z-10 h-4" />
 
       {/* Kitchen counter / cooking stations area */}
       <div className="relative z-10">
