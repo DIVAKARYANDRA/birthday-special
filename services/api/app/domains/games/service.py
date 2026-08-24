@@ -39,8 +39,9 @@ from app.domains.games.schemas import (
     LevelCustomerCreate,
     LevelCustomerRead,
     LoginRequest,
-    TokenResponse,
 )
+
+from app.domains.auth.schemas import TokenResponse
 
 
 
