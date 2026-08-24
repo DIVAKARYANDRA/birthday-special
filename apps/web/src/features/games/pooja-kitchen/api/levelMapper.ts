@@ -64,32 +64,34 @@ export function mapBackendLevel(data:any):Level {
 
 
         customers:
-            (data.customers ?? []).map(
-                (c:any)=>({
-                    id:c.id,
-                    name:c.name,
-                    avatar:"",
-                    happyAvatar:"",
-                    angryAvatar:"",
-                    patienceSeconds:c.patience_seconds ?? 45
-                })
-            ),
+        data.customers?.map((c:any)=>({
+            id: c.id,
+            name: c.name,
+
+            // Later these will come from media service
+            avatar: c.avatar_media_id ?? "",
+            happyAvatar: c.happy_media_id ?? "",
+            angryAvatar: c.angry_media_id ?? "",
+
+            patienceSeconds: c.patience_seconds,
+        })) ?? [],
 
 
 
         orderTemplates:
-            (data.orders ?? []).map(
-                (o:any)=>({
-                    customerId:"",
-                    lines:[
-                        {
-                            foodId:o.food.id,
-                            quantity:o.quantity
-                        }
-                    ],
-                    rewardPoints:o.reward_points
-                })
-            )
+        data.orders?.map((o:any,index:number)=>({
+            customerId:
+                data.customers?.[index]?.id ?? "",
+
+            lines:[
+                {
+                    foodId:o.food.id,
+                    quantity:o.quantity
+                }
+            ],
+
+            rewardPoints:o.reward_points
+        })) ?? []
 
     };
 
