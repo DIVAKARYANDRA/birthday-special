@@ -31,7 +31,8 @@ export function PoojaKitchenLogin({
       setError("");
 
       const response =
-        await fetch("/api/auth/login",
+  await fetch(
+    "https://journey-to-my-heart-api.onrender.com/api/v1/auth/login",
         {
           method:"POST",
 
