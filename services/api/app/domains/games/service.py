@@ -4,7 +4,12 @@ import uuid
 
 
 from sqlalchemy.orm import Session
+from app.core.security import (
+    verify_password,
+    create_access_token,
+)
 
+from app.core.exceptions import UnauthorizedError
 from app.domains.games.models import (
     HiddenObjectTarget,
     CupidArrowLevel,
@@ -33,6 +38,8 @@ from app.domains.games.schemas import (
     CustomerRead,
     LevelCustomerCreate,
     LevelCustomerRead,
+    LoginRequest,
+    TokenResponse,
 )
 
 
@@ -1194,6 +1201,43 @@ class PoojaKitchenService:
             ProgressResponse.model_validate(
                 progress
             )
+        )
+
+    def login(
+        self,
+        credentials: LoginRequest,
+    ) -> TokenResponse:
+
+        player = self.repository.get_player_by_username(
+            credentials.username
+        )
+
+        if player is None:
+            raise UnauthorizedError(
+                "Invalid username or password"
+            )
+
+        if not verify_password(
+            credentials.password,
+            player.password_hash
+        ):
+            raise UnauthorizedError(
+                "Invalid username or password"
+            )
+
+
+        access_token = create_access_token(
+            str(player.id),
+            extra_claims={
+                "type": "pooja_kitchen_player"
+            }
+        )
+
+
+        return TokenResponse(
+            access_token=access_token,
+            refresh_token="",
+            token_type="bearer",
         )
 
 
