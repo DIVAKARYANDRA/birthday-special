@@ -108,17 +108,38 @@ class PoojaKitchenRepository:
     # ------------------------------------------------------------------
 
     def get_level(self, level_number: int) -> PoojaKitchenLevel | None:
+
         stmt = (
             select(PoojaKitchenLevel)
             .options(
-                joinedload(PoojaKitchenLevel.theme),
-                joinedload(PoojaKitchenLevel.orders).joinedload(
+
+                joinedload(
+                    PoojaKitchenLevel.theme
+                ),
+
+                joinedload(
+                    PoojaKitchenLevel.orders
+                ).joinedload(
                     PoojaKitchenOrder.food
                 ),
+
+                joinedload(
+                    PoojaKitchenLevel.customers
+                ).joinedload(
+                    PoojaKitchenLevelCustomer.customer
+                ),
+
             )
-            .where(PoojaKitchenLevel.level_number == level_number)
+            .where(
+                PoojaKitchenLevel.level_number == level_number
+            )
         )
-        return self.db.execute(stmt).unique().scalar_one_or_none()
+
+        return (
+            self.db.execute(stmt)
+            .unique()
+            .scalar_one_or_none()
+        )
 
     def get_next_level(self, current_level_number: int) -> PoojaKitchenLevel | None:
         stmt = (

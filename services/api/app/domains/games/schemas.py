@@ -493,17 +493,39 @@ class CharacterResponse(BaseModel):
 
 
 class LevelResponse(BaseModel):
+
     model_config = ConfigDict(from_attributes=True)
 
     id: uuid.UUID
+
     theme: ThemeResponse
+
     level_number: int
+
     difficulty: str
+
     time_limit: int
+
     target_score: int
+
     customer_count: int
+
     unlock_level: int | None
-    orders: list[OrderResponse] = Field(default_factory=list)
+
+
+    foods: list[FoodResponse] = Field(
+        default_factory=list
+    )
+
+
+    orders: list[OrderResponse] = Field(
+        default_factory=list
+    )
+
+
+    customers: list[CustomerRead] = Field(
+        default_factory=list
+    )
 
     @field_validator("difficulty")
     @classmethod
