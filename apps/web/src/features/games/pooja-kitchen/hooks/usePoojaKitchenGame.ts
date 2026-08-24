@@ -17,7 +17,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { PoojaKitchenGameEngine } from '../engine/gameEngine';
 import { completeLevel, getLevel } from '../api/poojaKitchenApi';
 import type { Food, GameState } from '../data/types';
-
+import { mapBackendLevel } from "../api/levelMapper";
 interface UsePoojaKitchenGameOptions {
   /** Called once the backend has acknowledged a completed/failed attempt. */
   onLevelReported?: (levelNumber: number, passed: boolean) => void;
@@ -138,8 +138,14 @@ export function usePoojaKitchenGame(
       setLoadError(null);
       hasReportedResultRef.current = false;
       try {
-        const level = await getLevel(levelNumber);
+        const backendLevel = await getLevel(levelNumber);
+
+        const level = mapBackendLevel(
+          backendLevel
+        );
+
         currentLevelNumberRef.current = levelNumber;
+
         engine.loadLevel(level);
       } catch (error) {
         setLoadError(
