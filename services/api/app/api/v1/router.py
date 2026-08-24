@@ -17,14 +17,14 @@ from fastapi import APIRouter
 from app.api.v1 import platform
 
 from app.domains.achievements import router as achievements_router
-from app.domains.auth import router as auth_router
+from app.domains.auth import router as admin_auth_router
 from app.domains.letters import router as letters_router
 from app.domains.media import router as media_router
 from app.domains.memories import router as memories_router
 from app.domains.quotes import router as quotes_router
 from app.domains.timeline import router as timeline_router
 from app.domains.unlocks import router as unlocks_router
-from app.domains.games.pooja_kitchen import auth_router
+from app.domains.games.pooja_kitchen import auth_router as pooja_kitchen_auth_router
 from app.domains.media.public_router import (
     router as media_public_router
 )
@@ -84,9 +84,8 @@ api_router.include_router(
 
 # Public: no admin token required
 # This is how an authentication token is obtained.
-
 api_router.include_router(
-    auth_router.router,
+    admin_auth_router.router,
     prefix="/auth",
     tags=["auth"]
 )
@@ -250,7 +249,7 @@ api_router.include_router(
 
 
 api_router.include_router(
-    auth_router.router,
+    pooja_kitchen_auth_router.router,
     prefix="/games/pooja-kitchen/auth",
     tags=["pooja-kitchen-auth"]
 )
