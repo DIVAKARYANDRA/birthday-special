@@ -84,6 +84,46 @@ export function PoojaKitchenGame({
 
   const [carriedFood, setCarriedFood] = useState<Food | null>(null);
 
+  const [scale,setScale] = useState(1);
+
+  useEffect(()=>{
+
+const resize = ()=>{
+
+ const width = window.innerWidth;
+
+ const height =
+ window.visualViewport?.height ??
+ window.innerHeight;
+
+
+ const scaleX = width / 1280;
+ const scaleY = height / 720;
+
+
+ setScale(
+   Math.min(scaleX, scaleY)
+ );
+
+};
+
+
+resize();
+
+window.addEventListener(
+"resize",
+resize
+);
+
+
+return ()=>window.removeEventListener(
+"resize",
+resize
+);
+
+
+},[]);
+
   useEffect(() => {
     loadLevel(levelNumber);
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -123,20 +163,34 @@ export function PoojaKitchenGame({
 
   return (
     <OrientationGate>
-      <div
-        className="
-          relative
-          flex
-          h-[100dvh]
-          w-screen
-          flex-col
-          overflow-hidden
-          bg-gradient-to-b
-          from-[#1F4D45]
-          to-[#2F6F62]
-        "
-        aria-label="Pooja Kitchen game screen"
-      >
+
+<div
+  className="
+    fixed
+    inset-0
+    overflow-hidden
+    flex
+    items-center
+    justify-center
+  "
+>
+
+<div
+  className="
+    relative
+    h-[720px]
+    w-[1280px]
+    origin-center
+    overflow-hidden
+    bg-gradient-to-b
+    from-[#1F4D45]
+    to-[#2F6F62]
+  "
+  style={{
+  transform:`scale(${scale})`,
+  transformOrigin: "center center",
+  }}
+>
       {/* Background kitchen scene */}
       <div
         className="pointer-events-none absolute inset-0 opacity-70"
@@ -199,7 +253,6 @@ export function PoojaKitchenGame({
         )}
       </AnimatePresence>
 
-      <div className="relative z-10 h-4" />
 
       {/* Kitchen counter / cooking stations area */}
       <div className="relative z-10">
@@ -284,6 +337,8 @@ export function PoojaKitchenGame({
         </button>
       )}
       </div>
+      </div>
+
     </OrientationGate>
   );
 }
