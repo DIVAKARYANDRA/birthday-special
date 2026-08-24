@@ -64,7 +64,7 @@ from app.api.v1.experience import (
 from app.domains.games import (
     router as games_router
 )
-
+from app.domains.games.pooja_kitchen import public_router as pooja_kitchen_public_router
 
 api_router = APIRouter()
 
@@ -262,6 +262,16 @@ api_router.include_router(
     tags=["debug"]
 )
 
+
+# ============================================================
+# Public Pooja Kitchen Experience
+# ============================================================
+
+api_router.include_router(
+    pooja_kitchen_public_router.router,
+    prefix="/games/pooja-kitchen",
+    tags=["experience:pooja-kitchen"]
+)
 #------------------------------------------------------------
 # Future domain router registration
 #
