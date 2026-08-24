@@ -944,8 +944,39 @@ class PoojaKitchenService:
             )
 
 
-        return LevelResponse.model_validate(
-            level
+        return LevelResponse(
+
+            id=level.id,
+
+            theme=level.theme,
+
+            level_number=level.level_number,
+
+            difficulty=level.difficulty,
+
+            time_limit=level.time_limit,
+
+            target_score=level.target_score,
+
+            customer_count=level.customer_count,
+
+            unlock_level=level.unlock_level,
+
+
+            foods=[
+                order.food
+                for order in level.orders
+            ],
+
+
+            orders=level.orders,
+
+
+            customers=[
+                assignment.customer
+                for assignment in level.customers
+            ]
+
         )
 
 
