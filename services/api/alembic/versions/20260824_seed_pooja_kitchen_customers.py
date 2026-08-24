@@ -13,7 +13,7 @@ from alembic import op
 import sqlalchemy as sa
 
 
-revision = "20260824_seed_pooja_kitchen_customers"
+revision = "20260824_0005"
 
 down_revision = "20260824_0004"
 
