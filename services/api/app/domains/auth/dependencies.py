@@ -25,7 +25,7 @@ never the reverse. `auth` itself never imports from any content domain.
 import uuid
 
 from fastapi import Depends
-from fastapi.security import OAuth2PasswordBearer
+from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from sqlalchemy.orm import Session
 
 from app.core.exceptions import ForbiddenError, UnauthorizedError
@@ -36,11 +36,11 @@ from app.domains.users.service import AdminUserService, RoleService
 
 # tokenUrl is documentation-only (drives the "Authorize" button in
 # auto-generated API docs) — it does not itself enforce anything.
-_oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/api/v1/auth/login")
-
+_bearer_scheme = HTTPBearer()
 
 def get_current_admin_user(
-    token: str = Depends(_oauth2_scheme), db: Session = Depends(get_db)
+    credentials: HTTPAuthorizationCredentials = Depends(_bearer_scheme),
+    db: Session = Depends(get_db)
 ) -> AdminUser:
     """
     Decodes and validates the bearer access token, then loads the
@@ -49,6 +49,7 @@ def get_current_admin_user(
     account has since been deactivated — an access token issued before
     deactivation should stop working well before its natural expiry.
     """
+    token = credentials.credentials
     payload = decode_token(token, expected_type="access")
     admin_user_id = payload.get("sub")
 
