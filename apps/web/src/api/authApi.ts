@@ -11,7 +11,7 @@ export async function login(
 ): Promise<LoginResponse> {
 
   const response = await fetch(
-    "/api/auth/login",
+    "/api/v1/auth/login",
     {
       method: "POST",
       headers:{

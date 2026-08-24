@@ -18,7 +18,7 @@
 import type { Level, PlayerProgress } from '../data/types';
 import { getAuthToken } from './authToken';
 
-const API_BASE_URL = '/api/pooja-kitchen';
+const API_BASE_URL = '/api/v1/experience/pooja-kitchen';
 
 /** Toggle to false once the real backend endpoints are live. */
 const USE_MOCK_DATA = true;
