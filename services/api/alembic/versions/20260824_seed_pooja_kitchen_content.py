@@ -14,7 +14,7 @@ from alembic import op
 import sqlalchemy as sa
 
 
-revision: str = "20260824_seed_pooja_kitchen_content"
+revision: str = "20260824_0004"
 
 down_revision: Union[str, None] = "20260824_0003"
 
