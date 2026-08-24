@@ -24,12 +24,14 @@ import { Kitchen } from './components/Kitchen';
 import { OrientationGate } from './components/OrientationGate';
 import { buttonTapAnimation, overlayVariants } from './animations/uiAnimations';
 import type { Food } from './data/types';
-
+import { getAuthToken } from "./api/authToken";
+import { PoojaKitchenLogin } from "./components/PoojaKitchenLogin";
 export interface PoojaKitchenGameProps {
   levelNumber: number;
   onExit?: () => void;
   onLevelReported?: (levelNumber: number, passed: boolean) => void;
 }
+
 
 function formatTime(totalSeconds: number): string {
   const seconds = Math.max(0, Math.ceil(totalSeconds));
@@ -85,6 +87,12 @@ export function PoojaKitchenGame({
   const [carriedFood, setCarriedFood] = useState<Food | null>(null);
 
   const [scale,setScale] = useState(1);
+
+  const [authenticated,setAuthenticated]
+=
+useState(
+Boolean(getAuthToken())
+);
 
   useEffect(()=>{
 
@@ -160,6 +168,16 @@ resize
   };
 
   const { level, status } = gameState;
+
+  if(!authenticated){
+ return (
+   <PoojaKitchenLogin
+      onSuccess={() =>
+        setAuthenticated(true)
+      }
+   />
+ );
+}
 
   return (
     <OrientationGate>
