@@ -3,6 +3,7 @@ from sqlalchemy.orm import Session
 
 from app.db.session import get_db
 from app.domains.users.models import AdminUser
+from app.core.security import verify_password
 
 
 router = APIRouter()
@@ -13,15 +14,28 @@ def debug_admin_users(
     db: Session = Depends(get_db)
 ):
 
-    users = db.query(AdminUser).all()
+    user = (
+        db.query(AdminUser)
+        .filter(
+            AdminUser.username == "divakar"
+        )
+        .first()
+    )
 
-    return [
-        {
-            "id": str(user.id),
-            "username": user.username,
-            "email": user.email,
-            "is_active": user.is_active,
-            "role_id": str(user.role_id),
+    if not user:
+        return {
+            "exists": False
         }
-        for user in users
-    ]
+
+
+    return {
+        "exists": True,
+        "username": user.username,
+        "is_active": user.is_active,
+        "hash_prefix": user.hashed_password[:20],
+        "hash_length": len(user.hashed_password),
+        "password_check": verify_password(
+            "PoojaLove19!",
+            user.hashed_password
+        )
+    }
