@@ -105,6 +105,9 @@ def get_db() -> Iterator[Session]:
         yield session
         session.commit()
     except Exception as exc:
+        import traceback
+        traceback.print_exc()
+
         session.rollback()
         raise translate_db_exception(exc) from exc
     finally:

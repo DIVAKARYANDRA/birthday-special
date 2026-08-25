@@ -29,7 +29,9 @@ investigate before retrying).
 from sqlalchemy.exc import IntegrityError, OperationalError, SQLAlchemyError, TimeoutError as SATimeoutError
 
 from app.core.exceptions import AppError, ConflictError
+import logging
 
+logger = logging.getLogger("app.db")
 
 class DatabaseUnavailableError(AppError):
     """
@@ -85,7 +87,15 @@ def translate_db_exception(exc: Exception) -> Exception:
         )
 
     if isinstance(exc, SQLAlchemyError):
-        return TransactionError("A database transaction error occurred.")
+
+        logger.exception(
+            "REAL DATABASE ERROR",
+            exc_info=exc
+        )
+
+        return TransactionError(
+            "A database transaction error occurred."
+        )
 
     # Not a database exception at all — let app/core/error_handlers.py's
     # catch-all Exception handler deal with it as an unexpected system
