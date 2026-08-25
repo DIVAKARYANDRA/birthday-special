@@ -86,49 +86,12 @@ export function PoojaKitchenGame({
 
   const [carriedFood, setCarriedFood] = useState<Food | null>(null);
 
-  const [scale,setScale] = useState(1);
 
   const [authenticated,setAuthenticated]
 =
 useState(
 Boolean(getAuthToken())
 );
-
-  useEffect(()=>{
-
-const resize = ()=>{
-
- const width = window.innerWidth;
-
- const height =
- window.visualViewport?.height ??
- window.innerHeight;
-
-
- const scaleX = width / 1280;
- const scaleY = height / 720;
-
- setScale(
-    Math.max(scaleX, scaleY)
- );
-};
-
-
-resize();
-
-window.addEventListener(
-"resize",
-resize
-);
-
-
-return ()=>window.removeEventListener(
-"resize",
-resize
-);
-
-
-},[]);
 
   useEffect(() => {
     loadLevel(levelNumber);
@@ -196,18 +159,14 @@ resize
 <div
   className="
     relative
-    h-[720px]
-    w-[1280px]
+    h-screen
+    w-screen
     origin-center
     overflow-hidden
     bg-gradient-to-b
     from-[#1F4D45]
     to-[#2F6F62]
   "
-  style={{
-  transform:`scale(${scale})`,
-  transformOrigin: "center center",
-  }}
 >
       {/* Background kitchen scene */}
       <div
