@@ -13,10 +13,9 @@ Affected tables:
 
 Revision ID: 20260825_0000
 """
-
 from alembic import op
 import sqlalchemy as sa
-
+from sqlalchemy.dialects import postgresql
 
 revision = "20260825_0000"
 
@@ -38,7 +37,8 @@ def upgrade():
         "pooja_kitchen_themes",
         "background_media_id",
         existing_type=sa.String(length=255),
-        type_=sa.UUID(),
+        type_=postgresql.UUID(),
+        postgresql_using="background_media_id::uuid",
         existing_nullable=True,
     )
 
@@ -62,7 +62,8 @@ def upgrade():
         "pooja_kitchen_foods",
         "image_media_id",
         existing_type=sa.String(length=255),
-        type_=sa.UUID(),
+        type_=postgresql.UUID(),
+        postgresql_using="image_media_id::uuid",
         existing_nullable=True,
     )
 
@@ -86,16 +87,18 @@ def upgrade():
         "pooja_kitchen_customers",
         "avatar_media_id",
         existing_type=sa.String(length=255),
-        type_=sa.UUID(),
+        type_=postgresql.UUID(),
+        postgresql_using="avatar_media_id::uuid",
         existing_nullable=True,
     )
 
 
     op.alter_column(
         "pooja_kitchen_customers",
-        "happy_media_id",
+        "avatar_media_id",
         existing_type=sa.String(length=255),
-        type_=sa.UUID(),
+        type_=postgresql.UUID(),
+        postgresql_using="avatar_media_id::uuid",
         existing_nullable=True,
     )
 
@@ -104,7 +107,8 @@ def upgrade():
         "pooja_kitchen_customers",
         "angry_media_id",
         existing_type=sa.String(length=255),
-        type_=sa.UUID(),
+        type_=postgresql.UUID(),
+        postgresql_using="angry_media_id::uuid",
         existing_nullable=True,
     )
 
