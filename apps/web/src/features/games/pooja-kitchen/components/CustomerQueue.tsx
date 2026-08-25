@@ -51,16 +51,19 @@ export function CustomerQueue({
   return (
     <div
 
- className="
- relative
- flex
- w-full
- h-32
- items-end
- justify-center
- gap-6
- overflow-hidden
- "
+
+  className="
+    relative
+    flex
+    h-32
+    w-full
+    items-end
+    justify-center
+    gap-3
+    overflow-hidden
+    px-3
+    pb-0
+  "
       aria-label="Customer queue"
     >
       <AnimatePresence>
@@ -79,7 +82,15 @@ export function CustomerQueue({
             >
               {(customer.state === 'waiting' || customer.state === 'angry') &&
                 lines.length > 0 && (
-                  <div className="absolute -top-9 left-1/2 -translate-x-1/2">
+                  <div
+ className="
+ absolute
+ -top-14
+ left-1/2
+ -translate-x-1/2
+ z-30
+ "
+>
                     <OrderBubble lines={lines} urgent={urgent} />
                   </div>
                 )}

@@ -56,9 +56,24 @@ export function OrderBubble({ lines, urgent = false }: OrderBubbleProps) {
       exit="exit"
       variants={orderBubbleVariants}
       transition={orderBubbleTransition}
-      className={`relative flex flex-col gap-1 px-2 pb-3 pt-1.5 shadow-md ${
-        urgent ? 'bg-[#FFE9E4] ring-1 ring-[#E85D5D]' : 'bg-[#FFF8ED]'
-      }`}
+      className={`
+  relative
+  flex
+  flex-col
+  gap-1
+  rounded-xl
+  border
+  border-yellow-300
+  px-2
+  pb-3
+  pt-1.5
+  shadow-lg
+  ${
+    urgent
+      ? 'bg-[#FFE9E4] ring-1 ring-[#E85D5D]'
+      : 'bg-[#FFF8ED]'
+  }
+`}
       style={{ clipPath: ticketClipPath, minWidth: '3.5rem' }}
     >
       {lines.map((line) => {
