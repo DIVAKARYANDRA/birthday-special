@@ -863,43 +863,44 @@ class PoojaKitchenCustomer(Base):
         nullable=True
     )
 
-    avatar_media_id = Column(
-        UUID(as_uuid=True),
-        ForeignKey("media_assets.id"),
-        nullable=True
-    )
-
 
     avatar_media = relationship(
         "MediaAsset",
-        foreign_keys=[avatar_media_id]
+        foreign_keys="PoojaKitchenCustomer.avatar_media_id",
+        lazy="joined"
     )
+
 
     happy_media = relationship(
         "MediaAsset",
-        foreign_keys=[happy_media_id]
+        foreign_keys="PoojaKitchenCustomer.happy_media_id",
+        lazy="joined"
     )
 
 
     angry_media = relationship(
         "MediaAsset",
-        foreign_keys=[angry_media_id]
+        foreign_keys="PoojaKitchenCustomer.angry_media_id",
+        lazy="joined"
     )
 
-    happy_media_id = Column(
-        UUID(as_uuid=True),
-        ForeignKey(
-            "media_assets.id"
-        ),
+    avatar_media_id: Mapped[uuid.UUID | None] = mapped_column(
+        Uuid,
+        ForeignKey("media_assets.id"),
         nullable=True
     )
 
 
-    angry_media_id = Column(
-        UUID(as_uuid=True),
-        ForeignKey(
-            "media_assets.id"
-        ),
+    happy_media_id: Mapped[uuid.UUID | None] = mapped_column(
+        Uuid,
+        ForeignKey("media_assets.id"),
+        nullable=True
+    )
+
+
+    angry_media_id: Mapped[uuid.UUID | None] = mapped_column(
+        Uuid,
+        ForeignKey("media_assets.id"),
         nullable=True
     )
 
