@@ -42,7 +42,7 @@ function buildOrdersAndCustomers(level: Level): {
   const customers: Customer[] = level.customers.map((definition, index) => ({
     ...definition,
     instanceId: nextInstanceId('customer'),
-    state: index < MAX_QUEUE_SLOTS ? 'entering' : ('waiting' as CustomerState),
+    state: 'waiting',
     orderId: null,
     patienceRemaining: definition.patienceSeconds,
     slot: index,
@@ -50,8 +50,8 @@ function buildOrdersAndCustomers(level: Level): {
 
   const orders: Order[] = level.orderTemplates.map((template, index) => {
     const customer = customers.find(
-      (c) => c.slot === index && c.id === template.customerId
-    );
+  (c) => c.id === template.customerId
+);
     const lines: OrderLine[] = template.lines.map((line) => ({
       foodId: line.foodId,
       quantity: line.quantity,
@@ -291,16 +291,39 @@ export class PoojaKitchenGameEngine {
     let customers = this.state.customers;
 
     if (isFulfilled) {
-      score += updatedOrder.rewardPoints;
-      coins += this.calculateCoinsForOrder(updatedOrder);
-      customers = customers.map((customer) =>
-        customer.instanceId === updatedOrder.customerInstanceId
-          ? { ...customer, state: 'happy' as const }
-          : customer
-      );
-    }
+  score += updatedOrder.rewardPoints;
+  coins += this.calculateCoinsForOrder(updatedOrder);
 
-    this.setState({ orders, score, coins, customers });
+  customers = customers.map((customer) =>
+    customer.instanceId === updatedOrder.customerInstanceId
+      ? {
+          ...customer,
+          state: 'happy' as const,
+        }
+      : customer
+  );
+}
+
+this.setState({
+  orders,
+  score,
+  coins,
+  customers,
+});
+
+
+if (isFulfilled) {
+  const customerId = updatedOrder.customerInstanceId;
+
+  setTimeout(() => {
+    this.advanceCustomer(customerId);
+
+    setTimeout(() => {
+      this.removeCustomer(customerId);
+    }, 800);
+
+  }, 2000);
+}
     this.checkAllOrdersResolved();
   }
 
@@ -315,13 +338,20 @@ export class PoojaKitchenGameEngine {
 
   /** Transition a customer whose order was fulfilled/expired off screen. */
   advanceCustomer(customerInstanceId: string): void {
-    const customers = this.state.customers.map((customer) =>
-      customer.instanceId === customerInstanceId
-        ? { ...customer, state: 'leaving' as const }
-        : customer
-    );
-    this.setState({ customers });
-  }
+
+  const customers = this.state.customers.map((customer) =>
+    customer.instanceId === customerInstanceId
+      ? {
+          ...customer,
+          state: 'leaving' as const,
+        }
+      : customer
+  );
+
+  this.setState({
+    customers,
+  });
+}
 
   removeCustomer(customerInstanceId: string): void {
     const customers = this.state.customers.filter(
