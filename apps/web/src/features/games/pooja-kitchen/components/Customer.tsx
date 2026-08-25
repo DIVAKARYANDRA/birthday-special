@@ -87,11 +87,29 @@ export function Customer(props: CustomerProps) {
       exit="leaving"
       variants={customerContainerVariants}
       transition={customerContainerTransition}
-      className="relative flex w-16 flex-shrink-0 flex-col items-center gap-1"
+      className="
+relative
+flex
+w-20
+h-28
+flex-shrink-0
+flex-col
+items-center
+"
       aria-label={`Customer ${name}`}
     >
       <motion.div
-        className="relative h-14 w-14 overflow-visible rounded-full ring-2 ring-white/70"
+        className="
+relative
+h-20
+w-20
+-translate-y-4
+overflow-visible
+rounded-full
+ring-2
+ring-white/70
+
+"
         {...resolveCustomerMotion(state)}
       >
         <AvatarImage src={resolveAvatar(props)} name={name} />

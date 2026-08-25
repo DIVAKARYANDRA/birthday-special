@@ -93,6 +93,12 @@ function buildCookingSlots(level: Level): CookingSlot[] {
 export class PoojaKitchenGameEngine {
   private state: GameState;
   private listeners: Set<Listener> = new Set();
+  private pendingCustomers: Customer[] = [];
+
+  private customerSpawnTimer = 0;
+
+  private nextCustomerIndex = 0;
+
 
   constructor() {
     this.state = {
@@ -132,6 +138,11 @@ export class PoojaKitchenGameEngine {
 
   loadLevel(level: Level): void {
     const { customers, orders } = buildOrdersAndCustomers(level);
+    this.pendingCustomers = customers;
+
+    this.nextCustomerIndex = 0;
+
+    this.customerSpawnTimer = 0;
     const cookingSlots = buildCookingSlots(level);
 
     this.setState({
@@ -140,7 +151,7 @@ export class PoojaKitchenGameEngine {
       timeRemainingSeconds: level.timeLimit,
       score: 0,
       coins: 0,
-      customers,
+      customers: [],
       orders,
       cookingSlots,
       result: null,
@@ -164,6 +175,37 @@ export class PoojaKitchenGameEngine {
     this.setState({ status: 'playing' });
   }
 
+  private spawnCustomer(): void {
+
+  if(this.nextCustomerIndex >= this.pendingCustomers.length){
+    return;
+  }
+
+
+  const customer =
+    this.pendingCustomers[this.nextCustomerIndex];
+
+
+  const updatedCustomer = {
+    ...customer,
+    state:'entering' as const,
+    slot:this.state.customers.length
+  };
+
+
+  this.nextCustomerIndex++;
+
+
+  this.setState({
+    customers:[
+      ...this.state.customers,
+      updatedCustomer
+    ]
+  });
+
+
+}
+
   /**
    * Advance the simulation by `deltaMs`. Intended to be driven by a
    * requestAnimationFrame/interval loop in the React hook — the engine
@@ -174,13 +216,39 @@ export class PoojaKitchenGameEngine {
     if (this.state.status !== 'playing') return;
 
     const deltaSeconds = deltaMs / 1000;
+
+    this.customerSpawnTimer += deltaMs;
+
+
+// spawn customer every 3 seconds
+
+if(
+ this.customerSpawnTimer >= 3000 &&
+ this.nextCustomerIndex < this.pendingCustomers.length
+){
+
+ this.customerSpawnTimer = 0;
+
+ this.spawnCustomer();
+
+}
     const timeRemainingSeconds = Math.max(
       0,
       this.state.timeRemainingSeconds - deltaSeconds
     );
 
     const customers = this.state.customers.map((customer) => {
-      if (customer.state !== 'waiting') return customer;
+      if(customer.state === 'entering'){
+
+ return {
+   ...customer,
+   state:'waiting' as const
+ };
+
+}
+
+
+if (customer.state !== 'waiting') return customer;
       const patienceRemaining = Math.max(
         0,
         customer.patienceRemaining - deltaSeconds

@@ -12,11 +12,38 @@ import type { Variants } from 'framer-motion';
 
 /** Slide/fade transitions between the five CustomerState values. */
 export const customerContainerVariants: Variants = {
-  entering: { x: 60, opacity: 0 },
-  waiting: { x: 0, opacity: 1 },
-  happy: { x: 0, opacity: 1 },
-  angry: { x: 0, opacity: 1 },
-  leaving: { x: -60, opacity: 0 },
+
+  entering: {
+    x: 120,
+    y: 20,
+    opacity: 0,
+  },
+
+  waiting: {
+    x: 0,
+    y: 0,
+    opacity: 1,
+  },
+
+  happy: {
+    x: 0,
+    y: 0,
+    opacity: 1,
+    scale: 1.05,
+  },
+
+  angry: {
+    x: 0,
+    y: 0,
+    opacity: 1,
+  },
+
+  leaving: {
+    x: -120,
+    y: 20,
+    opacity: 0,
+  },
+
 };
 
 export const customerContainerTransition = {
@@ -27,16 +54,33 @@ export const customerContainerTransition = {
 
 /** Idle bobbing loop played while a customer is waiting patiently. */
 export const customerWaitingBob = {
-  animate: { y: [0, -3, 0] },
-  transition: { duration: 1.6, repeat: Infinity, ease: 'easeInOut' as const },
+
+  animate:{
+    y:[0,-5,0]
+  },
+
+  transition:{
+    duration:1.8,
+    repeat:Infinity,
+    ease:'easeInOut' as const
+  }
+
 };
 
 /** Short angry shake loop played once patience hits zero. */
 export const customerAngryShake = {
-  animate: { rotate: [0, -6, 6, -6, 0] },
-  transition: { duration: 0.4, repeat: Infinity, repeatDelay: 0.6 },
-};
 
+ animate:{
+   rotate:[0,-4,4,-4,0]
+ },
+
+ transition:{
+   duration:0.35,
+   repeat:Infinity,
+   repeatDelay:0.8
+ }
+
+};
 /** Resolves the correct avatar animation for the current customer state. */
 export function resolveCustomerMotion(state: 'entering' | 'waiting' | 'happy' | 'angry' | 'leaving') {
   if (state === 'angry') return customerAngryShake;

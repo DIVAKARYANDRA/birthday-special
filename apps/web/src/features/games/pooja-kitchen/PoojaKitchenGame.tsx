@@ -204,16 +204,14 @@ Boolean(getAuthToken())
       </div>
 
       {/* Customer queue + order display area */}
-      <div
+<div
   className="
     relative
     z-10
-    flex-1
-    flex
-    items-end
+    h-36
+    shrink-0
     overflow-hidden
     mt-2
-    pb-4
   "
 >
         {level && (
@@ -243,7 +241,7 @@ Boolean(getAuthToken())
 
 
       {/* Kitchen counter / cooking stations area */}
-      <div className="relative z-10 shrink-0">
+      <div className="relative z-20 -mt-8 shrink-0">
         {level && (
           <Kitchen
             stations={level.stations}

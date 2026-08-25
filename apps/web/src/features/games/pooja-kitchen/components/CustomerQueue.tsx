@@ -50,7 +50,17 @@ export function CustomerQueue({
 
   return (
     <div
-      className="flex w-full items-end gap-4 overflow-x-auto px-3 pb-2 pt-10"
+
+ className="
+ relative
+ flex
+ w-full
+ h-32
+ items-end
+ justify-center
+ gap-6
+ overflow-hidden
+ "
       aria-label="Customer queue"
     >
       <AnimatePresence>
