@@ -15,7 +15,6 @@
 
 import type {
   Customer,
-  CustomerState,
   CookingSlot,
   Food,
   GameState,
@@ -33,7 +32,6 @@ function nextInstanceId(prefix: string): string {
   return `${prefix}-${instanceCounter}`;
 }
 
-const MAX_QUEUE_SLOTS = 3;
 
 function buildOrdersAndCustomers(level: Level): {
   customers: Customer[];
