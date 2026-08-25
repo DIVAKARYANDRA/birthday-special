@@ -46,7 +46,7 @@ function buildOrdersAndCustomers(level: Level): {
     slot: index,
   }));
 
-  const orders: Order[] = level.orderTemplates.map((template, index) => {
+  const orders: Order[] = level.orderTemplates.map((template) => {
     const customer = customers.find(
   (c) => c.id === template.customerId
 );
