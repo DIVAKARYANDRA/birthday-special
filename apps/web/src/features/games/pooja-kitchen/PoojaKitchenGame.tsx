@@ -108,11 +108,9 @@ const resize = ()=>{
  const scaleX = width / 1280;
  const scaleY = height / 720;
 
-
  setScale(
-   Math.min(scaleX, scaleY)
+    Math.max(scaleX, scaleY)
  );
-
 };
 
 
