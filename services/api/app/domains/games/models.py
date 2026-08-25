@@ -11,9 +11,9 @@ from sqlalchemy import (
     Boolean,
     UniqueConstraint,
     func,
+
 )
 from datetime import datetime
-
 
 from sqlalchemy.dialects.postgresql import UUID
 
@@ -864,6 +864,26 @@ class PoojaKitchenCustomer(Base):
     )
 
 
+    avatar_media_id: Mapped[uuid.UUID | None] = mapped_column(
+        UUID(as_uuid=True),
+        ForeignKey("media_assets.id"),
+        nullable=True
+    )
+
+
+    happy_media_id: Mapped[uuid.UUID | None] = mapped_column(
+        UUID(as_uuid=True),
+        ForeignKey("media_assets.id"),
+        nullable=True
+    )
+
+
+    angry_media_id: Mapped[uuid.UUID | None] = mapped_column(
+        UUID(as_uuid=True),
+        ForeignKey("media_assets.id"),
+        nullable=True
+    )
+
     avatar_media = relationship(
         "MediaAsset",
         foreign_keys="PoojaKitchenCustomer.avatar_media_id",
@@ -882,26 +902,6 @@ class PoojaKitchenCustomer(Base):
         "MediaAsset",
         foreign_keys="PoojaKitchenCustomer.angry_media_id",
         lazy="joined"
-    )
-
-    avatar_media_id: Mapped[uuid.UUID | None] = mapped_column(
-        Uuid,
-        ForeignKey("media_assets.id"),
-        nullable=True
-    )
-
-
-    happy_media_id: Mapped[uuid.UUID | None] = mapped_column(
-        Uuid,
-        ForeignKey("media_assets.id"),
-        nullable=True
-    )
-
-
-    angry_media_id: Mapped[uuid.UUID | None] = mapped_column(
-        Uuid,
-        ForeignKey("media_assets.id"),
-        nullable=True
     )
 
     customer_type = Column(
