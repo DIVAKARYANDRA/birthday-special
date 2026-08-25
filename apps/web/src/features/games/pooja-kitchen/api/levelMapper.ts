@@ -1,6 +1,5 @@
 import type { Level, Food, KitchenStation } from "../data/types";
-import { getCloudinaryUrl } from "../../../utils/mediaUrls";
-
+import { getCloudinaryUrl } from "../../../../utils/mediaUrls";
 
 export function mapBackendLevel(data:any):Level {
 
