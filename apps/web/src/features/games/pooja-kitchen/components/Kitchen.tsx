@@ -35,7 +35,18 @@ export function Kitchen({
 }: KitchenProps) {
   return (
     <div
-      className="flex w-full flex-col gap-3 rounded-t-3xl bg-[#C9944A] px-3 pb-4 pt-3 shadow-[0_-4px_12px_rgba(0,0,0,0.15)]"
+      className="
+  flex
+  w-full
+  flex-col
+  gap-2
+  rounded-t-3xl
+  bg-[#C9944A]
+  px-3
+  pb-2
+  pt-2
+  shadow-[0_-4px_12px_rgba(0,0,0,0.15)]
+"
       aria-label="Kitchen stations"
     >
       {stations.map((station) => {

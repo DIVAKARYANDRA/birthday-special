@@ -149,18 +149,18 @@ Boolean(getAuthToken())
     inset-0
     overflow-hidden
     flex
-    items-center
-    justify-center
+    w-full
+    h-[100svh]
     bg-[#1F4D45]
-
   "
 >
+
 <div
   className="
     relative
     flex
-    h-screen
-    w-screen
+    h-full
+    w-full
     flex-col
     overflow-hidden
     bg-gradient-to-b
@@ -204,7 +204,18 @@ Boolean(getAuthToken())
       </div>
 
       {/* Customer queue + order display area */}
-      <div className="relative z-10 flex-1 overflow-hidden mt-2">
+      <div
+  className="
+    relative
+    z-10
+    flex-1
+    flex
+    items-end
+    overflow-hidden
+    mt-2
+    pb-4
+  "
+>
         {level && (
           <CustomerQueue
             customers={gameState.customers}

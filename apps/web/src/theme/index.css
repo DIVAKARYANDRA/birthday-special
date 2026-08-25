@@ -21,6 +21,9 @@ body,
   height:100%;
   overflow-x:hidden;
 }
+#root {
+  height:100dvh;
+}
 :root {
   --color-primary: #4b2e83;
   --color-secondary: #d8a7e0;
