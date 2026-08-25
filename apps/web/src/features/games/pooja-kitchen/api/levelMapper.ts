@@ -11,7 +11,8 @@ export function mapBackendLevel(data:any):Level {
                 {
                     id: order.food.id,
                     name: order.food.name,
-                    image: "",
+                    image:
+                        order.food.image_media?.external_reference ?? "",
                     cookTime: order.food.cook_time,
                     price: order.food.sell_price,
                 } as Food,
@@ -44,7 +45,8 @@ export function mapBackendLevel(data:any):Level {
             id:data.theme.id,
             name:data.theme.name,
             description:data.theme.description ?? "",
-            backgroundImage:""
+            backgroundImage:
+                data.theme.background_media?.external_reference ?? "",
         },
 
 
@@ -65,15 +67,27 @@ export function mapBackendLevel(data:any):Level {
 
         customers:
         data.customers?.map((c:any)=>({
-            id: c.id,
-            name: c.name,
 
-            // Later these will come from media service
-            avatar: c.avatar_media_id ?? "",
-            happyAvatar: c.happy_media_id ?? "",
-            angryAvatar: c.angry_media_id ?? "",
+            id:c.id,
 
-            patienceSeconds: c.patience_seconds,
+            name:c.name,
+
+
+            avatar:
+                c.avatar_media?.external_reference ?? "",
+
+
+            happyAvatar:
+                c.happy_media?.external_reference ?? "",
+
+
+            angryAvatar:
+                c.angry_media?.external_reference ?? "",
+
+
+            patienceSeconds:
+                c.patience_seconds,
+
         })) ?? [],
 
 

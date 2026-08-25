@@ -13,7 +13,7 @@ from app.domains.games.pooja_kitchen.constants import (
     VALID_CHARACTER_TYPES,
     VALID_DIFFICULTIES,
 )
-
+from app.domains.media.schemas import MediaAssetRead
 
 class HiddenObjectTargetCreate(BaseModel):
 
@@ -379,25 +379,28 @@ class CustomerCreate(BaseModel):
 
 
 class CustomerRead(BaseModel):
-    """
-    Customer response schema.
-    """
 
     model_config = ConfigDict(
         from_attributes=True
     )
 
+
     id: uuid.UUID
 
     name: str
 
-    description: str | None
+    description: str | None = None
 
-    avatar_media_id: str | None
 
-    happy_media_id: str | None
+    avatar_media_id: uuid.UUID | None = None
+    happy_media_id: uuid.UUID | None = None
+    angry_media_id: uuid.UUID | None = None
 
-    angry_media_id: str | None
+
+    avatar_media: MediaAssetRead | None = None
+    happy_media: MediaAssetRead | None = None
+    angry_media: MediaAssetRead | None = None
+
 
     customer_type: str
 
@@ -446,23 +449,48 @@ class LevelCustomerRead(BaseModel):
     display_order: int
 
 class ThemeResponse(BaseModel):
-    model_config = ConfigDict(from_attributes=True)
+
+    model_config = ConfigDict(
+        from_attributes=True
+    )
+
 
     id: uuid.UUID
+
     name: str
+
     description: str | None = None
-    background_media_id: str | None = None
+
+
+    background_media_id: uuid.UUID | None = None
+
+    background_media: MediaAssetRead | None = None
+
+
     is_active: bool
+
     created_at: datetime
 
-
 class FoodResponse(BaseModel):
-    model_config = ConfigDict(from_attributes=True)
+
+    model_config = ConfigDict(
+        from_attributes=True
+    )
+
 
     id: uuid.UUID
+
     name: str
-    image_media_id: str | None = None
+
+
+    image_media_id: uuid.UUID | None = None
+
+
+    image_media: MediaAssetRead | None = None
+
+
     cook_time: int
+
     sell_price: int
 
 

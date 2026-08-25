@@ -8,7 +8,7 @@ from app.core.security import (
     verify_password,
     create_access_token,
 )
-
+from app.core.config import get_settings
 from app.core.exceptions import UnauthorizedError
 from app.domains.games.models import (
     HiddenObjectTarget,
@@ -861,6 +861,29 @@ class HeartRushObjectService:
 
         return object_item
 
+def build_media_url(media):
+    """
+    Converts MediaAsset Cloudinary reference
+    into frontend usable URL.
+    """
+
+    if not media:
+        return None
+
+
+    settings = get_settings()
+
+
+    if not media.external_reference:
+        return None
+
+
+    return (
+        f"https://res.cloudinary.com/"
+        f"{settings.cloudinary_cloud_name}"
+        f"/image/upload/q_auto,f_auto/"
+        f"{media.external_reference}"
+    )
 
 class PoojaKitchenService:
     """
@@ -944,7 +967,7 @@ class PoojaKitchenService:
             )
 
 
-        return LevelResponse(
+        response = LevelResponse(
 
             id=level.id,
 
@@ -978,6 +1001,63 @@ class PoojaKitchenService:
             ]
 
         )
+
+
+        # =====================================================
+        # Resolve Cloudinary URLs
+        # =====================================================
+
+        if response.theme.background_media:
+
+            response.theme.background_media.external_reference = (
+                build_media_url(
+                    response.theme.background_media
+                )
+            )
+
+
+        for food in response.foods:
+
+            if food.image_media:
+
+                food.image_media.external_reference = (
+                    build_media_url(
+                        food.image_media
+                    )
+                )
+
+
+
+        for customer in response.customers:
+
+            if customer.avatar_media:
+
+                customer.avatar_media.external_reference = (
+                    build_media_url(
+                        customer.avatar_media
+                    )
+                )
+
+
+            if customer.happy_media:
+
+                customer.happy_media.external_reference = (
+                    build_media_url(
+                        customer.happy_media
+                    )
+                )
+
+
+            if customer.angry_media:
+
+                customer.angry_media.external_reference = (
+                    build_media_url(
+                        customer.angry_media
+                    )
+                )
+
+
+        return response
 
 
 

@@ -707,8 +707,12 @@ class PoojaKitchenTheme(Base):
     id: Mapped[uuid.UUID] = _uuid_pk()
     name: Mapped[str] = mapped_column(String(128), nullable=False, unique=True)
     description: Mapped[str | None] = mapped_column(String(1024), nullable=True)
-    background_media_id: Mapped[str | None] = mapped_column(
-        String(255), nullable=True
+    background_media_id: Mapped[uuid.UUID | None] = mapped_column(
+        UUID(as_uuid=True),
+        ForeignKey(
+            "media_assets.id"
+        ),
+        nullable=True
     )
     is_active: Mapped[bool] = mapped_column(Boolean, nullable=False, default=True)
     created_at: Mapped[datetime] = mapped_column(
@@ -717,6 +721,10 @@ class PoojaKitchenTheme(Base):
 
     levels: Mapped[list["PoojaKitchenLevel"]] = relationship(
         back_populates="theme", cascade="all, delete-orphan"
+    )
+    background_media = relationship(
+        "MediaAsset",
+        foreign_keys=[background_media_id]
     )
 
     def __repr__(self) -> str:  # pragma: no cover - debug helper
@@ -774,11 +782,21 @@ class PoojaKitchenFood(Base):
 
     id: Mapped[uuid.UUID] = _uuid_pk()
     name: Mapped[str] = mapped_column(String(128), nullable=False, unique=True)
-    image_media_id: Mapped[str | None] = mapped_column(String(255), nullable=True)
+    image_media_id: Mapped[uuid.UUID | None] = mapped_column(
+        UUID(as_uuid=True),
+        ForeignKey(
+            "media_assets.id"
+        ),
+        nullable=True
+    )
     cook_time: Mapped[int] = mapped_column(Integer, nullable=False)  # seconds
     sell_price: Mapped[int] = mapped_column(Integer, nullable=False)
 
     orders: Mapped[list["PoojaKitchenOrder"]] = relationship(back_populates="food")
+    image_media = relationship(
+        "MediaAsset",
+        foreign_keys=[image_media_id]
+    )
 
     def __repr__(self) -> str:  # pragma: no cover - debug helper
         return f"<PoojaKitchenFood name={self.name!r}>"
@@ -846,17 +864,42 @@ class PoojaKitchenCustomer(Base):
     )
 
     avatar_media_id = Column(
-        String(255),
+        UUID(as_uuid=True),
+        ForeignKey("media_assets.id"),
         nullable=True
+    )
+
+
+    avatar_media = relationship(
+        "MediaAsset",
+        foreign_keys=[avatar_media_id]
+    )
+
+    happy_media = relationship(
+        "MediaAsset",
+        foreign_keys=[happy_media_id]
+    )
+
+
+    angry_media = relationship(
+        "MediaAsset",
+        foreign_keys=[angry_media_id]
     )
 
     happy_media_id = Column(
-        String(255),
+        UUID(as_uuid=True),
+        ForeignKey(
+            "media_assets.id"
+        ),
         nullable=True
     )
 
+
     angry_media_id = Column(
-        String(255),
+        UUID(as_uuid=True),
+        ForeignKey(
+            "media_assets.id"
+        ),
         nullable=True
     )
 

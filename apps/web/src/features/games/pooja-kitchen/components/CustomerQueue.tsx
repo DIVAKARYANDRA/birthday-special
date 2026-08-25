@@ -55,7 +55,7 @@ export function CustomerQueue({
   className="
     relative
     flex
-    h-32
+    h-24
     w-full
     items-end
     justify-center
@@ -85,7 +85,7 @@ export function CustomerQueue({
                   <div
  className="
  absolute
- -top-14
+ -top-10
  left-1/2
  -translate-x-1/2
  z-30

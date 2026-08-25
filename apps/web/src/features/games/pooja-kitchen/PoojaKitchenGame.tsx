@@ -241,7 +241,7 @@ Boolean(getAuthToken())
 
 
       {/* Kitchen counter / cooking stations area */}
-      <div className="relative z-20 -mt-8 shrink-0">
+      <div className="relative z-20 -mt-10 shrink-0">
         {level && (
           <Kitchen
             stations={level.stations}

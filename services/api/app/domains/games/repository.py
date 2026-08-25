@@ -113,20 +113,57 @@ class PoojaKitchenRepository:
             select(PoojaKitchenLevel)
             .options(
 
+                # Theme
                 joinedload(
                     PoojaKitchenLevel.theme
+                ).joinedload(
+                    PoojaKitchenTheme.background_media
                 ),
 
+
+                # Orders -> Food -> Food Image
                 joinedload(
                     PoojaKitchenLevel.orders
-                ).joinedload(
+                )
+                .joinedload(
                     PoojaKitchenOrder.food
+                )
+                .joinedload(
+                    PoojaKitchenFood.image_media
                 ),
+
+
+                # Customers -> Customer -> Media
+                joinedload(
+                    PoojaKitchenLevel.customers
+                )
+                .joinedload(
+                    PoojaKitchenLevelCustomer.customer
+                )
+                .joinedload(
+                    PoojaKitchenCustomer.avatar_media
+                ),
+
 
                 joinedload(
                     PoojaKitchenLevel.customers
-                ).joinedload(
+                )
+                .joinedload(
                     PoojaKitchenLevelCustomer.customer
+                )
+                .joinedload(
+                    PoojaKitchenCustomer.happy_media
+                ),
+
+
+                joinedload(
+                    PoojaKitchenLevel.customers
+                )
+                .joinedload(
+                    PoojaKitchenLevelCustomer.customer
+                )
+                .joinedload(
+                    PoojaKitchenCustomer.angry_media
                 ),
 
             )
@@ -134,6 +171,7 @@ class PoojaKitchenRepository:
                 PoojaKitchenLevel.level_number == level_number
             )
         )
+
 
         return (
             self.db.execute(stmt)
