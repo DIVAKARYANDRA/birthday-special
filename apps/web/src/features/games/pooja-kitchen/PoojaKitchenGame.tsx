@@ -155,13 +155,13 @@ Boolean(getAuthToken())
 
   "
 >
-
 <div
   className="
     relative
+    flex
     h-screen
     w-screen
-    origin-center
+    flex-col
     overflow-hidden
     bg-gradient-to-b
     from-[#1F4D45]
@@ -183,7 +183,7 @@ Boolean(getAuthToken())
       />
 
       {/* HUD: score, coins, timer */}
-      <div className="relative z-10 flex items-center justify-between px-3 pt-3">
+      <div className="relative z-10 flex shrink-0 items-center justify-between px-3 pt-3">
         <button
           type="button"
           onClick={onExit}
@@ -204,7 +204,7 @@ Boolean(getAuthToken())
       </div>
 
       {/* Customer queue + order display area */}
-      <div className="relative z-10 mt-2">
+      <div className="relative z-10 flex-1 overflow-hidden mt-2">
         {level && (
           <CustomerQueue
             customers={gameState.customers}
@@ -232,7 +232,7 @@ Boolean(getAuthToken())
 
 
       {/* Kitchen counter / cooking stations area */}
-      <div className="relative z-10">
+      <div className="relative z-10 shrink-0">
         {level && (
           <Kitchen
             stations={level.stations}
