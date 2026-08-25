@@ -134,36 +134,12 @@ class PoojaKitchenRepository:
 
 
                 # Customers -> Customer -> Media
+                # Customers
                 joinedload(
                     PoojaKitchenLevel.customers
                 )
                 .joinedload(
                     PoojaKitchenLevelCustomer.customer
-                )
-                .joinedload(
-                    PoojaKitchenCustomer.avatar_media
-                ),
-
-
-                joinedload(
-                    PoojaKitchenLevel.customers
-                )
-                .joinedload(
-                    PoojaKitchenLevelCustomer.customer
-                )
-                .joinedload(
-                    PoojaKitchenCustomer.happy_media
-                ),
-
-
-                joinedload(
-                    PoojaKitchenLevel.customers
-                )
-                .joinedload(
-                    PoojaKitchenLevelCustomer.customer
-                )
-                .joinedload(
-                    PoojaKitchenCustomer.angry_media
                 ),
 
             )
