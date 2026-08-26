@@ -236,18 +236,18 @@ bg-transparent
       </div>
 
       {/* Customer queue + order display area */}
+
 <div
  className="
-absolute
-top-32
-left-0
-right-0
-z-20
-h-48
-flex
-items-end
-justify-center
-"
+ absolute
+ top-24
+ left-0
+ right-0
+ z-10
+ h-44
+ flex
+ justify-center
+ "
 >
         {level && (
           <CustomerQueue

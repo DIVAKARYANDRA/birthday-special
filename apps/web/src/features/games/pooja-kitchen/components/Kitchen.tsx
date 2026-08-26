@@ -42,7 +42,7 @@ flex-col
 gap-2
 bg-transparent
 px-3
-pb-3
+pb-2
 pt-2
 "
       aria-label="Kitchen stations"
@@ -67,14 +67,7 @@ pt-2
     p-0
   "
 >
-            <div
-className="
-flex
-items-end
-justify-end
-px-1
-"
->
+           <div className="flex items-center justify-between px-1">
 
               <div className="flex gap-1">
                 {slotsForStation.map((slot) =>
@@ -98,14 +91,7 @@ px-1
               </div>
             </div>
 
-            <div
-            className="
-            flex
-            flex-wrap
-            gap-2
-            justify-start
-            "
-            >
+            <div className="flex flex-wrap gap-2">
               {menuFoods.map((food) => (
                 <FoodItem
                   key={food.id}
