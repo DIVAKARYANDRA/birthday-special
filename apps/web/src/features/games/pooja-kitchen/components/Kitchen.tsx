@@ -58,16 +58,23 @@ pt-2
 
         return (
           <div
-            key={station.id}
-            className="flex flex-col gap-2 bg-transparent p-2"
-          >
-            <div className="
+  key={station.id}
+  className="
+    flex
+    flex-col
+    gap-2
+    bg-transparent
+    p-0
+  "
+>
+            <div
+className="
 flex
 items-end
 justify-end
 px-1
-min-h-[60px]
-">
+"
+>
 
               <div className="flex gap-1">
                 {slotsForStation.map((slot) =>

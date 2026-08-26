@@ -239,7 +239,7 @@ Boolean(getAuthToken())
 <div
  className="
 absolute
-top-20
+top-32
 left-0
 right-0
 z-20
