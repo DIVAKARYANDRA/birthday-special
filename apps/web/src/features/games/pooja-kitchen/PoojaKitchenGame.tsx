@@ -146,7 +146,7 @@ Boolean(getAuthToken())
   className="
     relative
     w-full
-    h-full
+    h-dvh
     overflow-hidden
     bg-transparent
   "

@@ -24,6 +24,7 @@ export default function SceneTransition({ children }: SceneTransitionProps) {
     <AnimatePresence mode="wait" initial={false}>
       <motion.div
         key={location.pathname}
+        className="w-full h-full"
         variants={reducedMotion ? { initial: { opacity: 0 }, animate: { opacity: 1 }, exit: { opacity: 0 } } : sceneTransition}
         initial="initial"
         animate="animate"
