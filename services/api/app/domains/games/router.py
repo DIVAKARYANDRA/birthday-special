@@ -280,37 +280,6 @@ def delete_heart_rush_object(
 # ============================================================
 
 
-# ============================================================
-# Pooja Kitchen
-# ============================================================
-
-
-@router.get(
-    "/pooja-kitchen/{level_number}",
-    response_model=LevelResponse
-)
-def get_pooja_kitchen_level(
-    level_number: int,
-    db: Session = Depends(get_db)
-):
-
-    return PoojaKitchenService(db).load_level_configuration(
-        level_number
-    )
-
-@router.get(
-    "/pooja-kitchen/levels/{level_number}",
-    response_model=LevelResponse
-)
-def get_pooja_kitchen_level_with_path(
-    level_number: int,
-    db: Session = Depends(get_db)
-):
-
-    return PoojaKitchenService(db).load_level_configuration(
-        level_number
-    )
-
 
 # ============================================================
 # Pooja Kitchen Customers
@@ -548,6 +517,39 @@ def update_pooja_level(
             level_id,
             payload
         )
+    )
+
+
+
+# ============================================================
+# Pooja Kitchen
+# ============================================================
+
+
+@router.get(
+    "/pooja-kitchen/{level_number}",
+    response_model=LevelResponse
+)
+def get_pooja_kitchen_level(
+    level_number: int,
+    db: Session = Depends(get_db)
+):
+
+    return PoojaKitchenService(db).load_level_configuration(
+        level_number
+    )
+
+@router.get(
+    "/pooja-kitchen/levels/{level_number}",
+    response_model=LevelResponse
+)
+def get_pooja_kitchen_level_with_path(
+    level_number: int,
+    db: Session = Depends(get_db)
+):
+
+    return PoojaKitchenService(db).load_level_configuration(
+        level_number
     )
 
 

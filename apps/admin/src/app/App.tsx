@@ -48,6 +48,12 @@ from "@/modules/games/pooja-kitchen/CustomerEditor";
 import LevelEditor
 from "@/modules/games/pooja-kitchen/LevelEditor";
 
+import PoojaKitchenPage
+from "@/modules/games/pooja-kitchen/PoojaKitchenPage";
+
+import PoojaKitchenEditorPage
+from "@/modules/games/pooja-kitchen/PoojaKitchenEditorPage";
+
 function useSessionHydration() {
   useEffect(() => {
     const { getStoredRefreshToken, setSession, clearSession } = useAuthStore.getState();
@@ -87,6 +93,10 @@ export default function App() {
               element={<HeartRushEditorPage />}
             />
             <Route
+              path="/games/pooja-kitchen"
+              element={<PoojaKitchenEditorPage />}
+            />
+            <Route
               path="/games/pooja-kitchen/themes"
               element={<ThemeEditor />}
             />
@@ -104,6 +114,10 @@ export default function App() {
             <Route
               path="/games/pooja-kitchen/levels"
               element={<LevelEditor />}
+            />
+            <Route
+            path="/games/pooja-kitchen"
+            element={<PoojaKitchenPage />}
             />
             <Route path="/memories" element={<MemoriesListPage />} />
             <Route path="/timeline" element={<TimelineListPage />} />
