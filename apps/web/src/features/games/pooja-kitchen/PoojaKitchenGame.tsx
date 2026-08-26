@@ -151,7 +151,7 @@ Boolean(getAuthToken())
     flex
     w-full
     h-[100svh]
-    bg-black
+    bg-transparent
   "
 >
 <div
@@ -166,7 +166,7 @@ Boolean(getAuthToken())
   "
 >
       {/* Background kitchen scene */}
-      <div
+      {/* <div
   className="
     pointer-events-none
     absolute
@@ -182,7 +182,26 @@ Boolean(getAuthToken())
         ? `url(${level.theme.backgroundImage})`
         : undefined,
   }}
+/> */}
+
+<div
+  className="
+    absolute
+    inset-0
+    z-0
+  "
+>
+<img
+ src={level.theme.backgroundImage}
+ className="
+ absolute
+ inset-0
+ w-full
+ h-full
+ object-cover
+ "
 />
+</div>
 
 
       {/* HUD: score, coins, timer */}
