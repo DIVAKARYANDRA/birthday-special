@@ -52,7 +52,7 @@ function AvatarImage({ src, name }: { src: string; name: string }) {
     <img
       src={src}
       alt={name}
-      className="h-full w-full rounded-full object-cover"
+      className="h-full w-full rounded-full object-contain"
       draggable={false}
     />
   );
@@ -101,13 +101,11 @@ items-center
       <motion.div
         className="
 relative
-h-14
-w-14
+h-28
+w-28
 -translate-y-4
 overflow-visible
-rounded-full
-ring-2
-ring-white/70
+
 
 "
         {...resolveCustomerMotion(state)}

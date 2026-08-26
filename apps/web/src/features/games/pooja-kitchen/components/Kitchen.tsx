@@ -63,10 +63,8 @@ export function Kitchen({
             key={station.id}
             className="flex flex-col gap-2 rounded-2xl bg-[#E8B75D]/50 p-2"
           >
-            <div className="flex items-center justify-between px-1">
-              <span className="text-xs font-bold text-[#1F2A24]">
-                {station.name}
-              </span>
+            <div className="flex items-end justify-end px-1">
+            
               <div className="flex gap-1">
                 {slotsForStation.map((slot) =>
                   slot.food ? (
