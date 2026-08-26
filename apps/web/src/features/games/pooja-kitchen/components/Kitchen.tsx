@@ -42,8 +42,8 @@ export function Kitchen({
   gap-2
   bg-transparent
   px-3
-  pb-2
-  pt-2
+  pb-0
+  pt-0
 "
       aria-label="Kitchen stations"
     >
@@ -61,10 +61,14 @@ export function Kitchen({
             key={station.id}
             className="flex flex-col gap-2 bg-transparent p-2"
           >
-            <div className="flex items-center justify-between px-1">
-              <span className="text-xs font-bold text-[#1F2A24]">
-                {station.name}
-              </span>
+            <div className="
+flex
+items-end
+justify-end
+px-1
+min-h-[60px]
+">
+
               <div className="flex gap-1">
                 {slotsForStation.map((slot) =>
                   slot.food ? (
@@ -87,7 +91,14 @@ export function Kitchen({
               </div>
             </div>
 
-            <div className="flex flex-wrap gap-2">
+            <div
+            className="
+            flex
+            flex-wrap
+            gap-2
+            justify-start
+            "
+            >
               {menuFoods.map((food) => (
                 <FoodItem
                   key={food.id}

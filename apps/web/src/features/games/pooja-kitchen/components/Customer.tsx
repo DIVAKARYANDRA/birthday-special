@@ -52,7 +52,7 @@ function AvatarImage({ src, name }: { src: string; name: string }) {
     <img
       src={src}
       alt={name}
-      className="h-full w-full rounded-full object-cover"
+      className="h-full w-full object-contain"
       draggable={false}
     />
   );
@@ -90,24 +90,22 @@ export function Customer(props: CustomerProps) {
       className="
 relative
 flex
-w-28
-h-40
+w-32
+h-48
 flex-shrink-0
 flex-col
 items-center
+
 "
       aria-label={`Customer ${name}`}
     >
       <motion.div
         className="
 relative
-h-28
-w-28
+h-44
+w-32
 -translate-y-4
 overflow-visible
-rounded-full
-ring-2
-ring-white/70
 
 "
         {...resolveCustomerMotion(state)}
@@ -135,7 +133,7 @@ ring-white/70
         )}
       </motion.div>
 
-      <span className="max-w-[4rem] truncate text-[11px] font-semibold text-white drop-shadow">
+      <span className="max-w-[8rem] truncate text-[11px] font-semibold text-white drop-shadow">
         {name}
       </span>
     </motion.button>

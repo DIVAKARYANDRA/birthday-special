@@ -148,6 +148,7 @@ Boolean(getAuthToken())
     fixed
     inset-0
     overflow-hidden
+    relative
     flex
     w-full
     h-[100svh]
@@ -156,13 +157,15 @@ Boolean(getAuthToken())
 >
 <div
   className="
-    relative
-    flex
-    h-full
-    w-full
-    flex-col
-    overflow-hidden
-    bg-transparent
+     absolute
+ top-32
+ left-0
+ right-0
+ z-10
+ h-48
+ flex
+ justify-center
+ items-end
   "
 >
       {/* Background kitchen scene */}
@@ -235,14 +238,15 @@ Boolean(getAuthToken())
       {/* Customer queue + order display area */}
 <div
  className="
- absolute
- top-24
- left-0
- right-0
- z-10
- h-44
- flex
- justify-center
+absolute
+top-36
+left-0
+right-0
+z-10
+h-52
+flex
+items-end
+justify-center
  "
 >
         {level && (
