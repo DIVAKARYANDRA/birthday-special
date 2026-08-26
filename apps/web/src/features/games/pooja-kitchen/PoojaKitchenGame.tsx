@@ -191,16 +191,23 @@ Boolean(getAuthToken())
     z-0
   "
 >
-<img
- src={level.theme.backgroundImage}
- className="
- absolute
- inset-0
- w-full
- h-full
- object-cover
- "
-/>
+{
+  level?.theme.backgroundImage && (
+
+    <img
+      src={level.theme.backgroundImage}
+      className="
+        absolute
+        inset-0
+        w-full
+        h-full
+        object-cover
+      "
+      alt="Kitchen background"
+    />
+
+  )
+}
 </div>
 
 
