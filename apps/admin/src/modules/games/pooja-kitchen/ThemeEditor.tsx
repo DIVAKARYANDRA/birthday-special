@@ -206,61 +206,53 @@ export default function ThemeEditor() {
 
 
 
+{
+  mediaOpen && selectedTheme && (
+
+    <MediaSelector
+
+      title="Select background for Pooja Kitchen"
 
 
+      onClose={()=>{
+        setMediaOpen(false);
+        setSelectedTheme(null);
+      }}
 
 
-      {
-        mediaOpen && selectedTheme && (
+      onSelect={async(mediaId)=>{
 
 
-          <MediaSelector
+        await themeApi.update(
+
+          selectedTheme.id,
+
+          {
+            background_media_id: mediaId
+          }
+
+        );
 
 
-            title={
-              `Select background for ${selectedTheme.name}`
-            }
+        setMediaOpen(false);
+
+        setSelectedTheme(null);
 
 
-
-            onSelect={
-              async(mediaId)=>{
+        await loadThemes();
 
 
-                await themeApi.update(
-
-                  selectedTheme.id,
-
-                  {
-
-                    background_media_id:
-                      mediaId
-
-                  }
-
-                );
+        alert(
+          "Background updated successfully"
+        );
 
 
+      }}
 
-                setMediaOpen(false);
+    />
 
-                setSelectedTheme(null);
-
-
-
-                loadThemes();
-
-
-              }
-
-            }
-
-
-          />
-
-
-        )
-      }
+  )
+}
 
 
 

@@ -92,6 +92,7 @@ export default function FoodEditor() {
       <h2 className="text-xl font-bold">
         Pooja Kitchen Foods
       </h2>
+      
 
 
 
@@ -212,6 +213,14 @@ export default function FoodEditor() {
               `Select image for ${selectedFood.name}`
             }
 
+
+             onClose={()=>{
+
+   setMediaOpen(false);
+
+   setSelectedFood(null);
+
+ }}
 
 
             onSelect={

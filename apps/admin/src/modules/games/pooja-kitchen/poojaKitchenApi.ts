@@ -148,25 +148,25 @@ export const themeApi = {
 
 
   update(
-    id:string,
-    payload:Partial<PoojaKitchenTheme>
-  ){
+  id:string,
+  payload:Partial<PoojaKitchenTheme>
+){
 
-    return apiRequest<PoojaKitchenTheme>(
+  return apiRequest<PoojaKitchenTheme>(
 
-      `/api/v1/admin/games/pooja-kitchen/admin/themes/${id}`,
+    `/api/v1/admin/games/pooja-kitchen/admin/themes/${id}`,
 
-      {
+    {
 
-        method:"PATCH",
+      method:"PATCH",
 
-        body:JSON.stringify(payload),
+      body:payload,
 
-      }
+    }
 
-    );
+  );
 
-  },
+},
 
 
 };
@@ -205,7 +205,7 @@ export const foodApi = {
 
         method:"POST",
 
-        body:JSON.stringify(payload),
+        body:payload,
 
       }
 
@@ -228,7 +228,7 @@ export const foodApi = {
 
         method:"PATCH",
 
-        body:JSON.stringify(payload),
+        body:payload,
 
       }
 
@@ -273,7 +273,7 @@ export const customerApi = {
 
         method:"POST",
 
-        body:JSON.stringify(payload),
+        body:payload,
 
       }
 
@@ -296,7 +296,7 @@ export const customerApi = {
 
         method:"PATCH",
 
-        body:JSON.stringify(payload),
+        body:payload,
 
       }
 
@@ -342,7 +342,7 @@ export const levelApi = {
 
         method:"PATCH",
 
-        body:JSON.stringify(payload),
+        body:payload,
 
       }
 
@@ -374,7 +374,7 @@ export const orderApi = {
      `/api/v1/admin/games/pooja-kitchen/admin/levels/${levelId}/orders`,
      {
        method:"POST",
-       body:JSON.stringify(payload)
+       body:payload,
      }
    );
 
@@ -390,7 +390,7 @@ export const orderApi = {
      `/api/v1/admin/games/pooja-kitchen/admin/orders/${id}`,
      {
        method:"PATCH",
-       body:JSON.stringify(payload)
+       body:payload,
      }
    );
 

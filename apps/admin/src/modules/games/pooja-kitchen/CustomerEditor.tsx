@@ -187,6 +187,15 @@ title={
 `Select ${mediaTarget} avatar`
 }
 
+onClose={()=>{
+
+setMediaTarget(null);
+
+setSelectedCustomer(null);
+
+}}
+
+
 
 onSelect={
 async(mediaId)=>{
