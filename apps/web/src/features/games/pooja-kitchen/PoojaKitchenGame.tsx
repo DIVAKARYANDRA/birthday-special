@@ -242,7 +242,7 @@ scale-110
     z-10
     left-0
     right-0
-    top-[42%]
+    top-[50%]
     flex
     justify-center
     overflow-visible

@@ -40,6 +40,7 @@ export interface CustomerProps {
    * Total patience allowed for this customer
    */
   patienceSeconds: number;
+  orderFoodImage?: string;
 
 
   /**
@@ -147,8 +148,8 @@ function AvatarImage(
       alt={name}
 
       className="
-      h-28
-w-20
+      h-36
+w-28
 
 object-contain
 object-bottom
@@ -266,6 +267,38 @@ justify-center
         {...resolveCustomerMotion(state)}
 
       >
+
+        {
+props.orderFoodImage && (
+
+<div
+className="
+absolute
+-bottom-2
+left-1/2
+-translate-x-1/2
+-translate-y-8
+z-20
+bg-white
+rounded-full
+p-2
+shadow-lg
+"
+>
+
+<img
+src={props.orderFoodImage}
+className="
+h-10
+w-10
+object-contain
+"
+/>
+
+</div>
+
+)
+}
 
 
 
