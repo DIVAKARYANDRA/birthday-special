@@ -1,150 +1,305 @@
 /**
  * Customer
  *
- * Renders a single customer at the counter with Framer Motion transitions
- * between lifecycle states. Avatars are always URLs supplied by the
- * parent (ultimately sourced from backend media) — this component never
- * hardcodes an image asset. When a URL is missing (e.g. in mock/dev
- * data) it falls back to a simple initials badge so the layout never
- * breaks on a broken <img>.
+ * Renders a customer character at the counter.
+ *
+ * Supports:
+ * - normal avatar
+ * - happy avatar
+ * - angry avatar
+ * - future patience based mood switching
+ *
+ * Uses transparent character PNGs.
+ * No circular avatar clipping.
  */
 
-import { motion } from 'framer-motion';
-import type { CustomerState } from '../data/types';
+import { motion } from "framer-motion";
+
+import type { CustomerState } from "../data/types";
+
 import {
   customerContainerTransition,
   customerContainerVariants,
   resolveCustomerMotion,
-} from '../animations/customerAnimations';
+} from "../animations/customerAnimations";
+
+
 
 export interface CustomerProps {
 
-  name:string;
+  name: string;
 
-  avatar:string;
+  avatar: string;
 
-  happyAvatar:string;
+  happyAvatar: string;
 
-  angryAvatar:string;
-
-
-  /**
-   * Maximum patience time for this customer
-   */
-  // patienceSeconds:number;
+  angryAvatar: string;
 
 
   /**
-   * Current remaining patience time
+   * Total patience allowed for this customer
    */
-  // patienceRemaining:number;
+  patienceSeconds: number;
 
 
   /**
-   * Current customer mood state
+   * Current remaining patience
    */
-  state:CustomerState;
+  patienceRemaining: number;
 
 
-  onSelect?:()=>void;
+  /**
+   * Current customer state
+   */
+  state: CustomerState;
 
-  onExitComplete?:()=>void;
+
+  onSelect?: () => void;
+
+  onExitComplete?: () => void;
 
 }
 
-function resolveAvatar(props: CustomerProps): string {
-  if (props.state === 'happy') return props.happyAvatar || props.avatar;
-  if (props.state === 'angry') return props.angryAvatar || props.avatar;
-  return props.avatar;
-}
 
-function AvatarImage({ src, name }: { src: string; name: string }) {
-  if (!src) {
-    const initial = name.trim().charAt(0).toUpperCase() || '?';
+
+
+
+function resolveAvatar(
+  props: CustomerProps
+): string {
+
+
+  if (props.state === "happy") {
+
     return (
-      <div className="flex h-full w-full items-center justify-center rounded-full bg-[#F5C24D] font-[Fredoka,ui-rounded,sans-serif] text-lg font-bold text-[#1F2A24]">
-        {initial}
-      </div>
+      props.happyAvatar ||
+      props.avatar
     );
+
   }
-  return (
-    <img
-      src={src}
-      alt={name}
-      className="h-full w-full object-contain"
-      draggable={false}
-    />
-  );
+
+
+  if (props.state === "angry") {
+
+    return (
+      props.angryAvatar ||
+      props.avatar
+    );
+
+  }
+
+
+  return props.avatar;
+
 }
 
-export function Customer(props: CustomerProps) {
+
+
+
+
+function AvatarImage(
+{
+  src,
+  name,
+}: {
+  src: string;
+  name: string;
+}) {
+
+
+  if (!src) {
+
+    return (
+
+      <div
+        className="
+        flex
+        h-full
+        w-full
+        items-center
+        justify-center
+        text-4xl
+        font-bold
+        text-white
+        "
+      >
+
+        {
+          name
+            .charAt(0)
+            .toUpperCase()
+        }
+
+      </div>
+
+    );
+
+  }
+
+
+
+  return (
+
+    <img
+
+      src={src}
+
+      alt={name}
+
+      className="
+      h-full
+      w-full
+      object-contain
+      "
+
+      draggable={false}
+
+    />
+
+  );
+
+}
+
+
+
+
+
+export function Customer(
+props: CustomerProps
+) {
+
+
   const {
+
     name,
-    patienceSeconds,
+
     state,
-    patienceRemaining,
+
     onSelect,
+
     onExitComplete,
+
   } = props;
 
-  // const patienceRatio =
-  //   patienceSeconds > 0
-  //     ? Math.max(0, Math.min(1, patienceRemaining / patienceSeconds))
-  //     : 1;
+
 
   return (
+
     <motion.button
+
       type="button"
+
       layout
+
       onClick={onSelect}
+
+
       onAnimationComplete={() => {
-        if (state === 'leaving') onExitComplete?.();
+
+        if (
+          state === "leaving"
+        ) {
+
+          onExitComplete?.();
+
+        }
+
       }}
+
+
       initial="entering"
+
       animate={state}
+
       exit="leaving"
-      variants={customerContainerVariants}
-      transition={customerContainerTransition}
+
+
+      variants={
+        customerContainerVariants
+      }
+
+
+      transition={
+        customerContainerTransition
+      }
+
+
       className="
-relative
-flex
-w-32
-h-44
-flex-shrink-0
-flex-col
-items-center
-"
-      aria-label={`Customer ${name}`}
+      relative
+      flex
+      h-48
+      w-36
+      flex-shrink-0
+      flex-col
+      items-center
+      justify-end
+      "
+
+
+      aria-label={
+        `Customer ${name}`
+      }
+
     >
+
+
+
       <motion.div
+
+
         className="
-relative
-flex
-w-32
-h-44
-flex-shrink-0
-flex-col
-items-center
+        absolute
+        bottom-5
+        h-48
+        w-36
+        overflow-visible
+        "
 
 
-
-"
         {...resolveCustomerMotion(state)}
+
       >
-        <AvatarImage src={resolveAvatar(props)} name={name} />
+
+
+
+        <AvatarImage
+
+          src={
+            resolveAvatar(props)
+          }
+
+          name={name}
+
+        />
 
 
       </motion.div>
 
-      <span className="absolute
-bottom-0
-text-[11px]
-font-semibold
-text-white
-drop-shadow
-">
+
+
+
+
+      <span
+
+        className="
+        absolute
+        bottom-0
+        text-xs
+        font-semibold
+        text-white
+        drop-shadow-lg
+        "
+
+      >
+
         {name}
+
       </span>
+
+
+
     </motion.button>
+
   );
+
 }
