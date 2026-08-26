@@ -52,7 +52,7 @@ function AvatarImage({ src, name }: { src: string; name: string }) {
     <img
       src={src}
       alt={name}
-      className="h-full w-full rounded-full object-contain"
+      className="h-full w-full object-contain"
       draggable={false}
     />
   );
@@ -90,8 +90,8 @@ export function Customer(props: CustomerProps) {
       className="
 relative
 flex
-w-20
-h-28
+w-32
+h-44
 flex-shrink-0
 flex-col
 items-center
@@ -101,10 +101,13 @@ items-center
       <motion.div
         className="
 relative
-h-28
-w-28
--translate-y-4
-overflow-visible
+flex
+w-32
+h-44
+flex-shrink-0
+flex-col
+items-center
+
 
 
 "
