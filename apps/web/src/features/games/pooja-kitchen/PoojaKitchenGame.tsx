@@ -198,10 +198,13 @@ Boolean(getAuthToken())
       src={level.theme.backgroundImage}
       className="
         absolute
-        inset-0
-        w-full
-        h-full
-        object-cover
+inset-0
+w-full
+h-full
+object-cover
+object-center
+scale-110
+
       "
       alt="Kitchen background"
     />
@@ -235,12 +238,14 @@ Boolean(getAuthToken())
       {/* Customer queue + order display area */}
 <div
   className="
-    relative
+    absolute
     z-10
-    h-36
-    shrink-0
-    overflow-hidden
-    mt-2
+    left-0
+    right-0
+    top-[30%]
+    flex
+    justify-center
+    overflow-visible
   "
 >
         {level && (
@@ -270,7 +275,12 @@ Boolean(getAuthToken())
 
 
       {/* Kitchen counter / cooking stations area */}
-      <div className="relative z-20 shrink-0">
+      <div className="absolute
+ bottom-4
+ left-0
+ right-0
+ z-20
+">
         {level && (
           <Kitchen
             stations={level.stations}

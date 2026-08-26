@@ -42,8 +42,8 @@ export function Kitchen({
   gap-2
   bg-transparent
   px-3
-  pb-2
-  pt-2
+  pb-0
+  pt-0
 "
       aria-label="Kitchen stations"
     >
@@ -86,7 +86,7 @@ export function Kitchen({
               </div>
             </div>
 
-            <div className="flex flex-wrap gap-2">
+            <div className="flex flex-wrap translate-y-6 gap-2">
               {menuFoods.map((food) => (
                 <FoodItem
                   key={food.id}

@@ -72,7 +72,6 @@ export function Customer(props: CustomerProps) {
     patienceSeconds > 0
       ? Math.max(0, Math.min(1, patienceRemaining / patienceSeconds))
       : 1;
-  const isLowPatience = patienceRatio <= 0.25 && state === 'waiting';
 
   return (
     <motion.button
@@ -115,28 +114,16 @@ items-center
       >
         <AvatarImage src={resolveAvatar(props)} name={name} />
 
-        {state === 'waiting' && (
-          <svg
-            className="pointer-events-none absolute -inset-1"
-            viewBox="0 0 64 64"
-          >
-            <circle
-              cx="32"
-              cy="32"
-              r="29"
-              fill="none"
-              stroke={isLowPatience ? '#E85D5D' : '#2F6F62'}
-              strokeWidth="3"
-              strokeLinecap="round"
-              strokeDasharray={2 * Math.PI * 29}
-              strokeDashoffset={2 * Math.PI * 29 * (1 - patienceRatio)}
-              transform="rotate(-90 32 32)"
-            />
-          </svg>
-        )}
+
       </motion.div>
 
-      <span className="max-w-[4rem] truncate text-[11px] font-semibold text-white drop-shadow">
+      <span className="absolute
+bottom-0
+text-[11px]
+font-semibold
+text-white
+drop-shadow
+">
         {name}
       </span>
     </motion.button>
