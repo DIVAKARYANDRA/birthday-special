@@ -149,7 +149,6 @@ Boolean(getAuthToken())
     inset-0
     overflow-hidden
     relative
-    flex
     w-full
     h-[100svh]
     bg-transparent
@@ -205,6 +204,7 @@ Boolean(getAuthToken())
         w-full
         h-full
         object-cover
+        object-center
       "
       alt="Kitchen background"
     />
@@ -239,15 +239,15 @@ Boolean(getAuthToken())
 <div
  className="
 absolute
-top-36
+top-20
 left-0
 right-0
-z-10
-h-52
+z-20
+h-48
 flex
 items-end
 justify-center
- "
+"
 >
         {level && (
           <CustomerQueue

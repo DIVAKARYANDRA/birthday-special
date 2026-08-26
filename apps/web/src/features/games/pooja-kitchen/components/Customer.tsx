@@ -90,8 +90,8 @@ export function Customer(props: CustomerProps) {
       className="
 relative
 flex
-w-32
-h-48
+w-24
+h-36
 flex-shrink-0
 flex-col
 items-center
@@ -102,8 +102,8 @@ items-center
       <motion.div
         className="
 relative
-h-44
-w-32
+h-36
+w-24
 -translate-y-4
 overflow-visible
 

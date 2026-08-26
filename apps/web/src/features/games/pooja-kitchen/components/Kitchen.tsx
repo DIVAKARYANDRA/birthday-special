@@ -36,14 +36,14 @@ export function Kitchen({
   return (
     <div
       className="
-  flex
-  w-full
-  flex-col
-  gap-2
-  bg-transparent
-  px-3
-  pb-0
-  pt-0
+flex
+w-full
+flex-col
+gap-2
+bg-transparent
+px-3
+pb-3
+pt-2
 "
       aria-label="Kitchen stations"
     >
