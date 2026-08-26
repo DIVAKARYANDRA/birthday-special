@@ -18,19 +18,38 @@ import {
 } from '../animations/customerAnimations';
 
 export interface CustomerProps {
-  name: string;
-  avatar: string;
-  happyAvatar: string;
-  angryAvatar: string;
-  // patienceSeconds: number;
-  /** Current lifecycle state driving which avatar/animation is shown. */
-  state: CustomerState;
-  /** Seconds of patience left; used to drive the patience ring. */
-  // patienceRemaining: number;
-  /** Called when this customer is tapped (e.g. to focus their order). */
-  onSelect?: () => void;
-  /** Called by the parent's AnimatePresence once the exit animation ends. */
-  onExitComplete?: () => void;
+
+  name:string;
+
+  avatar:string;
+
+  happyAvatar:string;
+
+  angryAvatar:string;
+
+
+  /**
+   * Maximum patience time for this customer
+   */
+  patienceSeconds:number;
+
+
+  /**
+   * Current remaining patience time
+   */
+  patienceRemaining:number;
+
+
+  /**
+   * Current customer mood state
+   */
+  state:CustomerState;
+
+
+  onSelect?:()=>void;
+
+  onExitComplete?:()=>void;
+
 }
 
 function resolveAvatar(props: CustomerProps): string {
