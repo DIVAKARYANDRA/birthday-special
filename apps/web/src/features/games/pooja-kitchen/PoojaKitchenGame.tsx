@@ -242,7 +242,7 @@ scale-110
     z-10
     left-0
     right-0
-    top-[30%]
+    top-[42%]
     flex
     justify-center
     overflow-visible
@@ -276,7 +276,7 @@ scale-110
 
       {/* Kitchen counter / cooking stations area */}
       <div className="absolute
- bottom-4
+ bottom-10
  left-0
  right-0
  z-20

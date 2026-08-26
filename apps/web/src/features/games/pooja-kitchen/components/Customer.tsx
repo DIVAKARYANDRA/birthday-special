@@ -147,9 +147,12 @@ function AvatarImage(
       alt={name}
 
       className="
-      h-full
-      w-full
-      object-contain
+      h-28
+w-20
+
+object-contain
+object-bottom
+
       "
 
       draggable={false}
@@ -226,13 +229,14 @@ props: CustomerProps
 
       className="
       relative
-      flex
-      h-48
-      w-36
-      flex-shrink-0
-      flex-col
-      items-center
-      justify-end
+flex
+w-20
+h-28
+flex-shrink-0
+flex-col
+items-center
+justify-end
+
       "
 
 
@@ -248,11 +252,14 @@ props: CustomerProps
 
 
         className="
-        absolute
-        bottom-5
-        h-48
-        w-36
-        overflow-visible
+        relative
+w-24
+h-32
+overflow-visible
+flex
+items-end
+justify-center
+
         "
 
 
@@ -276,25 +283,6 @@ props: CustomerProps
       </motion.div>
 
 
-
-
-
-      <span
-
-        className="
-        absolute
-        bottom-0
-        text-xs
-        font-semibold
-        text-white
-        drop-shadow-lg
-        "
-
-      >
-
-        {name}
-
-      </span>
 
 
 
