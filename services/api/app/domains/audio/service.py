@@ -10,7 +10,7 @@ from app.domains.audio.models import MusicTrack
 from app.domains.audio.repository import MusicTrackRepository
 from app.domains.audio.schemas import MusicTrackCreate, MusicTrackUpdate
 from app.domains.media.models import MediaAsset
-from app.core.config import settings
+from app.core.config import get_settings
 
 class MusicTrackService:
     def __init__(self, session: Session) -> None:
@@ -126,6 +126,8 @@ class MusicTrackService:
             raise ValidationAppError(
                 "The active music asset has no storage reference."
             )
+
+        settings = get_settings()
 
         audio_url = (
             f"https://res.cloudinary.com/"
