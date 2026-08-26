@@ -154,6 +154,10 @@ export function usePoojaKitchenGame(
           "Loaded level customers:",
           level.customers
         );
+        console.log(
+          "Loaded level theme:",
+          level.theme
+        );
       } catch (error) {
         setLoadError(
           error instanceof Error ? error.message : 'Failed to load level'
