@@ -68,10 +68,10 @@ export function Customer(props: CustomerProps) {
     onExitComplete,
   } = props;
 
-  const patienceRatio =
-    patienceSeconds > 0
-      ? Math.max(0, Math.min(1, patienceRemaining / patienceSeconds))
-      : 1;
+  // const patienceRatio =
+  //   patienceSeconds > 0
+  //     ? Math.max(0, Math.min(1, patienceRemaining / patienceSeconds))
+  //     : 1;
 
   return (
     <motion.button
