@@ -41,7 +41,7 @@ export function Kitchen({
   flex-col
   gap-2
   rounded-t-3xl
-  bg-[#C9944A]
+  bg-[#C9944A]/80
   px-3
   pb-2
   pt-2
@@ -61,7 +61,7 @@ export function Kitchen({
         return (
           <div
             key={station.id}
-            className="flex flex-col gap-2 rounded-2xl bg-[#E8B75D]/60 p-2"
+            className="flex flex-col gap-2 rounded-2xl bg-[#E8B75D]/50 p-2"
           >
             <div className="flex items-center justify-between px-1">
               <span className="text-xs font-bold text-[#1F2A24]">

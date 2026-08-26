@@ -163,24 +163,29 @@ Boolean(getAuthToken())
     w-full
     flex-col
     overflow-hidden
-    bg-gradient-to-b
-    from-[#1F4D45]
-    to-[#2F6F62]
+    bg-transparent
   "
 >
       {/* Background kitchen scene */}
       <div
-        className="pointer-events-none absolute inset-0 opacity-70"
-        style={
-          level?.theme.backgroundImage
-            ? {
-                backgroundImage: `url(${level.theme.backgroundImage})`,
-                backgroundSize: 'cover',
-                backgroundPosition: 'center',
-              }
-            : undefined
+  className="
+    pointer-events-none
+    absolute
+    inset-0
+    z-0
+    bg-cover
+    bg-center
+    bg-no-repeat
+  "
+  style={
+    level?.theme.backgroundImage
+      ? {
+          backgroundImage:
+            `url(${level.theme.backgroundImage})`,
         }
-      />
+      : undefined
+  }
+/>
 
       {/* HUD: score, coins, timer */}
       <div className="relative z-10 flex shrink-0 items-center justify-between px-3 pt-3">
