@@ -237,16 +237,14 @@ overflow-hidden
       {/* Customer queue + order display area */}
 
 <div
- className="
- absolute
- top-24
- left-0
- right-0
- z-10
- h-44
- flex
- justify-center
- "
+  className="
+    relative
+    z-10
+    h-36
+    shrink-0
+    overflow-hidden
+    mt-2
+  "
 >
         {level && (
           <CustomerQueue
@@ -275,16 +273,7 @@ overflow-hidden
 
 
       {/* Kitchen counter / cooking stations area */}
-      <div
-  className="
-    absolute
-    bottom-0
-    left-0
-    right-0
-    z-20
-  "
->
-
+      <div className="relative z-20 -mt-10 shrink-0">
         {level && (
           <Kitchen
             stations={level.stations}

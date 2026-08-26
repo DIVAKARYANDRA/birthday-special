@@ -36,14 +36,16 @@ export function Kitchen({
   return (
     <div
       className="
-flex
-w-full
-flex-col
-gap-2
-bg-transparent
-px-3
-pb-2
-pt-2
+  flex
+  w-full
+  flex-col
+  gap-2
+  rounded-t-3xl
+  bg-[#C9944A]/80
+  px-3
+  pb-2
+  pt-2
+  shadow-[0_-4px_12px_rgba(0,0,0,0.15)]
 "
       aria-label="Kitchen stations"
     >
@@ -58,17 +60,13 @@ pt-2
 
         return (
           <div
-  key={station.id}
-  className="
-    flex
-flex-col
-gap-2
-bg-transparent
-p-2
-  "
->
-           <div className="flex items-center justify-between px-1">
-
+            key={station.id}
+            className="flex flex-col gap-2 rounded-2xl bg-[#E8B75D]/50 p-2"
+          >
+            <div className="flex items-center justify-between px-1">
+              <span className="text-xs font-bold text-[#1F2A24]">
+                {station.name}
+              </span>
               <div className="flex gap-1">
                 {slotsForStation.map((slot) =>
                   slot.food ? (
