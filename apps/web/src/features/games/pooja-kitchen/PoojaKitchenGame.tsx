@@ -148,16 +148,15 @@ Boolean(getAuthToken())
     fixed
     inset-0
     overflow-hidden
-    relative
     w-full
-    h-[100svh]
+    h-full
     bg-transparent
   "
 >
 <div
   className="
      absolute
- top-32
+ top-20
  left-0
  right-0
  z-10

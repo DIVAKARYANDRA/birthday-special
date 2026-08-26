@@ -102,8 +102,8 @@ items-center
       <motion.div
         className="
 relative
-h-40
-w-28
+h-36
+w-24
 translate-y-4
 overflow-visible
 "
