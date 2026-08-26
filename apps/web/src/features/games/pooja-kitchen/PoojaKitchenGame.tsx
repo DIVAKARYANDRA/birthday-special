@@ -145,12 +145,12 @@ Boolean(getAuthToken())
 
 <div
 className="
-fixed
-inset-0
+relative
+w-full
+h-full
 overflow-hidden
 flex
-w-full
-h-[100svh]
+flex-col
 bg-transparent
 "
 >
