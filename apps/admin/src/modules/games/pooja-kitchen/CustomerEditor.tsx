@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
-import MediaSelector from "@/components/media/MediaSelector";
-
+import MediaSelector from "@/modules/media/MediaSelector";
 import {
   customerApi,
   type PoojaKitchenCustomer,
