@@ -142,15 +142,12 @@ Boolean(getAuthToken())
 
   return (
     <OrientationGate>
-
 <div
 className="
 relative
 w-full
-h-full
+h-dvh
 overflow-hidden
-flex
-flex-col
 bg-transparent
 "
 >
@@ -189,8 +186,10 @@ bg-transparent
 <div
   className="
     absolute
-    inset-0
-    z-0
+inset-0
+z-0
+overflow-hidden
+
   "
 >
 {
