@@ -151,10 +151,9 @@ Boolean(getAuthToken())
     flex
     w-full
     h-[100svh]
-    bg-[#1F4D45]
+    bg-black
   "
 >
-
 <div
   className="
     relative
@@ -177,14 +176,13 @@ Boolean(getAuthToken())
     bg-center
     bg-no-repeat
   "
-  style={
-    level?.theme.backgroundImage
-      ? {
-          backgroundImage:
-            `url(${level.theme.backgroundImage})`,
-        }
-      : undefined
-  }
+  style={{
+    backgroundImage:
+      level?.theme.backgroundImage
+        ? `url(${level.theme.backgroundImage})`
+        : undefined,
+  }}
+/>
 />
 
       {/* HUD: score, coins, timer */}
