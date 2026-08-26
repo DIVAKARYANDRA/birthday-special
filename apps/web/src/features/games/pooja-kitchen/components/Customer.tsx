@@ -31,13 +31,13 @@ export interface CustomerProps {
   /**
    * Maximum patience time for this customer
    */
-  patienceSeconds:number;
+  // patienceSeconds:number;
 
 
   /**
    * Current remaining patience time
    */
-  patienceRemaining:number;
+  // patienceRemaining:number;
 
 
   /**
