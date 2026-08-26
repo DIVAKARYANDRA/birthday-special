@@ -30,9 +30,6 @@ from app.domains.games.schemas import (
     CustomerRead,
     LevelCustomerCreate,
     LevelCustomerRead,
-
-    PoojaKitchenOrderCreate,
-    PoojaKitchenOrderRead,
 )
 
 
