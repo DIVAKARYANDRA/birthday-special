@@ -20,6 +20,9 @@ from app.domains.games.models import (
     PoojaKitchenProgress,
     PoojaKitchenCustomer,
     PoojaKitchenLevelCustomer,
+    PoojaKitchenTheme,
+    PoojaKitchenFood,
+    PoojaKitchenLevel,
 )
 
 from app.domains.games.schemas import (
@@ -885,6 +888,175 @@ def build_media_url(media):
         f"{media.external_reference}"
     )
 
+# ============================================================
+# Pooja Kitchen Theme Service
+# ============================================================
+
+
+class PoojaKitchenThemeService:
+
+    def __init__(
+        self,
+        db: Session
+    ):
+        self.repository = PoojaKitchenRepository(db)
+
+
+
+    def list_themes(self):
+
+        return self.repository.get_themes()
+
+
+
+    def get_theme(
+        self,
+        theme_id: uuid.UUID
+    ):
+
+        theme = self.repository.get_theme_by_id(
+            theme_id
+        )
+
+        if theme is None:
+            raise HTTPException(
+                status_code=404,
+                detail="Theme not found"
+            )
+
+        return theme
+
+
+
+    def update_theme(
+        self,
+        theme_id: uuid.UUID,
+        payload: dict
+    ):
+
+        theme = self.get_theme(
+            theme_id
+        )
+
+
+        for key,value in payload.items():
+
+            if hasattr(theme,key):
+
+                setattr(
+                    theme,
+                    key,
+                    value
+                )
+
+
+        return self.repository.update_theme(
+            theme
+        )
+
+
+# ============================================================
+# Pooja Kitchen Food Service
+# ============================================================
+
+
+class PoojaKitchenFoodService:
+
+
+    def __init__(
+        self,
+        db: Session
+    ):
+        self.repository = PoojaKitchenRepository(db)
+
+
+
+    def list_foods(
+        self
+    ):
+
+        return self.repository.get_foods()
+
+
+
+    def create_food(
+        self,
+        payload
+    ):
+
+        food = PoojaKitchenFood(
+
+            id=uuid.uuid4(),
+
+            name=payload.name,
+
+            image_media_id=payload.image_media_id,
+
+            cook_time=payload.cook_time,
+
+            sell_price=payload.sell_price,
+
+        )
+
+
+        return self.repository.create_food(
+            food
+        )
+
+
+
+    def get_food(
+        self,
+        food_id: uuid.UUID
+    ):
+
+        food = (
+            self.repository
+            .get_food_by_id(
+                food_id
+            )
+        )
+
+
+        if food is None:
+
+            raise HTTPException(
+                status_code=404,
+                detail="Food not found"
+            )
+
+
+        return food
+
+
+
+    def update_food(
+        self,
+        food_id: uuid.UUID,
+        payload: dict
+    ):
+
+
+        food = self.get_food(
+            food_id
+        )
+
+
+        for key,value in payload.items():
+
+            if hasattr(food,key):
+
+                setattr(
+                    food,
+                    key,
+                    value
+                )
+
+
+        return self.repository.update_food(
+            food
+        )
+
 class PoojaKitchenService:
     """
     Handles Pooja Kitchen gameplay rules.
@@ -1352,6 +1524,57 @@ class PoojaKitchenService:
             token_type="bearer",
         )
 
+    def update_level(
+        self,
+        level_id: str,
+        payload: dict
+    ):
+
+        level = (
+            self.repository.db
+            .query(PoojaKitchenLevel)
+            .filter(
+                PoojaKitchenLevel.id == level_id
+            )
+            .first()
+        )
+
+
+        if not level:
+            raise HTTPException(
+                status_code=404,
+                detail="Level not found"
+            )
+
+
+        allowed = [
+            "difficulty",
+            "time_limit",
+            "target_score",
+            "customer_count",
+            "unlock_level",
+            "theme_id",
+        ]
+
+
+        for key,value in payload.items():
+
+            if key in allowed:
+
+                setattr(
+                    level,
+                    key,
+                    value
+                )
+
+
+        self.repository.db.commit()
+
+        self.repository.db.refresh(level)
+
+
+        return level
+
 
 # ============================================================
 # Pooja Kitchen Customer Service
@@ -1525,3 +1748,43 @@ class PoojaKitchenCustomerService:
             )
             for item in assignments
         ]
+
+    def update_customer(
+        self,
+        customer_id: uuid.UUID,
+        payload: dict
+    ):
+
+
+        customer = (
+            self.repository
+            .get_customer_by_id(
+                customer_id
+            )
+        )
+
+
+        if customer is None:
+
+            raise HTTPException(
+                status_code=404,
+                detail="Customer not found"
+            )
+
+
+        for key,value in payload.items():
+
+            if hasattr(customer,key):
+
+                setattr(
+                    customer,
+                    key,
+                    value
+                )
+
+
+        return self.repository.update_customer(
+            customer
+        )
+
+    

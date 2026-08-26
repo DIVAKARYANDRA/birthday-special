@@ -35,10 +35,22 @@ const NAV_ITEMS = [
     label: "Heart Rush ❤️"
   },
   {
-    to: "/games/pooja-kitchen",
-    label: "Pooja Kitchen 🍳"
+    to: "/games/pooja-kitchen/themes",
+    label: "Pooja Kitchen Themes 🍳"
   },
-  
+  {
+    to: "/games/pooja-kitchen/foods",
+    label: "Pooja Kitchen Foods 🍽️"
+  },
+  {
+    to: "/games/pooja-kitchen/customers",
+    label: "Pooja Kitchen Customers 👥"
+  },
+  {
+    to: "/games/pooja-kitchen/levels",
+    label: "Pooja Kitchen Levels 🎮"
+  },
+    
 ];
 
 const linkStyle = (isActive: boolean): CSSProperties => ({

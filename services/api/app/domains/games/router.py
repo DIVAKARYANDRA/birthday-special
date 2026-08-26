@@ -1,4 +1,8 @@
-from fastapi import APIRouter, Depends
+from fastapi import (
+    APIRouter,
+    Depends,
+    HTTPException,
+)
 
 from sqlalchemy.orm import Session
 
@@ -35,6 +39,9 @@ from app.domains.games.service import (
     HiddenObjectService,
     PoojaKitchenService,
 
+    PoojaKitchenThemeService,
+    PoojaKitchenFoodService,
+
     CupidArrowService,
     CupidArrowTargetService,
 
@@ -44,6 +51,7 @@ from app.domains.games.service import (
     PoojaKitchenCustomerService,
 )
 
+from app.domains.games.repository import PoojaKitchenRepository
 
 router = APIRouter()
 
@@ -350,6 +358,58 @@ def get_pooja_customer(
     )
 
 
+# ============================================================
+# Pooja Kitchen Admin - Themes
+# ============================================================
+
+
+@router.get(
+    "/pooja-kitchen/admin/themes"
+)
+def list_pooja_themes(
+    db: Session = Depends(get_db)
+):
+
+    return (
+        PoojaKitchenThemeService(db)
+        .list_themes()
+    )
+
+
+
+@router.get(
+    "/pooja-kitchen/admin/themes/{theme_id}"
+)
+def get_pooja_theme(
+    theme_id: str,
+    db: Session = Depends(get_db)
+):
+
+    return (
+        PoojaKitchenThemeService(db)
+        .get_theme(
+            theme_id
+        )
+    )
+
+
+
+@router.patch(
+    "/pooja-kitchen/admin/themes/{theme_id}"
+)
+def update_pooja_theme(
+    theme_id: str,
+    payload: dict,
+    db: Session = Depends(get_db)
+):
+
+    return (
+        PoojaKitchenThemeService(db)
+        .update_theme(
+            theme_id,
+            payload
+        )
+    )
 
 # ============================================================
 # Level Customer Assignment
@@ -383,3 +443,111 @@ def list_level_customers(
     return PoojaKitchenCustomerService(db).get_level_customers(
         level_id
     )
+
+
+# ============================================================
+# Pooja Kitchen Admin - Foods
+# ============================================================
+
+
+@router.get(
+    "/pooja-kitchen/admin/foods"
+)
+def list_pooja_foods(
+    db: Session = Depends(get_db)
+):
+
+    return (
+        PoojaKitchenFoodService(db)
+        .list_foods()
+    )
+
+
+
+@router.post(
+    "/pooja-kitchen/admin/foods"
+)
+def create_pooja_food(
+    payload: dict,
+    db: Session = Depends(get_db)
+):
+
+    return (
+        PoojaKitchenFoodService(db)
+        .create_food(
+            payload
+        )
+    )
+
+
+
+@router.patch(
+    "/pooja-kitchen/admin/foods/{food_id}"
+)
+def update_pooja_food(
+    food_id: str,
+    payload: dict,
+    db: Session = Depends(get_db)
+):
+
+    return (
+        PoojaKitchenFoodService(db)
+        .update_food(
+            food_id,
+            payload
+        )
+    )
+
+@router.patch(
+    "/pooja-kitchen/customers/{customer_id}"
+)
+def update_pooja_customer(
+    customer_id: str,
+    payload: dict,
+    db: Session = Depends(get_db)
+):
+
+    return (
+        PoojaKitchenCustomerService(db)
+        .update_customer(
+            customer_id,
+            payload
+        )
+    )
+
+# ============================================================
+# Pooja Kitchen Admin - Levels
+# ============================================================
+
+
+@router.get(
+    "/pooja-kitchen/admin/levels"
+)
+def list_pooja_levels(
+    db: Session = Depends(get_db)
+):
+
+    repository = PoojaKitchenRepository(db)
+
+    return repository.list_levels()
+
+
+
+@router.patch(
+    "/pooja-kitchen/admin/levels/{level_id}"
+)
+def update_pooja_level(
+    level_id: str,
+    payload: dict,
+    db: Session = Depends(get_db)
+):
+
+    return (
+        PoojaKitchenService(db)
+        .update_level(
+            level_id,
+            payload
+        )
+    )
+
+

@@ -103,6 +103,53 @@ class PoojaKitchenRepository:
         stmt = select(PoojaKitchenTheme).where(PoojaKitchenTheme.name == name)
         return self.db.execute(stmt).scalar_one_or_none()
 
+    def get_themes(
+        self
+    ) -> list[PoojaKitchenTheme]:
+
+        stmt = (
+            select(PoojaKitchenTheme)
+            .order_by(
+                PoojaKitchenTheme.created_at.asc()
+            )
+        )
+
+        return list(
+            self.db.execute(stmt)
+            .scalars()
+            .all()
+        )
+
+
+    def get_theme_by_id(
+        self,
+        theme_id: uuid.UUID
+    ) -> PoojaKitchenTheme | None:
+
+        stmt = (
+            select(PoojaKitchenTheme)
+            .where(
+                PoojaKitchenTheme.id == theme_id
+            )
+        )
+
+        return self.db.execute(stmt).scalar_one_or_none()
+
+
+
+    def update_theme(
+        self,
+        theme: PoojaKitchenTheme
+    ) -> PoojaKitchenTheme:
+
+        self.db.add(theme)
+
+        self.db.flush()
+
+        self.db.refresh(theme)
+
+        return theme
+
     # ------------------------------------------------------------------
     # Levels
     # ------------------------------------------------------------------
@@ -155,6 +202,59 @@ class PoojaKitchenRepository:
             .scalar_one_or_none()
         )
 
+    def get_levels(
+        self
+    ) -> list[PoojaKitchenLevel]:
+
+        stmt = (
+            select(PoojaKitchenLevel)
+            .options(
+                joinedload(
+                    PoojaKitchenLevel.theme
+                )
+            )
+            .order_by(
+                PoojaKitchenLevel.level_number.asc()
+            )
+        )
+
+        return list(
+            self.db.execute(stmt)
+            .unique()
+            .scalars()
+            .all()
+        )
+
+
+    def get_level_by_id(
+        self,
+        level_id: uuid.UUID
+    ) -> PoojaKitchenLevel | None:
+
+        stmt = (
+            select(PoojaKitchenLevel)
+            .where(
+                PoojaKitchenLevel.id == level_id
+            )
+        )
+
+        return self.db.execute(stmt).scalar_one_or_none()
+
+
+
+    def update_level(
+        self,
+        level: PoojaKitchenLevel
+    ) -> PoojaKitchenLevel:
+
+        self.db.add(level)
+
+        self.db.flush()
+
+        self.db.refresh(level)
+
+        return level
+
     def get_next_level(self, current_level_number: int) -> PoojaKitchenLevel | None:
         stmt = (
             select(PoojaKitchenLevel)
@@ -192,6 +292,34 @@ class PoojaKitchenRepository:
     def get_food_by_id(self, food_id: uuid.UUID) -> PoojaKitchenFood | None:
         stmt = select(PoojaKitchenFood).where(PoojaKitchenFood.id == food_id)
         return self.db.execute(stmt).scalar_one_or_none()
+
+    def create_food(
+        self,
+        food: PoojaKitchenFood
+    ) -> PoojaKitchenFood:
+
+        self.db.add(food)
+
+        self.db.flush()
+
+        self.db.refresh(food)
+
+        return food
+
+
+
+    def update_food(
+        self,
+        food: PoojaKitchenFood
+    ) -> PoojaKitchenFood:
+
+        self.db.add(food)
+
+        self.db.flush()
+
+        self.db.refresh(food)
+
+        return food
 
     # ------------------------------------------------------------------
     # Orders
@@ -267,6 +395,19 @@ class PoojaKitchenRepository:
         )
 
         return self.db.execute(stmt).scalar_one_or_none()
+
+    def update_customer(
+        self,
+        customer: PoojaKitchenCustomer
+    ) -> PoojaKitchenCustomer:
+
+        self.db.add(customer)
+
+        self.db.flush()
+
+        self.db.refresh(customer)
+
+        return customer
 
 
 
@@ -344,3 +485,22 @@ class PoojaKitchenRepository:
         self.db.flush()
 
         return True
+
+    def list_levels(
+        self
+    ):
+
+        stmt = (
+            select(
+                PoojaKitchenLevel
+            )
+            .order_by(
+                PoojaKitchenLevel.level_number.asc()
+            )
+        )
+
+        return list(
+            self.db.execute(stmt)
+            .scalars()
+            .all()
+        )

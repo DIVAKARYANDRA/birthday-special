@@ -36,6 +36,18 @@ from "@/modules/games/cupid-arrow/CupidArrowEditorPage";
 import HeartRushEditorPage
 from "@/modules/games/heart-rush/HeartRushEditorPage";
 
+import ThemeEditor
+from "@/modules/games/pooja-kitchen/ThemeEditor";
+
+import FoodEditor
+from "@/modules/games/pooja-kitchen/FoodEditor";
+
+import CustomerEditor
+from "@/modules/games/pooja-kitchen/CustomerEditor";
+
+import LevelEditor
+from "@/modules/games/pooja-kitchen/LevelEditor";
+
 function useSessionHydration() {
   useEffect(() => {
     const { getStoredRefreshToken, setSession, clearSession } = useAuthStore.getState();
@@ -73,6 +85,25 @@ export default function App() {
             <Route
               path="/games/heart-rush"
               element={<HeartRushEditorPage />}
+            />
+            <Route
+              path="/games/pooja-kitchen/themes"
+              element={<ThemeEditor />}
+            />
+
+            <Route
+              path="/games/pooja-kitchen/foods"
+              element={<FoodEditor />}
+            />
+
+            <Route
+              path="/games/pooja-kitchen/customers"
+              element={<CustomerEditor />}
+            />
+
+            <Route
+              path="/games/pooja-kitchen/levels"
+              element={<LevelEditor />}
             />
             <Route path="/memories" element={<MemoriesListPage />} />
             <Route path="/timeline" element={<TimelineListPage />} />
