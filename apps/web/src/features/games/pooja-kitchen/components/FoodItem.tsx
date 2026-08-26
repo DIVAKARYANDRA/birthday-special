@@ -106,7 +106,7 @@ export function FoodItem({
       onClick={onClick}
       animate={isReady ? foodReadyBob.animate : foodIdleAnimation}
       transition={isReady ? foodReadyBob.transition : { duration: 0.2 }}
-      className="relative flex h-12 w-12 items-center justify-center rounded-xl bg-white/80 shadow-inner disabled:cursor-default"
+      className="relative flex h-12 w-12 items-center justify-center rounded-xl bg-transparent disabled:cursor-default"
       aria-label={
         isReady ? `Collect ${food.name}` : `${food.name} cooking`
       }
