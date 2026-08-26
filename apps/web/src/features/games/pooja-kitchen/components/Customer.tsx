@@ -22,11 +22,11 @@ export interface CustomerProps {
   avatar: string;
   happyAvatar: string;
   angryAvatar: string;
-  patienceSeconds: number;
+  // patienceSeconds: number;
   /** Current lifecycle state driving which avatar/animation is shown. */
   state: CustomerState;
   /** Seconds of patience left; used to drive the patience ring. */
-  patienceRemaining: number;
+  // patienceRemaining: number;
   /** Called when this customer is tapped (e.g. to focus their order). */
   onSelect?: () => void;
   /** Called by the parent's AnimatePresence once the exit animation ends. */
