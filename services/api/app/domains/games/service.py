@@ -23,6 +23,7 @@ from app.domains.games.models import (
     PoojaKitchenTheme,
     PoojaKitchenFood,
     PoojaKitchenLevel,
+    PoojaKitchenOrder,
 )
 
 from app.domains.games.schemas import (
@@ -1056,6 +1057,140 @@ class PoojaKitchenFoodService:
         return self.repository.update_food(
             food
         )
+
+# ============================================================
+# Pooja Kitchen Order Service
+# ============================================================
+
+class PoojaKitchenOrderService:
+
+
+    def __init__(
+        self,
+        db: Session
+    ):
+
+        self.db = db
+
+
+
+    def list_orders(
+        self,
+        level_id
+    ):
+
+        return (
+            self.db
+            .query(PoojaKitchenOrder)
+            .filter(
+                PoojaKitchenOrder.level_id == level_id
+            )
+            .all()
+        )
+
+
+
+    def create_order(
+        self,
+        level_id,
+        payload
+    ):
+
+        order = PoojaKitchenOrder(
+
+            level_id=level_id,
+
+            food_id=payload.food_id,
+
+            quantity=payload.quantity,
+
+            reward_points=payload.reward_points
+
+        )
+
+
+        self.db.add(order)
+
+        self.db.commit()
+
+        self.db.refresh(order)
+
+
+        return order
+
+
+
+    def update_order(
+        self,
+        order_id,
+        payload
+    ):
+
+
+        order = (
+            self.db
+            .query(PoojaKitchenOrder)
+            .filter(
+                PoojaKitchenOrder.id == order_id
+            )
+            .first()
+        )
+
+
+        if not order:
+
+            raise HTTPException(
+                status_code=404,
+                detail="Order not found"
+            )
+
+
+
+        for key,value in payload.items():
+
+            if hasattr(order,key):
+
+                setattr(
+                    order,
+                    key,
+                    value
+                )
+
+
+        self.db.commit()
+
+        self.db.refresh(order)
+
+
+        return order
+
+
+
+    def delete_order(
+        self,
+        order_id
+    ):
+
+
+        order = (
+            self.db
+            .query(PoojaKitchenOrder)
+            .filter(
+                PoojaKitchenOrder.id == order_id
+            )
+            .first()
+        )
+
+
+        if order:
+
+            self.db.delete(order)
+
+            self.db.commit()
+
+
+        return order
+
 
 class PoojaKitchenService:
     """

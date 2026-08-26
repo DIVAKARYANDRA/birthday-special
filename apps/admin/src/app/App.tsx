@@ -41,7 +41,8 @@ from "@/modules/games/pooja-kitchen/ThemeEditor";
 
 import FoodEditor
 from "@/modules/games/pooja-kitchen/FoodEditor";
-
+import OrderEditor 
+from "@/modules/games/pooja-kitchen/OrderEditor";
 import CustomerEditor
 from "@/modules/games/pooja-kitchen/CustomerEditor";
 
@@ -119,6 +120,10 @@ export default function App() {
             path="/games/pooja-kitchen"
             element={<PoojaKitchenPage />}
             />
+            <Route
+              path="/games/pooja-kitchen/orders"
+              element={<OrderEditor />}
+              />
             <Route path="/memories" element={<MemoriesListPage />} />
             <Route path="/timeline" element={<TimelineListPage />} />
             <Route path="/letters" element={<LettersListPage />} />

@@ -96,6 +96,21 @@ export interface PoojaKitchenLevel {
 
 }
 
+export interface PoojaKitchenOrder {
+
+ id:string;
+
+ level_id:string;
+
+ food_id:string;
+
+ quantity:number;
+
+ reward_points:number;
+
+ food?:PoojaKitchenFood;
+
+}
 
 
 // ============================================================
@@ -335,5 +350,62 @@ export const levelApi = {
 
   },
 
+
+};
+
+
+export const orderApi = {
+
+ list(levelId:string){
+
+   return apiRequest<PoojaKitchenOrder[]>(
+     `/api/v1/admin/games/pooja-kitchen/admin/levels/${levelId}/orders`
+   );
+
+ },
+
+
+ create(
+   levelId:string,
+   payload:any
+ ){
+
+   return apiRequest<PoojaKitchenOrder>(
+     `/api/v1/admin/games/pooja-kitchen/admin/levels/${levelId}/orders`,
+     {
+       method:"POST",
+       body:JSON.stringify(payload)
+     }
+   );
+
+ },
+
+
+ update(
+   id:string,
+   payload:any
+ ){
+
+   return apiRequest<PoojaKitchenOrder>(
+     `/api/v1/admin/games/pooja-kitchen/admin/orders/${id}`,
+     {
+       method:"PATCH",
+       body:JSON.stringify(payload)
+     }
+   );
+
+ },
+
+
+ delete(id:string){
+
+   return apiRequest(
+     `/api/v1/admin/games/pooja-kitchen/admin/orders/${id}`,
+     {
+       method:"DELETE"
+     }
+   );
+
+ }
 
 };

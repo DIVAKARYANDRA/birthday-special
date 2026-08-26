@@ -30,6 +30,9 @@ from app.domains.games.schemas import (
     CustomerRead,
     LevelCustomerCreate,
     LevelCustomerRead,
+
+    PoojaKitchenOrderCreate,
+    PoojaKitchenOrderRead,
 )
 
 
@@ -49,6 +52,9 @@ from app.domains.games.service import (
     HeartRushObjectService,
 
     PoojaKitchenCustomerService,
+    PoojaKitchenOrderService,
+
+
 )
 
 from app.domains.games.repository import PoojaKitchenRepository
@@ -553,3 +559,76 @@ def get_pooja_kitchen_level_with_path(
     )
 
 
+
+# ============================================================
+# Pooja Kitchen Admin - Orders
+# ============================================================
+
+
+@router.get(
+    "/pooja-kitchen/admin/levels/{level_id}/orders"
+)
+def list_pooja_orders(
+    level_id:str,
+    db:Session = Depends(get_db)
+):
+
+    return (
+        PoojaKitchenOrderService(db)
+        .list_orders(level_id)
+    )
+
+
+
+@router.post(
+    "/pooja-kitchen/admin/levels/{level_id}/orders"
+)
+def create_pooja_order(
+    level_id:str,
+    payload:dict,
+    db:Session = Depends(get_db)
+):
+
+    return (
+        PoojaKitchenOrderService(db)
+        .create_order(
+            level_id,
+            payload
+        )
+    )
+
+
+
+@router.patch(
+    "/pooja-kitchen/admin/orders/{order_id}"
+)
+def update_pooja_order(
+    order_id:str,
+    payload:dict,
+    db:Session = Depends(get_db)
+):
+
+    return (
+        PoojaKitchenOrderService(db)
+        .update_order(
+            order_id,
+            payload
+        )
+    )
+
+
+
+@router.delete(
+    "/pooja-kitchen/admin/orders/{order_id}"
+)
+def delete_pooja_order(
+    order_id:str,
+    db:Session = Depends(get_db)
+):
+
+    return (
+        PoojaKitchenOrderService(db)
+        .delete_order(
+            order_id
+        )
+    )

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-
+import MediaSelector from "@/components/media/MediaSelector";
 
 import {
   customerApi,
@@ -25,8 +25,14 @@ export default function CustomerEditor(){
   ] =
   useState(true);
 
+const [mediaTarget, setMediaTarget] = useState<
+  "avatar" | "happy" | "angry" | null
+>(null);
 
-
+const [
+ selectedCustomer,
+ setSelectedCustomer
+] = useState<PoojaKitchenCustomer | null>(null);
 
   async function loadCustomers(){
 
@@ -57,52 +63,6 @@ export default function CustomerEditor(){
 
   },[]);
 
-
-
-
-  async function assignMedia(
-
-    customerId:string,
-
-    field:
-      |"avatar_media_id"
-      |"happy_media_id"
-      |"angry_media_id"
-
-  ){
-
-
-
-    const mediaId =
-      window.prompt(
-        `Enter ${field} media UUID`
-      );
-
-
-
-    if(!mediaId){
-
-      return;
-
-    }
-
-
-
-    await customerApi.update(
-
-      customerId,
-
-      {
-        [field]:
-          mediaId
-      }
-
-    );
-
-
-    await loadCustomers();
-
-  }
 
 
 
@@ -160,73 +120,56 @@ export default function CustomerEditor(){
 
 
             <button
-
-              className="
-                rounded
-                bg-blue-600
-                px-3
-                py-2
-                text-white
-              "
-
-              onClick={()=>assignMedia(
-                customer.id,
-                "avatar_media_id"
-              )}
-
-            >
-
-              Assign Normal Avatar
-
-            </button>
+onClick={()=>{
+  setSelectedCustomer(customer);
+  setMediaTarget("avatar");
+}}
+className="
+bg-blue-600
+text-white
+px-3
+py-2
+rounded
+"
+>
+Assign Normal Avatar
+</button>
 
 
 
-            <button
-
-              className="
-                rounded
-                bg-green-600
-                px-3
-                py-2
-                text-white
-              "
-
-              onClick={()=>assignMedia(
-                customer.id,
-                "happy_media_id"
-              )}
-
-            >
-
-              Assign Happy Avatar
-
-            </button>
+<button
+onClick={()=>{
+  setSelectedCustomer(customer);
+  setMediaTarget("happy");
+}}
+className="
+bg-green-600
+text-white
+px-3
+py-2
+rounded
+"
+>
+Assign Happy Avatar
+</button>
 
 
 
-
-            <button
-
-              className="
-                rounded
-                bg-red-600
-                px-3
-                py-2
-                text-white
-              "
-
-              onClick={()=>assignMedia(
-                customer.id,
-                "angry_media_id"
-              )}
-
-            >
-
-              Assign Angry Avatar
-
-            </button>
-
+<button
+onClick={()=>{
+  setSelectedCustomer(customer);
+  setMediaTarget("angry");
+}}
+className="
+bg-red-600
+text-white
+px-3
+py-2
+rounded
+"
+>
+Assign Angry Avatar
+</button>
 
 
           </div>
@@ -235,6 +178,53 @@ export default function CustomerEditor(){
         ))
 
       }
+
+    {
+mediaTarget && (
+
+<MediaSelector
+
+title={
+`Select ${mediaTarget} avatar`
+}
+
+
+onSelect={
+async(mediaId)=>{
+
+if(!selectedCustomer){
+  return;
+}
+
+await customerApi.update(
+
+selectedCustomer.id,
+
+{
+
+[`${mediaTarget}_media_id`]:
+mediaId
+
+}
+
+);
+
+
+setMediaTarget(null);
+
+setSelectedCustomer(null);
+
+loadCustomers();
+
+}
+
+}
+
+/>
+
+)
+
+}
 
 
     </div>

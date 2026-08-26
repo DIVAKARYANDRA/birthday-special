@@ -85,9 +85,6 @@ export default function LevelEditor(){
           level.customer_count,
 
 
-        unlock_level:
-          level.unlock_level
-
       }
 
     );

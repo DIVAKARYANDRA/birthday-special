@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
 
+import MediaSelector from "@/components/media/MediaSelector";
+
 import {
   foodApi,
   type PoojaKitchenFood,
@@ -9,12 +11,32 @@ import {
 export default function FoodEditor() {
 
 
-  const [foods,setFoods] =
-    useState<PoojaKitchenFood[]>([]);
+  const [
+    foods,
+    setFoods
+  ] = useState<PoojaKitchenFood[]>([]);
 
 
-  const [loading,setLoading] =
-    useState(true);
+
+  const [
+    loading,
+    setLoading
+  ] = useState(true);
+
+
+
+  const [
+    selectedFood,
+    setSelectedFood
+  ] = useState<PoojaKitchenFood | null>(null);
+
+
+
+  const [
+    mediaOpen,
+    setMediaOpen
+  ] = useState(false);
+
 
 
 
@@ -38,48 +60,13 @@ export default function FoodEditor() {
 
 
 
+
   useEffect(()=>{
 
     loadFoods();
 
   },[]);
 
-
-
-  async function assignImage(
-    foodId:string
-  ){
-
-
-    const mediaId =
-      window.prompt(
-        "Enter uploaded Media Asset UUID"
-      );
-
-
-    if(!mediaId){
-
-      return;
-
-    }
-
-
-
-    await foodApi.update(
-
-      foodId,
-
-      {
-        image_media_id:
-          mediaId
-      }
-
-    );
-
-
-    await loadFoods();
-
-  }
 
 
 
@@ -96,6 +83,8 @@ export default function FoodEditor() {
 
 
 
+
+
   return (
 
     <div className="space-y-4">
@@ -104,6 +93,7 @@ export default function FoodEditor() {
       <h2 className="text-xl font-bold">
         Pooja Kitchen Foods
       </h2>
+
 
 
 
@@ -119,39 +109,50 @@ export default function FoodEditor() {
               rounded-lg
               border
               p-4
-              space-y-2
+              space-y-3
             "
 
           >
 
 
+
             <h3 className="font-semibold">
+
               {food.name}
+
             </h3>
 
 
 
+
             <div>
+
               Cook time:
               {" "}
               {food.cook_time}
               {" "}
               seconds
+
             </div>
+
 
 
 
             <div>
+
               Sell price:
               {" "}
               {food.sell_price}
+
             </div>
+
 
 
 
             <div className="text-sm">
 
               Image Media:
+
               {" "}
 
               {
@@ -161,6 +162,7 @@ export default function FoodEditor() {
               }
 
             </div>
+
 
 
 
@@ -174,7 +176,14 @@ export default function FoodEditor() {
                 text-white
               "
 
-              onClick={()=>assignImage(food.id)}
+
+              onClick={()=>{
+
+                setSelectedFood(food);
+
+                setMediaOpen(true);
+
+              }}
 
             >
 
@@ -183,12 +192,65 @@ export default function FoodEditor() {
             </button>
 
 
+
           </div>
 
 
         ))
 
       }
+
+
+
+
+      {
+        mediaOpen && selectedFood && (
+
+          <MediaSelector
+
+
+            title={
+              `Select image for ${selectedFood.name}`
+            }
+
+
+
+            onSelect={
+              async(mediaId)=>{
+
+
+                await foodApi.update(
+
+                  selectedFood.id,
+
+                  {
+
+                    image_media_id:
+                      mediaId
+
+                  }
+
+                );
+
+
+                setMediaOpen(false);
+
+                setSelectedFood(null);
+
+
+                loadFoods();
+
+
+              }
+
+            }
+
+
+          />
+
+        )
+      }
+
 
 
     </div>

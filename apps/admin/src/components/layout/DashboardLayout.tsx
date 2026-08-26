@@ -50,6 +50,11 @@ const NAV_ITEMS = [
     to: "/games/pooja-kitchen/levels",
     label: "Pooja Kitchen Levels 🎮"
   },
+
+  {
+  to:"/games/pooja-kitchen/orders",
+  label:"Pooja Orders 🍽️"
+  },
     
 ];
 

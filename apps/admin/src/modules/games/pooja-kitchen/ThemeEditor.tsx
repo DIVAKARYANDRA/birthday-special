@@ -1,20 +1,44 @@
 import { useEffect, useState } from "react";
 
+import MediaSelector from "@/components/media/MediaSelector";
+
 import {
   themeApi,
   type PoojaKitchenTheme,
 } from "./poojaKitchenApi";
 
 
+
 export default function ThemeEditor() {
 
 
-  const [themes,setThemes] =
-    useState<PoojaKitchenTheme[]>([]);
+
+  const [
+    themes,
+    setThemes
+  ] = useState<PoojaKitchenTheme[]>([]);
 
 
-  const [loading,setLoading] =
-    useState(true);
+
+  const [
+    loading,
+    setLoading
+  ] = useState(true);
+
+
+
+  const [
+    selectedTheme,
+    setSelectedTheme
+  ] = useState<PoojaKitchenTheme | null>(null);
+
+
+
+  const [
+    mediaOpen,
+    setMediaOpen
+  ] = useState(false);
+
 
 
 
@@ -38,6 +62,7 @@ export default function ThemeEditor() {
 
 
 
+
   useEffect(()=>{
 
     loadThemes();
@@ -46,47 +71,24 @@ export default function ThemeEditor() {
 
 
 
-  async function updateBackground(
-    themeId:string
-  ){
 
-
-    const mediaId =
-      window.prompt(
-        "Enter uploaded Media Asset UUID"
-      );
-
-
-    if(!mediaId){
-      return;
-    }
-
-
-
-    await themeApi.update(
-      themeId,
-      {
-        background_media_id:
-          mediaId
-      }
-    );
-
-
-    await loadThemes();
-
-  }
 
 
 
   if(loading){
 
     return (
+
       <div>
         Loading themes...
       </div>
+
     );
 
   }
+
+
+
 
 
 
@@ -95,9 +97,12 @@ export default function ThemeEditor() {
     <div className="space-y-4">
 
 
+
       <h2 className="text-xl font-bold">
         Pooja Kitchen Themes
       </h2>
+
+
 
 
 
@@ -106,40 +111,60 @@ export default function ThemeEditor() {
 
 
           <div
+
             key={theme.id}
+
             className="
               rounded-lg
               border
               p-4
-              space-y-2
+              space-y-3
             "
+
           >
 
 
+
             <h3 className="font-semibold">
+
               {theme.name}
+
             </h3>
 
 
+
+
+
             <p>
+
               {theme.description}
+
             </p>
 
 
 
+
+
             <p className="text-sm">
+
               Background Media:
+
               {" "}
+
               {
                 theme.background_media_id
                 ??
                 "Not assigned"
               }
+
             </p>
 
 
 
+
+
             <button
+
 
               className="
                 rounded
@@ -149,22 +174,96 @@ export default function ThemeEditor() {
                 text-white
               "
 
-              onClick={()=> 
-                updateBackground(theme.id)
-              }
+
+
+              onClick={()=>{
+
+                setSelectedTheme(theme);
+
+                setMediaOpen(true);
+
+              }}
+
+
 
             >
 
               Assign Background
 
+
             </button>
+
+
+
 
 
           </div>
 
 
         ))
+
       }
+
+
+
+
+
+
+
+      {
+        mediaOpen && selectedTheme && (
+
+
+          <MediaSelector
+
+
+            title={
+              `Select background for ${selectedTheme.name}`
+            }
+
+
+
+            onSelect={
+              async(mediaId)=>{
+
+
+                await themeApi.update(
+
+                  selectedTheme.id,
+
+                  {
+
+                    background_media_id:
+                      mediaId
+
+                  }
+
+                );
+
+
+
+                setMediaOpen(false);
+
+                setSelectedTheme(null);
+
+
+
+                loadThemes();
+
+
+              }
+
+            }
+
+
+          />
+
+
+        )
+      }
+
+
+
 
 
     </div>
