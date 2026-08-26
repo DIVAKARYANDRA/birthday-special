@@ -92,6 +92,8 @@ export interface PoojaKitchenLevel {
 
   theme_id:string;
 
+  unlock_level:number | null;
+
 }
 
 
