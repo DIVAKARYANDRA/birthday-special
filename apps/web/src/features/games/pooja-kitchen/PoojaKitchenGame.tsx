@@ -144,14 +144,15 @@ Boolean(getAuthToken())
     <OrientationGate>
 
 <div
-  className="
-    fixed
-    inset-0
-    overflow-hidden
-    w-full
-    h-full
-    bg-transparent
-  "
+className="
+fixed
+inset-0
+overflow-hidden
+flex
+w-full
+h-[100svh]
+bg-transparent
+"
 >
 <div
   className="
