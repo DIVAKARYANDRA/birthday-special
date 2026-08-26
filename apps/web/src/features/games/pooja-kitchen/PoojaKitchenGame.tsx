@@ -183,7 +183,7 @@ Boolean(getAuthToken())
         : undefined,
   }}
 />
-/>
+
 
       {/* HUD: score, coins, timer */}
       <div className="relative z-10 flex shrink-0 items-center justify-between px-3 pt-3">
