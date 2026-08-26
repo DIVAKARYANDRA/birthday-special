@@ -61,10 +61,10 @@ pt-2
   key={station.id}
   className="
     flex
-    flex-col
-    gap-2
-    bg-transparent
-    p-0
+flex-col
+gap-2
+bg-transparent
+p-2
   "
 >
            <div className="flex items-center justify-between px-1">
