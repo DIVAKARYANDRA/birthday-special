@@ -10,7 +10,7 @@ from app.domains.audio.models import MusicTrack
 from app.domains.audio.repository import MusicTrackRepository
 from app.domains.audio.schemas import MusicTrackCreate, MusicTrackUpdate
 from app.domains.media.models import MediaAsset
-
+from app.core.config import settings
 
 class MusicTrackService:
     def __init__(self, session: Session) -> None:
@@ -127,7 +127,12 @@ class MusicTrackService:
                 "The active music asset has no storage reference."
             )
 
-        audio_url = media_asset.external_reference
+        audio_url = (
+            f"https://res.cloudinary.com/"
+            f"{settings.cloudinary_cloud_name}/video/upload/"
+            f"q_auto/"
+            f"{media_asset.external_reference}"
+        )
 
         return {
             "id": music_track.id,
