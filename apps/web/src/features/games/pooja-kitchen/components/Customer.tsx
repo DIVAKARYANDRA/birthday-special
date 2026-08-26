@@ -148,8 +148,8 @@ function AvatarImage(
       alt={name}
 
       className="
-      h-36
-w-28
+      h-28
+w-24
 
 object-contain
 object-bottom
@@ -277,7 +277,7 @@ absolute
 -bottom-2
 left-1/2
 -translate-x-1/2
--translate-y-8
+-translate-y-14
 z-20
 bg-white
 rounded-full
