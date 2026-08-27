@@ -1,74 +1,33 @@
-import {useEffect,useState} from "react";
-
-import HeartPortraitReveal from "@/features/heart-portrait/HeartPortraitReveal";
-
-import {
- getPortraitImage
-} from "@/api/portraitApi";
+const API_BASE_URL =
+  import.meta.env.VITE_API_BASE_URL ?? "";
 
 
-export default function HeartPortraitScene(){
-
-
-const [image,setImage]=useState<string>("");
-
-
-useEffect(()=>{
-
-
-async function load(){
-
-const data =
-await getPortraitImage();
-
-
-if(data?.url){
-
-setImage(data.url);
-
-}
-
+export interface PortraitImage {
+  id: string;
+  url: string;
+  title?: string | null;
 }
 
 
-void load();
+export async function getPortraitImage(): Promise<PortraitImage | null> {
+
+  const response = await fetch(
+    `${API_BASE_URL}/api/v1/experience/media/portrait`,
+  );
 
 
-},[]);
+  if (response.status === 404) {
+    return null;
+  }
 
 
-
-if(!image){
-
-return (
-
-<div className="
-flex
-min-h-screen
-items-center
-justify-center
-text-white
-">
-
-Loading ❤️
-
-</div>
-
-);
-
-}
+  if (!response.ok) {
+    throw new Error(
+      "Failed to load portrait image",
+    );
+  }
 
 
-
-return (
-
-<HeartPortraitReveal
-
-imageSrc={image}
-
-/>
-
-);
-
+  return response.json();
 
 }
