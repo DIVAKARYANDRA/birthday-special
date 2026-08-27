@@ -120,7 +120,6 @@ interface PointerState {
 // ───────────────────────────────────────────────────────────────────────
 // Tunables
 // ───────────────────────────────────────────────────────────────────────
-
 const GATHER_DURATION_MS = 650;
 const FORM_DURATION_MS = 1700;
 const ANALYSIS_WIDTH = 260; // fixed sampling resolution, independent of display size
