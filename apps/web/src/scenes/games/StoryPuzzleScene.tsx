@@ -124,7 +124,7 @@ try{
 
 const response =
 await fetch(
-`${API}/api/v1/experience/media/gallery`
+`${API}/api/v1/experience/media/game/story-puzzle`
 );
 
 

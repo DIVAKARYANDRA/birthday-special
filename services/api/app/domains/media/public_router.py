@@ -250,3 +250,52 @@ def get_game_music(
     asset.original_filename
 
 }
+
+@router.get("/game/{category}")
+def get_game_images(
+    category: str,
+    db: Session = Depends(get_db),
+):
+
+    assets = (
+        db.query(MediaAsset)
+        .filter(
+            MediaAsset.media_type == MediaType.IMAGE,
+
+            MediaAsset.usage == "game",
+
+            MediaAsset.category == category,
+
+            MediaAsset.is_visible.is_(True),
+
+            MediaAsset.status == MediaAssetStatus.PUBLISHED,
+        )
+        .order_by(
+            MediaAsset.display_order.asc()
+        )
+        .all()
+    )
+
+
+    return [
+
+        {
+            "id": str(asset.id),
+
+            "url": build_cloudinary_url(
+                asset.external_reference
+            ),
+
+            "title": asset.original_filename,
+
+            "alt_text": asset.alt_text,
+
+            "category": asset.category,
+
+            "usage": asset.usage,
+
+        }
+
+        for asset in assets
+
+    ]

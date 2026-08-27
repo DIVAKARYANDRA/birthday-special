@@ -110,9 +110,8 @@ try{
 
 const response =
 await fetch(
-`${API}/api/v1/experience/media/gallery`
+`${API}/api/v1/experience/media/game/memory-match`
 );
-
 
 
 if(!response.ok){
@@ -130,19 +129,7 @@ await response.json();
 
 
 
-
-const gameImages =
-data.filter(
-(item:any)=>
-
-item.usage === "game"
-
-&&
-
-item.category === "memory-match"
-
-);
-
+const gameImages = data;
 
 
 setImages(
