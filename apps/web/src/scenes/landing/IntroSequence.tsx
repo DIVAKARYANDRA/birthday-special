@@ -212,11 +212,11 @@ export default function IntroSequence() {
           className="relative z-10 mb-8"
         >
           <p className="text-[11px] uppercase tracking-[0.35em] text-white/45">
-            Chapter One
+            Sai Poojitha
           </p>
 
           <h1 className="mt-2 font-display text-3xl text-white sm:text-4xl">
-            Our Story
+            Your Story
           </h1>
         </motion.div>
 
@@ -415,7 +415,7 @@ export default function IntroSequence() {
           }}
           className="relative z-10 mt-7 text-xs text-white/40"
         >
-          Tap to continue
+          Tap Anywhere continue
         </motion.p>
       </button>
     </AmbientBackground>

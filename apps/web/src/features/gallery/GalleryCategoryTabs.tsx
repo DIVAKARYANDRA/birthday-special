@@ -16,7 +16,7 @@ label:"All ❤️"
 
 {
 id:"first_moments",
-label:"First Moments 💕"
+label:"Pooja Moments 💕"
 },
 
 {
@@ -31,7 +31,7 @@ label:"Celebrations 🎂"
 
 {
 id:"random_us",
-label:"Random Us 😂"
+label:"Unseen Pics 😂"
 },
 
 {

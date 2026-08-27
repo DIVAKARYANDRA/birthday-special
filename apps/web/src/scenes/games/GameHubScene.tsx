@@ -141,7 +141,7 @@ text-white/60
 "
 >
 
-Choose a memory adventure ❤️
+Welcome to Pooja Game World ⚡
 
 </p>
 

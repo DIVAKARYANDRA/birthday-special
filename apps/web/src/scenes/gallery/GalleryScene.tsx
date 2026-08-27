@@ -286,7 +286,7 @@ text-white
 tracking-wide
 "
 >
-Our Memories
+Your Memories
 </h1>
 
 
@@ -299,7 +299,7 @@ max-w-xs
 mx-auto
 "
 >
-Every picture holds a little story of us ❤️
+Every picture holds a little story of yours ❤️
 </p>
 
 
