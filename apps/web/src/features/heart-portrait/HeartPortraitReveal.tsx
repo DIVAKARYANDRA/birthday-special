@@ -324,7 +324,7 @@ function sampleImageToSeeds(
 ): PortraitSeed[] {
 
 
-  const sampleW = 360;
+  const sampleW = ANALYSIS_WIDTH;
 
   const sampleH =
     Math.round(
