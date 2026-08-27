@@ -122,7 +122,7 @@ interface PointerState {
 // ───────────────────────────────────────────────────────────────────────
 const GATHER_DURATION_MS = 650;
 const FORM_DURATION_MS = 1700;
-const ANALYSIS_WIDTH = 420; // fixed sampling resolution, independent of display size
+const ANALYSIS_WIDTH = 360; // fixed sampling resolution, independent of display size
 const MIN_BUDGET = 1800;
 const MAX_BUDGET = 2800;
 const AMBIENT_COUNT = 42;
@@ -318,108 +318,176 @@ function createAmbientParticle(width: number, height: number, dim = false): Ambi
  * computed later against whatever the current canvas box happens to be,
  * so the same seed set survives resizes/orientation changes untouched.
  */
-function sampleImageToSeeds(img: HTMLImageElement, budget: number): PortraitSeed[] {
-  const sampleW = ANALYSIS_WIDTH;
-  const sampleH = Math.max(1, Math.round(sampleW * (img.naturalHeight / img.naturalWidth)));
+function sampleImageToSeeds(
+  img: HTMLImageElement,
+  budget: number
+): PortraitSeed[] {
 
-  const offscreen = document.createElement('canvas');
-  offscreen.width = sampleW;
-  offscreen.height = sampleH;
-  const octx = offscreen.getContext('2d', { willReadFrequently: true });
-  if (!octx) return [];
+
+  const sampleW = 360;
+
+  const sampleH =
+    Math.round(
+      sampleW *
+      (img.naturalHeight / img.naturalWidth)
+    );
+
+
+  const canvas =
+    document.createElement("canvas");
+
+
+  canvas.width = sampleW;
+  canvas.height = sampleH;
+
+
+  const ctx =
+    canvas.getContext(
+      "2d",
+      {
+        willReadFrequently:true
+      }
+    );
+
+
+  if(!ctx)
+    return [];
+
 
   drawImageContain(
-  octx,
-  img,
-  sampleW,
-  sampleH
-);
-  const { data } = octx.getImageData(0, 0, sampleW, sampleH);
-
-  const luma = (i: number) => 0.299 * data[i] + 0.587 * data[i + 1] + 0.114 * data[i + 2];
-
-  interface Candidate {
-    nx: number;
-    ny: number;
-    r: number;
-    g: number;
-    b: number;
-    edge: number;
-  }
-  const candidates: Candidate[] = [];
-
-  for (let py = 0; py < sampleH; py++) {
-    for (let px = 0; px < sampleW; px++) {
-      const i = (py * sampleW + px) * 4;
-      const alpha = data[i + 3];
-      if (alpha < 40) continue; // transparent (PNG cutout) background
-
-      let edge = 0;
-      if (px < sampleW - 1) edge += Math.abs(luma(i) - luma(i + 4));
-      if (py < sampleH - 1) edge += Math.abs(luma(i) - luma(i + sampleW * 4));
-
-      const l = luma(i);
-      const likelyBackground =
-  edge < 4 && l > 245;
-
-
-if (
-  likelyBackground &&
-  Math.random() > 0.35
-) continue;
-
-      const keepProbability =
-  Math.min(
-    1,
-    0.55 + edge / 120
+    ctx,
+    img,
+    sampleW,
+    sampleH
   );
 
-if (
-  Math.random() >
-  keepProbability
-) continue;
 
-      candidates.push({ nx: px / sampleW, ny: py / sampleH, r: data[i], g: data[i + 1], b: data[i + 2], edge });
+  const image =
+    ctx.getImageData(
+      0,
+      0,
+      sampleW,
+      sampleH
+    );
+
+
+  const pixels =
+    image.data;
+
+
+
+  const seeds:PortraitSeed[]=[];
+
+
+
+  const step =
+    Math.max(
+      2,
+      Math.floor(
+        Math.sqrt(
+          (sampleW*sampleH)/budget
+        )
+      )
+    );
+
+
+
+  for(
+    let y=0;
+    y<sampleH;
+    y+=step
+  ){
+
+
+    for(
+      let x=0;
+      x<sampleW;
+      x+=step
+    ){
+
+
+      const index =
+        (y*sampleW+x)*4;
+
+
+
+      const r=pixels[index];
+      const g=pixels[index+1];
+      const b=pixels[index+2];
+      const a=pixels[index+3];
+
+
+
+      if(a<50)
+        continue;
+
+
+
+      const brightness =
+        (r+g+b)/3;
+
+
+
+      /*
+        remove only pure empty background
+      */
+
+      if(
+        brightness>245 &&
+        Math.random()>0.7
+      ){
+        continue;
+      }
+
+
+
+      seeds.push({
+
+        normX:
+          x/sampleW,
+
+        normY:
+          y/sampleH,
+
+
+        color:
+          `rgb(${r},${g},${b})`,
+
+        kind:
+          brightness<80
+          ?
+          "dot"
+          :
+          "heart",
+
+
+        glow:
+          Math.random()<0.25,
+
+
+        size:
+          2 +
+          Math.random()*2,
+
+
+        delay:
+          Math.random()*500
+
+      });
+
+
     }
+
   }
 
-  let pool = candidates;
-  if (pool.length > budget) {
-    pool = pool
-      .map((c) => ({ c, score: c.edge + Math.random() * 20 }))
-      .sort((a, b) => b.score - a.score)
-      .slice(0, budget)
-      .map((s) => s.c);
-  }
 
-  const edgeSorted = [...pool].sort((a, b) => a.edge - b.edge);
-  const edgeCutoff = edgeSorted[Math.floor(edgeSorted.length * 0.85)]?.edge ?? Infinity;
 
-  return pool.map((c) => {
-    const isEdge = c.edge >= edgeCutoff && c.edge > 10;
-    const l = 0.299 * c.r + 0.587 * c.g + 0.114 * c.b;
-    let kind: ParticleKind;
-    let glow: boolean;
-    if (isEdge) {
-      kind = 'sparkle';
-      glow = true;
-    } else if (l < 70) {
-      kind = 'dot';
-      glow = Math.random() < 0.06;
-    } else {
-      kind = 'heart';
-      glow = Math.random() < 0.1;
-    }
-    return {
-      normX: c.nx,
-      normY: c.ny,
-      color: `rgb(${c.r}, ${c.g}, ${c.b})`,
-      kind,
-      glow,
-      size: 1.8 + Math.random() * 1.8,
-      delay: Math.random() * 450 + Math.hypot(c.nx - 0.5, c.ny - 0.5) * 260,
-    };
-  });
+  return seeds.slice(
+    0,
+    budget
+  );
+
+
 }
 
 // ───────────────────────────────────────────────────────────────────────
