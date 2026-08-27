@@ -122,9 +122,9 @@ interface PointerState {
 // ───────────────────────────────────────────────────────────────────────
 const GATHER_DURATION_MS = 650;
 const FORM_DURATION_MS = 1700;
-const ANALYSIS_WIDTH = 260; // fixed sampling resolution, independent of display size
-const MIN_BUDGET = 800;
-const MAX_BUDGET = 1200;
+const ANALYSIS_WIDTH = 420; // fixed sampling resolution, independent of display size
+const MIN_BUDGET = 1800;
+const MAX_BUDGET = 2800;
 const AMBIENT_COUNT = 42;
 const ATMOSPHERE_COUNT = 16;
 const REPULSE_RADIUS = 64;
@@ -250,11 +250,11 @@ function computePortraitBox(
 
   // Mobile optimized portrait area
   const maxW =
-    Math.min(width * 0.92, 520);
+    Math.min(width * 0.98, 650);
 
 
 const maxH =
-    height * 0.90;
+    height * 0.95;
 
 
 
@@ -359,11 +359,25 @@ function sampleImageToSeeds(img: HTMLImageElement, budget: number): PortraitSeed
       if (py < sampleH - 1) edge += Math.abs(luma(i) - luma(i + sampleW * 4));
 
       const l = luma(i);
-      const likelyBackground = edge < 6 && l > 225;
-      if (likelyBackground && Math.random() > 0.05) continue;
+      const likelyBackground =
+  edge < 4 && l > 245;
 
-      const keepProbability = Math.min(1, 0.16 + edge / 90);
-      if (Math.random() > keepProbability) continue;
+
+if (
+  likelyBackground &&
+  Math.random() > 0.35
+) continue;
+
+      const keepProbability =
+  Math.min(
+    1,
+    0.55 + edge / 120
+  );
+
+if (
+  Math.random() >
+  keepProbability
+) continue;
 
       candidates.push({ nx: px / sampleW, ny: py / sampleH, r: data[i], g: data[i + 1], b: data[i + 2], edge });
     }
@@ -402,7 +416,7 @@ function sampleImageToSeeds(img: HTMLImageElement, budget: number): PortraitSeed
       color: `rgb(${c.r}, ${c.g}, ${c.b})`,
       kind,
       glow,
-      size: 2.3 + Math.random() * 2.3,
+      size: 1.8 + Math.random() * 1.8,
       delay: Math.random() * 450 + Math.hypot(c.nx - 0.5, c.ny - 0.5) * 260,
     };
   });
@@ -659,7 +673,7 @@ export function HeartPortraitReveal({ imageSrc, title, onRevealComplete, classNa
     const samples = perfSamplesRef.current;
     if (samples.length > 10) {
       const avgMs = samples.reduce((a, b) => a + b, 0) / samples.length;
-      if (avgMs > 22 && seeds.length > MIN_BUDGET) {
+      if (false) {
         const target = Math.max(MIN_BUDGET, Math.round(seeds.length * 0.7));
         seeds = [...seeds].sort(() => Math.random() - 0.5).slice(0, target);
       }
