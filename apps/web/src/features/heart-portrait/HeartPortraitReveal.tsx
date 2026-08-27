@@ -235,6 +235,23 @@ function computePortraitBox(
   };
 
 }
+
+function createAmbientParticle(width: number, height: number, dim = false): AmbientParticle {
+  const kinds: ParticleKind[] = ['heart', 'heart', 'sparkle', 'dot'];
+  return {
+    x: Math.random() * width,
+    y: height + Math.random() * height * 0.4,
+    vy: -(0.25 + Math.random() * 0.5),
+    size: 3 + Math.random() * (dim ? 3.5 : 5),
+    kind: kinds[Math.floor(Math.random() * kinds.length)],
+    color: AMBIENT_PALETTE[Math.floor(Math.random() * AMBIENT_PALETTE.length)],
+    alpha: dim ? 0.12 + Math.random() * 0.18 : 0.28 + Math.random() * 0.5,
+    glow: Math.random() < (dim ? 0.15 : 0.3),
+    swayPhase: Math.random() * Math.PI * 2,
+    swaySpeed: 0.6 + Math.random() * 0.8,
+  };
+}
+
 /**
  * Edge-weighted pixel sampler — see the file-level doc comment above for
  * the reasoning. Returns normalized (0..1) seeds; actual pixel homes are
@@ -476,7 +493,7 @@ export function HeartPortraitReveal({ imageSrc, title, onRevealComplete, classNa
     canvas.height = Math.max(1, Math.round(rect.height * dpr));
     canvas.style.width = `${rect.width}px`;
     canvas.style.height = `${rect.height}px`;
-
+    
     console.log(rect.width,rect.height)
 
     const ctx = canvas.getContext('2d');
