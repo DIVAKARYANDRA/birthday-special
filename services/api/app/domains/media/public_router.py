@@ -106,12 +106,7 @@ def get_gallery_images(
             MediaAsset.media_type ==
             MediaType.IMAGE,
 
-            MediaAsset.usage.in_(
-                    [
-                        "gallery",
-                        "game",
-                    ]
-                ),
+            MediaAsset.usage == "gallery",
 
             MediaAsset.is_visible.is_(True),
 
