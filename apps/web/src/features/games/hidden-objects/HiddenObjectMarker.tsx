@@ -82,12 +82,11 @@ scale:[1,1.3,1]
 :
 
 {
-opacity:0,
+opacity:0.75,
 scale:1
 }
 
 }
-
 
 
 transition={{
@@ -147,14 +146,13 @@ target.found
 >
 
 
-{
-
-target.found &&
-
 <span
 
 className="
-text-3xl
+text-xs
+sm:text-sm
+opacity-80
+drop-shadow-lg
 "
 
 >
@@ -162,8 +160,6 @@ text-3xl
 {target.emoji}
 
 </span>
-
-}
 
 
 
