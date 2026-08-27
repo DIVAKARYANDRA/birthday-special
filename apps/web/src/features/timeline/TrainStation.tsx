@@ -11,6 +11,12 @@ interface Props {
 
 }
 
+// Helper to construct full Cloudinary URL
+const getImageUrl = (path?: string) => {
+  if (!path) return "";
+  if (path.startsWith("http")) return path;
+  return `https://res.cloudinary.com/jms8snqc/image/upload/${path}`;
+};
 
 
 export default function TrainStation({
@@ -84,7 +90,9 @@ image &&
 
 <img
 
-src={image}
+src={getImageUrl(image)}
+
+alt={title}
 
 className="
 h-40

@@ -8,6 +8,13 @@ interface StationModalProps {
   onClose: () => void;
 }
 
+// Helper to construct full Cloudinary URL
+const getImageUrl = (path?: string) => {
+  if (!path) return "";
+  if (path.startsWith("http")) return path;
+  return `https://res.cloudinary.com/jms8snqc/image/upload/${path}`;
+};
+
 
 export default function StationModal({
   station,
@@ -82,7 +89,7 @@ export default function StationModal({
 
             <img
 
-              src={station.image}
+              src={getImageUrl(station.image)}
 
               alt={station.title}
 
