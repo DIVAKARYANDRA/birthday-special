@@ -53,6 +53,10 @@ const StoryPuzzleScene = lazy(
 const HiddenObjectsScene = lazy(
 ()=>import("@/scenes/games/HiddenObjectsScene")
 );
+
+const HeartPortraitScene = lazy(
+()=> import("@/scenes/heart-portrait/HeartPortraitScene")
+);
 import HeartRushScene
 from "@/scenes/games/HeartRushScene";
 /** Ambient, in-world loading fallback — per
@@ -118,6 +122,11 @@ function AnimatedRoutes() {
             <PoojaKitchenGame levelNumber={1} />
           }
         />
+
+        <Route
+          path="/heart-portrait"
+          element={<HeartPortraitScene />}
+          />
 
            
           <Route path="*" element={<LandingScene />} />

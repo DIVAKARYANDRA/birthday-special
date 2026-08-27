@@ -36,7 +36,12 @@ const LOCATIONS: { id: WorldMapLocationId; label: string; emoji: string; to: str
     emoji:"🎮",
     to:"/games"
   },
-  { id: "birthday-castle", label: "Birthday Castle", emoji: "🏰", to: "/coming-soon" },
+  {
+id:"heart-portrait",
+label:"Portrait Animations",
+emoji:"❤️",
+to:"/heart-portrait"
+}
   { id: "secret-room", label: "Secret Room", emoji: "🗝️", to: "/coming-soon" },
 ];
 

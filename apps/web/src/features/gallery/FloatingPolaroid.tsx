@@ -289,30 +289,6 @@ hover:scale-110
 
 
 
-
-<div
-
-className="
-py-2
-text-center
-text-xs
-font-medium
-text-gray-700
-"
-
->
-
-
-{
-photo.title ??
-"Beautiful memory"
-}
-
-
-</div>
-
-
-
 </div>
 
 
@@ -369,10 +345,10 @@ text-white
 "
 
 >
-
 {
-photo.caption ??
-"Forever memory ❤️"
+  photo.caption ??
+  photo.alt_text ??
+  "Forever memory ❤️"
 }
 
 

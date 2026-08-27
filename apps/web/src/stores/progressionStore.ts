@@ -36,6 +36,7 @@ export type WorldMapLocationId =
   | "love-letters"
   | "gallery"
   | "game-zone"
+  | "heart-portrait"
   | "birthday-castle"
   | "secret-room";
 
@@ -51,6 +52,7 @@ export const useProgressionStore = create<ProgressionState>((_, get) => ({
     "love-letters",
     "gallery",
     "game-zone",
+    "heart-portrait",
   ]),
   isLocationUnlocked: (id) => get().unlockedLocations.has(id),
 }));
