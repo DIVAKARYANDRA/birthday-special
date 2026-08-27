@@ -123,8 +123,8 @@ interface PointerState {
 const GATHER_DURATION_MS = 650;
 const FORM_DURATION_MS = 1700;
 const ANALYSIS_WIDTH = 360; // fixed sampling resolution, independent of display size
-const MIN_BUDGET = 3500;
-const MAX_BUDGET = 5000;
+const MIN_BUDGET = 5000;
+const MAX_BUDGET = 7000;
 const AMBIENT_COUNT = 42;
 const ATMOSPHERE_COUNT = 16;
 const REPULSE_RADIUS = 64;
@@ -465,9 +465,7 @@ function sampleImageToSeeds(
           Math.random()<0.25,
 
 
-        size:
-          2 +
-          Math.random()*2,
+        size: 3.2,
 
 
         delay:
@@ -904,8 +902,16 @@ export function HeartPortraitReveal({ imageSrc, title, onRevealComplete, classNa
         const dHome = Math.hypot(p.x - p.homeX, p.y - p.homeY);
         if (dHome < 0.6) settledCount++;
 
-        const twinkle = 1 + Math.sin(now / 700 + p.twinklePhase) * 0.06;
-        drawParticle(ctx, p.kind, p.x, p.y, p.size * twinkle, p.color, 0.92, p.glow);
+drawParticle(
+ ctx,
+ p.kind,
+ p.x,
+ p.y,
+ p.size,
+ p.color,
+ 0.92,
+ p.glow
+);
       }
 
       if (forming && elapsed >= FORM_DURATION_MS + 250) {
