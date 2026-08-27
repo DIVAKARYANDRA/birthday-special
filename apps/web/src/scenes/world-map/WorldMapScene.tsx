@@ -41,7 +41,7 @@ id:"heart-portrait",
 label:"Portrait Animations",
 emoji:"❤️",
 to:"/heart-portrait"
-}
+},
   { id: "secret-room", label: "Secret Room", emoji: "🗝️", to: "/coming-soon" },
 ];
 
