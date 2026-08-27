@@ -290,6 +290,8 @@ def get_game_images(
 
             "alt_text": asset.alt_text,
 
+            "display_order": asset.display_order,
+
             "category": asset.category,
 
             "usage": asset.usage,

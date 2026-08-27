@@ -151,12 +151,6 @@ const puzzleImages = data;
 setImages(
 
 puzzleImages
-.sort(
-(a:any,b:any)=>
-(a.display_order ?? 999)
--
-(b.display_order ?? 999)
-)
 .map(
 (item:any)=>(
 
@@ -170,7 +164,6 @@ title:item.title,
 
 alt_text:item.alt_text,
 
-display_order:item.display_order
 
 }
 
@@ -288,7 +281,6 @@ window.location.reload();
 
 
 }
-
 
 
 
