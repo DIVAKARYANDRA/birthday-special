@@ -672,7 +672,7 @@ export function HeartPortraitReveal({ imageSrc, title, onRevealComplete, classNa
     // device-heuristic budget already did.
     const samples = perfSamplesRef.current;
     if (samples.length > 10) {
-      const avgMs = samples.reduce((a, b) => a + b, 0) / samples.length;
+    //   const avgMs = samples.reduce((a, b) => a + b, 0) / samples.length;
       if (false) {
         const target = Math.max(MIN_BUDGET, Math.round(seeds.length * 0.7));
         seeds = [...seeds].sort(() => Math.random() - 0.5).slice(0, target);
