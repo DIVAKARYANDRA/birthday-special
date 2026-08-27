@@ -123,8 +123,8 @@ interface PointerState {
 const GATHER_DURATION_MS = 650;
 const FORM_DURATION_MS = 1700;
 const ANALYSIS_WIDTH = 360; // fixed sampling resolution, independent of display size
-const MIN_BUDGET = 1800;
-const MAX_BUDGET = 2800;
+const MIN_BUDGET = 3500;
+const MAX_BUDGET = 5000;
 const AMBIENT_COUNT = 42;
 const ATMOSPHERE_COUNT = 16;
 const REPULSE_RADIUS = 64;
@@ -382,7 +382,7 @@ function sampleImageToSeeds(
 
   const step =
     Math.max(
-      2,
+      1,
       Math.floor(
         Math.sqrt(
           (sampleW*sampleH)/budget
