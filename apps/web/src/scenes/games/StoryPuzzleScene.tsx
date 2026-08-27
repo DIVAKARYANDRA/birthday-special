@@ -145,18 +145,7 @@ await response.json();
 
 
 
-const puzzleImages =
-data.filter(
-(item:any)=>
-
-item.usage==="game"
-
-&&
-
-item.category==="story-puzzle"
-
-);
-
+const puzzleImages = data;
 
 
 setImages(
