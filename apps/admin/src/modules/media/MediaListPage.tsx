@@ -41,6 +41,11 @@ const mediaUsages = [
     value: "background",
     label: "Background",
   },
+
+  {
+ value:"portrait",
+ label:"Heart Portrait ❤️"
+},
 ];
 
 const galleryCategories = [

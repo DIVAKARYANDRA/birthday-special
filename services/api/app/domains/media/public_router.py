@@ -176,6 +176,44 @@ def get_gallery_images(
 
 ]
 
+@router.get("/portrait")
+def get_portrait_image(
+    db: Session = Depends(get_db),
+):
+
+    asset = (
+        db.query(MediaAsset)
+        .filter(
+            MediaAsset.media_type == MediaType.IMAGE,
+            MediaAsset.usage == "portrait",
+            MediaAsset.is_visible.is_(True),
+            MediaAsset.status == MediaAssetStatus.PUBLISHED,
+        )
+        .order_by(
+            MediaAsset.display_order.asc()
+        )
+        .first()
+    )
+
+
+    if not asset:
+        return None
+
+
+    return {
+        "id": str(asset.id),
+
+        "url": build_cloudinary_url(
+            asset.external_reference
+        ),
+
+        "title": asset.original_filename,
+
+        "alt_text": asset.alt_text,
+
+        "category": asset.category,
+    }
+
 @router.get("/game-music/{game_id}")
 def get_game_music(
     game_id:str,
