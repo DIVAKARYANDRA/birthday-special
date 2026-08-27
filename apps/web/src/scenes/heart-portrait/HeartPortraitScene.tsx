@@ -6,6 +6,8 @@ import {
  getPortraitImage
 } from "@/api/portraitApi";
 
+import SceneLayout from "@/components/global/SceneLayout";
+
 
 export default function HeartPortraitScene(){
 
@@ -42,17 +44,26 @@ if(!image){
 
 return (
 
-<div className="
+<SceneLayout
+mode="night"
+showFireflies
+>
+
+<div
+className="
 flex
 min-h-screen
 items-center
 justify-center
 text-white
-">
+"
+>
 
 Loading ❤️
 
 </div>
+
+</SceneLayout>
 
 );
 
@@ -62,11 +73,31 @@ Loading ❤️
 
 return (
 
+<SceneLayout
+mode="night"
+showFireflies
+>
+
+
+<div
+className="
+h-[calc(100vh-0px)]
+w-full
+"
+>
+
 <HeartPortraitReveal
 
 imageSrc={image}
 
+title="My Love ❤️"
+
 />
+
+</div>
+
+
+</SceneLayout>
 
 );
 

@@ -455,6 +455,8 @@ export function HeartPortraitReveal({ imageSrc, title, onRevealComplete, classNa
     canvas.height = Math.max(1, Math.round(rect.height * dpr));
     canvas.style.width = `${rect.width}px`;
     canvas.style.height = `${rect.height}px`;
+    
+    console.log(rect.width,rect.height)
 
     const ctx = canvas.getContext('2d');
     if (ctx) {
