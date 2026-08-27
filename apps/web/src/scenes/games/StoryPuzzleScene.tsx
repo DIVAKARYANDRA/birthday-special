@@ -147,7 +147,6 @@ await response.json();
 
 const puzzleImages = data;
 
-
 setImages(
 
 puzzleImages
@@ -164,6 +163,7 @@ title:item.title,
 
 alt_text:item.alt_text,
 
+display_order:item.display_order,
 
 }
 
