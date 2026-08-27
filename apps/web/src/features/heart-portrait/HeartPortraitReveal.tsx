@@ -152,12 +152,12 @@ const HEART_POINTS: ReadonlyArray<readonly [number, number]> = (() => {
 // Small pure helpers
 // ───────────────────────────────────────────────────────────────────────
 
-function drawImageCover(
+function drawImageContain(
   ctx: CanvasRenderingContext2D,
   img: HTMLImageElement,
-  width:number,
-  height:number
-){
+  width: number,
+  height: number
+) {
 
   const imageRatio =
     img.naturalWidth / img.naturalHeight;
@@ -166,42 +166,49 @@ function drawImageCover(
     width / height;
 
 
-  let sx = 0;
-  let sy = 0;
-  let sw = img.naturalWidth;
-  let sh = img.naturalHeight;
+  let drawWidth = width;
+  let drawHeight = height;
+
+  let x = 0;
+  let y = 0;
 
 
-  if(imageRatio > canvasRatio){
+  if (imageRatio > canvasRatio) {
 
-    sw =
-      img.naturalHeight * canvasRatio;
+    // image is wider
+    drawHeight =
+      width / imageRatio;
 
-    sx =
-      (img.naturalWidth - sw) / 2;
+    y =
+      (height - drawHeight) / 2;
+
+  } 
+  else {
+
+    // image is taller
+    drawWidth =
+      height * imageRatio;
+
+    x =
+      (width - drawWidth) / 2;
 
   }
-  else{
-
-    sh =
-      img.naturalWidth / canvasRatio;
-
-    sy =
-      (img.naturalHeight - sh) / 2;
-
-  }
 
 
-  ctx.drawImage(
-    img,
-    sx,
-    sy,
-    sw,
-    sh,
+  ctx.clearRect(
     0,
     0,
     width,
     height
+  );
+
+
+  ctx.drawImage(
+    img,
+    x,
+    y,
+    drawWidth,
+    drawHeight
   );
 
 }
@@ -243,11 +250,11 @@ function computePortraitBox(
 
   // Mobile optimized portrait area
   const maxW =
-    Math.min(width * 0.82, 420);
+    Math.min(width * 0.92, 520);
 
 
-  const maxH =
-    height * 0.82;
+const maxH =
+    height * 0.90;
 
 
 
@@ -275,7 +282,7 @@ function computePortraitBox(
 
 
     y:
-      (height-boxH)/2 - height*0.10,
+(height-boxH)/2,
 
 
     width:
@@ -321,7 +328,7 @@ function sampleImageToSeeds(img: HTMLImageElement, budget: number): PortraitSeed
   const octx = offscreen.getContext('2d', { willReadFrequently: true });
   if (!octx) return [];
 
-  drawImageCover(
+  drawImageContain(
   octx,
   img,
   sampleW,
