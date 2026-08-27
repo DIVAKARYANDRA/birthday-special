@@ -123,7 +123,7 @@ interface PointerState {
 
 const GATHER_DURATION_MS = 650;
 const FORM_DURATION_MS = 1700;
-const ANALYSIS_WIDTH = 220; // fixed sampling resolution, independent of display size
+const ANALYSIS_WIDTH = 260; // fixed sampling resolution, independent of display size
 const MIN_BUDGET = 800;
 const MAX_BUDGET = 1200;
 const AMBIENT_COUNT = 42;
@@ -152,6 +152,60 @@ const HEART_POINTS: ReadonlyArray<readonly [number, number]> = (() => {
 // ───────────────────────────────────────────────────────────────────────
 // Small pure helpers
 // ───────────────────────────────────────────────────────────────────────
+
+function drawImageCover(
+  ctx: CanvasRenderingContext2D,
+  img: HTMLImageElement,
+  width:number,
+  height:number
+){
+
+  const imageRatio =
+    img.naturalWidth / img.naturalHeight;
+
+  const canvasRatio =
+    width / height;
+
+
+  let sx = 0;
+  let sy = 0;
+  let sw = img.naturalWidth;
+  let sh = img.naturalHeight;
+
+
+  if(imageRatio > canvasRatio){
+
+    sw =
+      img.naturalHeight * canvasRatio;
+
+    sx =
+      (img.naturalWidth - sw) / 2;
+
+  }
+  else{
+
+    sh =
+      img.naturalWidth / canvasRatio;
+
+    sy =
+      (img.naturalHeight - sh) / 2;
+
+  }
+
+
+  ctx.drawImage(
+    img,
+    sx,
+    sy,
+    sw,
+    sh,
+    0,
+    0,
+    width,
+    height
+  );
+
+}
 
 function easeOutCubic(t: number): number {
   const c = Math.min(1, Math.max(0, t));
@@ -194,7 +248,7 @@ function computePortraitBox(
 
 
   const maxH =
-    height * 0.72;
+    height * 0.82;
 
 
 
@@ -222,7 +276,7 @@ function computePortraitBox(
 
 
     y:
-      (height-boxH)/2 - height*0.05,
+      (height-boxH)/2 - height*0.10,
 
 
     width:
@@ -268,7 +322,12 @@ function sampleImageToSeeds(img: HTMLImageElement, budget: number): PortraitSeed
   const octx = offscreen.getContext('2d', { willReadFrequently: true });
   if (!octx) return [];
 
-  octx.drawImage(img, 0, 0, sampleW, sampleH);
+  drawImageCover(
+  octx,
+  img,
+  sampleW,
+  sampleH
+);
   const { data } = octx.getImageData(0, 0, sampleW, sampleH);
 
   const luma = (i: number) => 0.299 * data[i] + 0.587 * data[i + 1] + 0.114 * data[i + 2];
