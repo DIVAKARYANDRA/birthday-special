@@ -81,7 +81,7 @@ showFireflies
 
 <div
 className="
-h-[calc(100vh-0px)]
+h-[calc(100dvh-72px)]
 w-full
 "
 >
