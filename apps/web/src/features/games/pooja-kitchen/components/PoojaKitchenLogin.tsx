@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { setAuthToken } from "../api/authToken";
+import { setAuthTokens } from "../api/authToken";
 
 interface Props {
   onSuccess: () => void;
@@ -68,8 +68,9 @@ console.log(
   !!data.access_token
 );
 
-setAuthToken(
-  data.access_token
+setAuthTokens(
+  data.access_token,
+  data.refresh_token
 );
 
       onSuccess();

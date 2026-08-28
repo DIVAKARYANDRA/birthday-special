@@ -92,6 +92,25 @@ def create_refresh_token(admin_user_id: str, *, session_id: str) -> str:
         extra_claims={"session_id": session_id},
     )
 
+def create_pooja_kitchen_refresh_token(player_id: str) -> str:
+    """
+    Issues a long-lived refresh token for a Pooja Kitchen player.
+
+    Pooja Kitchen player sessions are separate from the Admin authentication
+    system, so this token does not use AdminSession. The player's UUID is
+    stored in the `sub` claim and the domain marker prevents this token from
+    being used as an Admin refresh token.
+    """
+    settings = get_settings()
+
+    return _create_token(
+        player_id,
+        "refresh",
+        timedelta(days=settings.jwt_refresh_token_expire_days),
+        extra_claims={
+            "domain": "pooja_kitchen_player",
+        },
+    )
 
 def decode_token(token: str, *, expected_type: Literal["access", "refresh"]) -> dict:
     """
