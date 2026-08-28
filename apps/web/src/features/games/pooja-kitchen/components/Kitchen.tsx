@@ -1,17 +1,17 @@
 /**
  * Kitchen
  *
- * Reusable kitchen interaction layer for Pooja Kitchen.
+ * Bottom cooking/control area for Pooja Kitchen.
  *
  * Design goals:
- *   - Keep the bottom ingredient/food tray consistent across all levels.
- *   - Keep cooking slots in a predictable area above the food tray.
- *   - Support multiple stations and multiple cooking slots.
- *   - All food/station configuration comes from the level/backend.
- *   - No level-specific positioning or food-specific logic lives here.
+ *   - The customer area remains visually separate from the kitchen controls.
+ *   - Cooking slots always live in a dedicated lower cooking zone.
+ *   - Food/menu buttons remain at the bottom of the screen.
+ *   - Additional foods can be supported without breaking the layout.
+ *   - Additional cooking slots can be supported without changing game code.
+ *   - All level-specific configuration continues to come from the backend.
  *
- * The game scene/background is owned by PoojaKitchenGame.
- * This component only provides the interactive kitchen layer.
+ * Game state and interactions remain owned by the caller.
  */
 
 import type {
@@ -22,13 +22,7 @@ import type {
 
 import { FoodItem } from "./FoodItem";
 
-
-// ---------------------------------------------------------------------------
-// Props
-// ---------------------------------------------------------------------------
-
 export interface KitchenProps {
-
   stations: KitchenStation[];
 
   cookingSlots: CookingSlot[];
@@ -43,12 +37,11 @@ export interface KitchenProps {
   onCollect: (
     slotId: string
   ) => void;
-
 }
 
 
 // ---------------------------------------------------------------------------
-// Helpers
+// Cooking progress
 // ---------------------------------------------------------------------------
 
 function cookProgress(
@@ -59,9 +52,7 @@ function cookProgress(
     !slot.food ||
     slot.state !== "cooking"
   ) {
-
     return 0;
-
   }
 
 
@@ -70,9 +61,7 @@ function cookProgress(
 
 
   if (totalMs <= 0) {
-
     return 1;
-
   }
 
 
@@ -115,12 +104,12 @@ export function Kitchen({
       aria-label="Kitchen stations"
     >
 
-      {/* ================================================================= */}
-      {/* COOKING STATIONS                                                  */}
-      {/* ================================================================= */}
-
       {stations.map(
-        (station, stationIndex) => {
+        (station) => {
+
+          // ---------------------------------------------------------------
+          // Foods supported by this station
+          // ---------------------------------------------------------------
 
           const menuFoods =
             foods.filter(
@@ -130,6 +119,10 @@ export function Kitchen({
                 )
             );
 
+
+          // ---------------------------------------------------------------
+          // Cooking slots belonging to this station
+          // ---------------------------------------------------------------
 
           const slotsForStation =
             cookingSlots.filter(
@@ -145,29 +138,9 @@ export function Kitchen({
             );
 
 
-          /*
-           * Station positioning
-           *
-           * One station:
-           *   - centered
-           *
-           * Multiple stations:
-           *   - distributed across the middle area
-           *
-           * This keeps the layout reusable for future levels.
-           */
-
-          const stationLeft =
-            stations.length === 1
-              ? "50%"
-              : `${18 + stationIndex * (
-                  64 /
-                  Math.max(
-                    1,
-                    stations.length - 1
-                  )
-                )}%`;
-
+          // ---------------------------------------------------------------
+          // Render
+          // ---------------------------------------------------------------
 
           return (
 
@@ -181,217 +154,87 @@ export function Kitchen({
             >
 
               {/* ========================================================= */}
-              {/* COOKING SLOTS                                              */}
+              {/* COOKING AREA                                              */}
               {/* ========================================================= */}
+              {/*
+               * This is deliberately kept in the lower half of the game.
+               *
+               * Customers/order bubbles occupy the upper portion.
+               *
+               * The cooking area is therefore independent from the
+               * customer queue and will remain stable when more customers
+               * or orders are introduced.
+               */}
 
               <div
                 className="
                   pointer-events-none
                   absolute
-                  left-1/2
-                  top-[23%]
-                  flex
-                  -translate-x-1/2
-                  items-end
-                  justify-center
-                  gap-3
-                  sm:gap-4
-                "
-                style={{
-                  left: stationLeft,
-                }}
-              >
-
-                {slotsForStation.map(
-                  (slot) => {
-
-                    /*
-                     * Empty slot
-                     */
-
-                    if (!slot.food) {
-
-                      return (
-
-                        <div
-                          key={slot.id}
-                          className="
-                            flex
-                            h-14
-                            w-14
-                            items-center
-                            justify-center
-                            rounded-2xl
-                            border-2
-                            border-dashed
-                            border-white/20
-                            bg-black/10
-                          "
-                          aria-hidden="true"
-                        />
-
-                      );
-
-                    }
-
-
-                    /*
-                     * Food currently cooking / ready / burnt.
-                     */
-
-                    return (
-
-                      <div
-                        key={slot.id}
-                        className="
-                          pointer-events-auto
-                          relative
-                        "
-                      >
-
-                        <FoodItem
-                          food={slot.food}
-
-                          variant="cooking"
-
-                          cookState={
-                            slot.state
-                          }
-
-                          progress={
-                            cookProgress(
-                              slot
-                            )
-                          }
-
-                          onClick={() => {
-
-                            if (
-                              slot.state ===
-                              "ready"
-                            ) {
-
-                              onCollect(
-                                slot.id
-                              );
-
-                            }
-
-                          }}
-
-                        />
-
-                      </div>
-
-                    );
-
-                  }
-                )}
-
-              </div>
-
-
-              {/* ========================================================= */}
-              {/* BOTTOM FOOD TRAY                                           */}
-              {/* ========================================================= */}
-
-              <div
-                className="
-                  pointer-events-none
-                  absolute
-                  bottom-0
+                  bottom-[25%]
                   left-0
                   right-0
+                  flex
+                  items-end
+                  justify-center
                   px-3
-                  pb-[max(10px,env(safe-area-inset-bottom))]
                 "
               >
 
                 <div
                   className="
-                    pointer-events-auto
-                    mx-auto
+                    pointer-events-none
                     flex
-                    w-full
-                    max-w-[1100px]
+                    max-w-full
                     items-end
                     justify-center
+                    gap-2
+                    sm:gap-3
+                    md:gap-4
                   "
                 >
 
-                  {/* =================================================== */}
-                  {/* FOOD COUNTER / TRAY                                  */}
-                  {/* =================================================== */}
+                  {slotsForStation.map(
+                    (slot) => {
 
-                  <div
-                    className="
-                      flex
-                      w-full
-                      items-end
-                      justify-center
-                      gap-2
-                      overflow-x-auto
-                      overscroll-x-contain
-                      rounded-[24px]
-                      border
-                      border-white/15
-                      bg-black/25
-                      px-3
-                      pb-2
-                      pt-2
-                      shadow-2xl
-                      backdrop-blur-md
-                    "
-                  >
+                      // ---------------------------------------------------
+                      // Occupied slot
+                      // ---------------------------------------------------
 
-                    {menuFoods.map(
-                      (food) => {
-
-                        const freeSlot =
-                          slotsForStation.find(
-                            (slot) =>
-                              slot.state ===
-                              "idle"
-                          );
-
+                      if (slot.food) {
 
                         return (
 
                           <div
-                            key={food.id}
+                            key={slot.id}
                             className="
+                              pointer-events-auto
                               flex
                               flex-shrink-0
+                              items-end
+                              justify-center
                             "
                           >
 
                             <FoodItem
-                              food={food}
+                              food={slot.food}
 
-                              variant="menu"
+                              variant="cooking"
 
-                              disabled={
-                                !hasFreeSlot
+                              cookState={
+                                slot.state
                               }
 
-                              onClick={() => {
+                              progress={
+                                cookProgress(slot)
+                              }
 
-                                if (
-                                  !freeSlot
-                                ) {
-
-                                  return;
-
-                                }
-
-
-                                onStartCooking(
-                                  freeSlot.id,
-                                  food
-                                );
-
-                              }}
-
+                              onClick={() =>
+                                slot.state === "ready"
+                                  ? onCollect(
+                                      slot.id
+                                    )
+                                  : undefined
+                              }
                             />
 
                           </div>
@@ -399,9 +242,162 @@ export function Kitchen({
                         );
 
                       }
-                    )}
 
-                  </div>
+
+                      // ---------------------------------------------------
+                      // Empty cooking slot
+                      // ---------------------------------------------------
+
+                      return (
+
+                        <div
+                          key={slot.id}
+                          className="
+                            pointer-events-none
+                            flex
+                            h-11
+                            w-11
+                            flex-shrink-0
+                            items-center
+                            justify-center
+                            rounded-xl
+                            border
+                            border-dashed
+                            border-white/20
+                            bg-black/10
+                            sm:h-12
+                            sm:w-12
+                            sm:rounded-2xl
+                            md:h-14
+                            md:w-14
+                          "
+                          aria-label="Empty cooking slot"
+                        >
+
+                          <span
+                            className="
+                              text-lg
+                              font-light
+                              text-white/25
+                              md:text-xl
+                            "
+                          >
+                            +
+                          </span>
+
+                        </div>
+
+                      );
+
+                    }
+                  )}
+
+                </div>
+
+              </div>
+
+
+              {/* ========================================================= */}
+              {/* FOOD MENU / COOKING CONTROLS                              */}
+              {/* ========================================================= */}
+              {/*
+               * The menu is intentionally anchored to the bottom.
+               *
+               * This becomes the permanent interaction area for every
+               * level. Future levels can simply provide different Food
+               * definitions from the admin panel.
+               *
+               * Horizontal scrolling prevents a large number of foods
+               * from breaking the landscape layout.
+               */}
+
+              <div
+                className="
+                  pointer-events-none
+                  absolute
+                  bottom-[2%]
+                  left-0
+                  right-0
+                  flex
+                  justify-center
+                  px-2
+                  sm:px-3
+                  md:px-4
+                "
+              >
+
+                <div
+                  className="
+                    pointer-events-auto
+                    flex
+                    max-w-[96%]
+                    items-end
+                    gap-2
+                    overflow-x-auto
+                    overflow-y-hidden
+                    px-1
+                    pb-1
+                    sm:gap-3
+                    md:gap-4
+                  "
+                  style={{
+                    scrollbarWidth: "none",
+                    WebkitOverflowScrolling:
+                      "touch",
+                  }}
+                >
+
+                  {menuFoods.map(
+                    (food) => {
+
+                      return (
+
+                        <div
+                          key={food.id}
+                          className="
+                            flex-shrink-0
+                          "
+                        >
+
+                          <FoodItem
+                            food={food}
+
+                            variant="menu"
+
+                            disabled={
+                              !hasFreeSlot
+                            }
+
+                            onClick={() => {
+
+                              const freeSlot =
+                                slotsForStation.find(
+                                  (slot) =>
+                                    slot.state ===
+                                    "idle"
+                                );
+
+
+                              if (
+                                freeSlot
+                              ) {
+
+                                onStartCooking(
+                                  freeSlot.id,
+                                  food
+                                );
+
+                              }
+
+                            }}
+                          />
+
+                        </div>
+
+                      );
+
+                    }
+                  )}
 
                 </div>
 

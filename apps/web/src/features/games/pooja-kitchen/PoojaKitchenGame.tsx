@@ -1,31 +1,19 @@
 /**
  * PoojaKitchenGame
  *
- * Top-level screen for a single Pooja Kitchen level.
+ * Main game composition for Pooja Kitchen.
  *
- * Responsibilities:
- *   - Authentication gate
- *   - Level loading
- *   - Fixed landscape-first game viewport
- *   - Responsive game composition
- *   - HUD
- *   - Customer area
- *   - Cooking/kitchen area
- *   - Persistent food tray area
- *   - Carried-food interaction
- *   - Pause / result / loading overlays
+ * Layout philosophy:
  *
- * Game rules remain inside usePoojaKitchenGame + gameEngine.
+ *   1. HUD
+ *   2. Customer / order zone
+ *   3. Kitchen / cooking zone
+ *   4. Food selection bar
  *
- * UI DESIGN:
- *   - Designed primarily for iPhone 16 landscape.
- *   - Main background/theme occupies the upper game scene.
- *   - Customer area remains visually dominant.
- *   - Kitchen/cooking area sits between customers and food tray.
- *   - Bottom food tray is reserved as a stable interaction area for
- *     all current and future levels.
- *   - Future levels can change customers, foods, stations and themes
- *     without requiring this component to be changed.
+ * The background is artwork only.
+ * Gameplay controls are positioned independently so future levels can
+ * freely change customers, foods, stations and themes without requiring
+ * UI code changes.
  */
 
 import {
@@ -115,6 +103,7 @@ function formatTime(
   return `${minutes}:${remainder
     .toString()
     .padStart(2, "0")}`;
+
 }
 
 
@@ -137,29 +126,28 @@ function HudBadge({
     <div
       className={`
         flex
-        h-10
+        min-w-[58px]
         items-center
+        justify-center
         gap-1.5
         rounded-full
         border
-        border-white/20
+        border-white/60
         px-3
-        shadow-lg
+        py-1.5
+        shadow-md
         backdrop-blur-md
         ${
           urgent
-            ? "bg-[#E85D5D]/95 text-white"
-            : "bg-black/35 text-white"
+            ? "bg-[#E85D5D] text-white"
+            : "bg-white/90 text-[#1F2A24]"
         }
       `}
     >
 
       <span
         aria-hidden="true"
-        className="
-          text-base
-          leading-none
-        "
+        className="text-base leading-none"
       >
         {icon}
       </span>
@@ -167,54 +155,15 @@ function HudBadge({
       <span
         className="
           font-[Fredoka,ui-rounded,sans-serif]
-          text-sm
+          text-base
           font-bold
-          leading-none
           tabular-nums
+          leading-none
         "
       >
         {value}
       </span>
 
-    </div>
-
-  );
-
-}
-
-
-// ---------------------------------------------------------------------------
-// Section label
-// ---------------------------------------------------------------------------
-
-function SceneLabel({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
-
-  return (
-
-    <div
-      className="
-        pointer-events-none
-        rounded-full
-        border
-        border-white/15
-        bg-black/20
-        px-3
-        py-1
-        font-[Fredoka,ui-rounded,sans-serif]
-        text-[10px]
-        font-bold
-        uppercase
-        tracking-[0.12em]
-        text-white/70
-        shadow-sm
-        backdrop-blur-sm
-      "
-    >
-      {children}
     </div>
 
   );
@@ -293,11 +242,7 @@ export function PoojaKitchenGame({
 
 
   // -------------------------------------------------------------------------
-  // Load level ONLY after authentication
-  //
-  // Important:
-  // We intentionally do not call loadLevel before authentication.
-  // This prevents an unauthenticated request from generating a 401.
+  // Load level only after authentication
   // -------------------------------------------------------------------------
 
   useEffect(() => {
@@ -316,10 +261,7 @@ export function PoojaKitchenGame({
 
 
   // -------------------------------------------------------------------------
-  // Customer completion / expiry handling
-  //
-  // Once a customer becomes happy or angry, allow the expression to remain
-  // visible briefly before advancing the customer.
+  // Remove customer after happy / angry state has been visible briefly
   // -------------------------------------------------------------------------
 
   useEffect(() => {
@@ -442,8 +384,6 @@ export function PoojaKitchenGame({
 
   // -------------------------------------------------------------------------
   // Authentication gate
-  //
-  // Always render login before the game scene if no access token exists.
   // -------------------------------------------------------------------------
 
   if (!authenticated) {
@@ -487,20 +427,16 @@ export function PoojaKitchenGame({
         "
         style={{
           paddingTop:
-            "env(safe-area-inset-top)",
-          paddingRight:
-            "env(safe-area-inset-right)",
+            "max(6px, env(safe-area-inset-top))",
           paddingBottom:
-            "env(safe-area-inset-bottom)",
-          paddingLeft:
-            "env(safe-area-inset-left)",
+            "max(6px, env(safe-area-inset-bottom))",
           boxSizing:
             "border-box",
         }}
       >
 
         {/* =============================================================== */}
-        {/* GAME CANVAS                                                     */}
+        {/* GAME SCENE                                                       */}
         {/* =============================================================== */}
 
         <div
@@ -510,12 +446,11 @@ export function PoojaKitchenGame({
             w-full
             overflow-hidden
             bg-[#1F4D45]
-            select-none
           "
         >
 
           {/* ============================================================= */}
-          {/* BACKGROUND / LEVEL THEME                                      */}
+          {/* BACKGROUND                                                     */}
           {/* ============================================================= */}
 
           <div
@@ -528,7 +463,7 @@ export function PoojaKitchenGame({
             "
           >
 
-            {level?.theme.backgroundImage ? (
+            {level?.theme.backgroundImage && (
 
               <img
                 src={
@@ -543,17 +478,6 @@ export function PoojaKitchenGame({
                   object-cover
                   object-center
                 "
-                draggable={false}
-              />
-
-            ) : (
-
-              <div
-                className="
-                  absolute
-                  inset-0
-                  bg-[#1F4D45]
-                "
               />
 
             )}
@@ -562,7 +486,7 @@ export function PoojaKitchenGame({
 
 
           {/* ============================================================= */}
-          {/* BACKGROUND DEPTH / READABILITY                                */}
+          {/* BACKGROUND READABILITY LAYER                                   */}
           {/* ============================================================= */}
 
           <div
@@ -571,16 +495,13 @@ export function PoojaKitchenGame({
               absolute
               inset-0
               z-[1]
-              bg-gradient-to-b
-              from-black/20
-              via-transparent
-              to-black/30
+              bg-black/[0.03]
             "
           />
 
 
           {/* ============================================================= */}
-          {/* TOP HUD                                                       */}
+          {/* HUD                                                             */}
           {/* ============================================================= */}
 
           <div
@@ -589,100 +510,88 @@ export function PoojaKitchenGame({
               left-0
               right-0
               top-0
-              z-50
+              z-[80]
               flex
-              items-center
+              h-[16%]
+              items-start
               justify-between
-              px-4
-              pt-3
-              sm:px-5
-              sm:pt-4
+              px-[3%]
+              pt-[2.5%]
             "
           >
 
             {/* ----------------------------------------------------------- */}
-            {/* LEFT SIDE                                                    */}
+            {/* EXIT + LEVEL                                                 */}
             {/* ----------------------------------------------------------- */}
 
             <div
               className="
                 flex
-                min-w-0
                 items-center
                 gap-2
               "
             >
 
-              {/* Exit */}
-
-              <motion.button
+              <button
                 type="button"
-                whileTap={buttonTapAnimation}
                 onClick={onExit}
                 className="
                   flex
-                  h-10
-                  w-10
-                  shrink-0
+                  h-11
+                  w-11
                   items-center
                   justify-center
                   rounded-full
-                  border
-                  border-white/20
-                  bg-black/35
+                  bg-black/40
                   text-2xl
                   font-bold
-                  leading-none
                   text-white
-                  shadow-lg
+                  shadow-md
                   backdrop-blur-md
+                  transition
+                  active:scale-95
                 "
                 aria-label="Exit level"
               >
                 ×
-              </motion.button>
+              </button>
 
-
-              {/* Level indicator */}
 
               <div
                 className="
-                  hidden
                   rounded-full
-                  border
-                  border-white/15
-                  bg-black/30
-                  px-3
-                  py-1.5
+                  bg-black/45
+                  px-4
+                  py-2
                   font-[Fredoka,ui-rounded,sans-serif]
-                  text-xs
+                  text-sm
                   font-bold
                   text-white
-                  shadow-lg
+                  shadow-md
                   backdrop-blur-md
-                  sm:block
                 "
               >
-                Level {level?.levelNumber ?? levelNumber}
+
+                Level {levelNumber}
+
               </div>
 
             </div>
 
 
             {/* ----------------------------------------------------------- */}
-            {/* CENTER SCORE                                                 */}
+            {/* SCORE + COINS                                                 */}
             {/* ----------------------------------------------------------- */}
 
             <div
               className="
                 absolute
                 left-1/2
-                top-3
+                top-[2.5%]
                 flex
                 -translate-x-1/2
                 items-center
                 gap-2
-                sm:top-4
               "
             >
 
@@ -700,7 +609,7 @@ export function PoojaKitchenGame({
 
 
             {/* ----------------------------------------------------------- */}
-            {/* RIGHT SIDE                                                   */}
+            {/* TIMER + PAUSE                                                 */}
             {/* ----------------------------------------------------------- */}
 
             <div
@@ -710,8 +619,6 @@ export function PoojaKitchenGame({
                 gap-2
               "
             >
-
-              {/* Timer */}
 
               <HudBadge
                 icon="⏱"
@@ -727,35 +634,31 @@ export function PoojaKitchenGame({
               />
 
 
-              {/* Pause */}
-
               {status === "playing" && (
 
-                <motion.button
+                <button
                   type="button"
-                  whileTap={buttonTapAnimation}
                   onClick={pauseLevel}
                   className="
                     flex
-                    h-10
-                    w-10
-                    shrink-0
+                    h-11
+                    w-11
                     items-center
                     justify-center
                     rounded-full
-                    border
-                    border-white/20
-                    bg-black/35
-                    text-sm
+                    bg-black/40
+                    text-lg
                     font-bold
                     text-white
-                    shadow-lg
+                    shadow-md
                     backdrop-blur-md
+                    transition
+                    active:scale-95
                   "
                   aria-label="Pause"
                 >
                   ❚❚
-                </motion.button>
+                </button>
 
               )}
 
@@ -765,365 +668,167 @@ export function PoojaKitchenGame({
 
 
           {/* ============================================================= */}
-          {/* MAIN GAMEPLAY AREA                                            */}
+          {/* CUSTOMER / ORDER ZONE                                          */}
           {/* ============================================================= */}
 
           <div
             className="
               absolute
-              inset-x-0
-              bottom-0
-              top-0
-              z-10
+              left-0
+              right-0
+              top-[14%]
+              z-30
+              h-[43%]
+              overflow-visible
             "
           >
 
-            {/* =========================================================== */}
-            {/* CUSTOMER ZONE                                               */}
-            {/* =========================================================== */}
+            {level && (
 
-            <div
-              className="
-                absolute
-                left-0
-                right-0
-                top-[12%]
-                h-[43%]
-                overflow-visible
-              "
-            >
+              <CustomerQueue
+                customers={
+                  gameState.customers
+                }
 
-              <div
-                className="
-                  absolute
-                  left-1/2
-                  top-1
-                  z-10
-                  -translate-x-1/2
-                "
-              >
+                orders={
+                  gameState.orders
+                }
 
-                <SceneLabel>
-                  Orders
-                </SceneLabel>
+                foods={
+                  level.foods
+                }
 
-              </div>
+                onSelectCustomer={
+                  handleSelectCustomer
+                }
 
-
-              {level && (
-
-                <CustomerQueue
-                  customers={
-                    gameState.customers
-                  }
-
-                  orders={
-                    gameState.orders
-                  }
-
-                  foods={
-                    level.foods
-                  }
-
-                  onSelectCustomer={
-                    handleSelectCustomer
-                  }
-
-                  onCustomerExited={
-                    removeCustomer
-                  }
-                />
-
-              )}
-
-            </div>
-
-
-            {/* =========================================================== */}
-            {/* COUNTER / VISUAL DIVIDER                                    */}
-            {/* =========================================================== */}
-
-            <div
-              className="
-                pointer-events-none
-                absolute
-                left-[4%]
-                right-[4%]
-                top-[54%]
-                z-10
-                h-[5%]
-                min-h-[18px]
-                rounded-[50%]
-                border-t
-                border-white/20
-                bg-black/10
-                shadow-[0_-8px_25px_rgba(0,0,0,0.15)]
-              "
-            />
-
-
-            {/* =========================================================== */}
-            {/* COOKING AREA                                                */}
-            {/* =========================================================== */}
-
-            <div
-              className="
-                absolute
-                left-[3%]
-                right-[3%]
-                top-[55%]
-                bottom-[21%]
-                z-20
-                overflow-visible
-              "
-            >
-
-              <div
-                className="
-                  pointer-events-none
-                  absolute
-                  left-1/2
-                  top-1
-                  z-10
-                  -translate-x-1/2
-                "
-              >
-
-                <SceneLabel>
-                  Cooking
-                </SceneLabel>
-
-              </div>
-
-
-              {level && (
-
-                <Kitchen
-                  stations={
-                    level.stations
-                  }
-
-                  cookingSlots={
-                    gameState.cookingSlots
-                  }
-
-                  foods={
-                    level.foods
-                  }
-
-                  onStartCooking={
-                    startCooking
-                  }
-
-                  onCollect={
-                    handleCollect
-                  }
-
-                />
-
-              )}
-
-            </div>
-
-
-            {/* =========================================================== */}
-            {/* CARRYING FOOD INDICATOR                                    */}
-            {/* =========================================================== */}
-
-            <AnimatePresence>
-
-              {carriedFood && (
-
-                <motion.div
-                  initial={{
-                    opacity: 0,
-                    y: 8,
-                    scale: 0.95,
-                  }}
-
-                  animate={{
-                    opacity: 1,
-                    y: 0,
-                    scale: 1,
-                  }}
-
-                  exit={{
-                    opacity: 0,
-                    y: 8,
-                    scale: 0.95,
-                  }}
-
-                  transition={{
-                    duration: 0.18,
-                  }}
-
-                  className="
-                    pointer-events-none
-                    absolute
-                    left-1/2
-                    top-[51%]
-                    z-[60]
-                    flex
-                    -translate-x-1/2
-                    items-center
-                    gap-2
-                    whitespace-nowrap
-                    rounded-full
-                    border
-                    border-white/30
-                    bg-white/95
-                    px-4
-                    py-2
-                    font-[Fredoka,ui-rounded,sans-serif]
-                    text-xs
-                    font-bold
-                    text-[#1F2A24]
-                    shadow-xl
-                    backdrop-blur-md
-                  "
-                >
-
-                  <span
-                    className="
-                      h-2
-                      w-2
-                      rounded-full
-                      bg-[#6FCB9F]
-                    "
-                  />
-
-                  Carrying {carriedFood.name}
-
-                  <span
-                    className="
-                      text-[#2F6F62]
-                    "
-                  >
-                    · Tap a customer
-                  </span>
-
-                </motion.div>
-
-              )}
-
-            </AnimatePresence>
-
-
-            {/* =========================================================== */}
-            {/* PERMANENT FOOD TRAY                                         */}
-            {/* =========================================================== */}
-
-            <div
-              className="
-                absolute
-                bottom-0
-                left-0
-                right-0
-                z-40
-                h-[20%]
-                min-h-[92px]
-              "
-            >
-
-              {/* Tray backdrop */}
-
-              <div
-                className="
-                  absolute
-                  inset-0
-                  border-t
-                  border-white/15
-                  bg-black/35
-                  shadow-[0_-10px_30px_rgba(0,0,0,0.25)]
-                  backdrop-blur-md
-                "
+                onCustomerExited={
+                  removeCustomer
+                }
               />
 
-
-              {/* Tray highlight */}
-
-              <div
-                className="
-                  pointer-events-none
-                  absolute
-                  left-[4%]
-                  right-[4%]
-                  top-0
-                  h-px
-                  bg-white/25
-                "
-              />
-
-
-              {/* Food tray content */}
-
-              <div
-                className="
-                  relative
-                  h-full
-                  w-full
-                  overflow-hidden
-                "
-              >
-
-                <div
-                  className="
-                    absolute
-                    left-3
-                    right-3
-                    top-1/2
-                    -translate-y-1/2
-                  "
-                >
-
-                  {/* Kitchen owns the actual food controls.
-                      This wrapper provides the permanent visual tray
-                      surface. */}
-
-                  {level && (
-
-                    <Kitchen
-                      stations={
-                        level.stations
-                      }
-
-                      cookingSlots={
-                        gameState.cookingSlots
-                      }
-
-                      foods={
-                        level.foods
-                      }
-
-                      onStartCooking={
-                        startCooking
-                      }
-
-                      onCollect={
-                        handleCollect
-                      }
-
-                    />
-
-                  )}
-
-                </div>
-
-              </div>
-
-            </div>
+            )}
 
           </div>
 
 
           {/* ============================================================= */}
-          {/* STATUS OVERLAYS                                               */}
+          {/* CARRIED FOOD INDICATOR                                          */}
+          {/* ============================================================= */}
+
+          <AnimatePresence>
+
+            {carriedFood && (
+
+              <motion.div
+                initial={{
+                  opacity: 0,
+                  y: 8,
+                  scale: 0.9,
+                }}
+
+                animate={{
+                  opacity: 1,
+                  y: 0,
+                  scale: 1,
+                }}
+
+                exit={{
+                  opacity: 0,
+                  y: 8,
+                  scale: 0.9,
+                }}
+
+                className="
+                  pointer-events-none
+                  absolute
+                  left-1/2
+                  top-[53%]
+                  z-[75]
+                  -translate-x-1/2
+                  whitespace-nowrap
+                  rounded-full
+                  border
+                  border-white/70
+                  bg-white/95
+                  px-4
+                  py-2
+                  text-xs
+                  font-black
+                  text-[#1F2A24]
+                  shadow-xl
+                  backdrop-blur-md
+                "
+              >
+
+                🍽️ Carrying {carriedFood.name}
+                {" "}
+                • Tap a customer
+
+              </motion.div>
+
+            )}
+
+          </AnimatePresence>
+
+
+          {/* ============================================================= */}
+          {/* KITCHEN / COOKING ZONE                                         */}
+          {/*                                                                 */}
+          {/* IMPORTANT:                                                     */}
+          {/* Kitchen is intentionally constrained to the lower portion.    */}
+          {/* Its own absolute positioning now works relative to this zone,  */}
+          {/* preventing cooking controls from colliding with customers.     */}
+          {/* ============================================================= */}
+
+          {level && (
+
+            <div
+              className="
+                absolute
+                inset-x-0
+                bottom-0
+                top-[55%]
+                z-20
+                overflow-visible
+              "
+            >
+
+              <Kitchen
+                stations={
+                  level.stations
+                }
+
+                cookingSlots={
+                  gameState.cookingSlots
+                }
+
+                foods={
+                  level.foods
+                }
+
+                onStartCooking={
+                  startCooking
+                }
+
+                onCollect={
+                  handleCollect
+                }
+              />
+
+            </div>
+
+          )}
+
+
+          {/* ============================================================= */}
+          {/* STATUS OVERLAYS                                                */}
           {/* ============================================================= */}
 
           <AnimatePresence>
 
             {/* ----------------------------------------------------------- */}
-            {/* Loading                                                      */}
+            {/* Loading                                                       */}
             {/* ----------------------------------------------------------- */}
 
             {isLoadingLevel && (
@@ -1131,22 +836,6 @@ export function PoojaKitchenGame({
               <Overlay
                 key="loading"
               >
-
-                <div
-                  className="
-                    mb-4
-                    flex
-                    h-14
-                    w-14
-                    items-center
-                    justify-center
-                    rounded-2xl
-                    bg-white/10
-                    text-3xl
-                  "
-                >
-                  🍳
-                </div>
 
                 <p
                   className="
@@ -1159,23 +848,13 @@ export function PoojaKitchenGame({
                   Loading kitchen…
                 </p>
 
-                <p
-                  className="
-                    mt-1
-                    text-sm
-                    text-white/60
-                  "
-                >
-                  Preparing your orders
-                </p>
-
               </Overlay>
 
             )}
 
 
             {/* ----------------------------------------------------------- */}
-            {/* Error                                                        */}
+            {/* Error                                                         */}
             {/* ----------------------------------------------------------- */}
 
             {!isLoadingLevel &&
@@ -1206,9 +885,7 @@ export function PoojaKitchenGame({
                       mb-5
                       max-w-md
                       text-center
-                      text-sm
-                      leading-relaxed
-                      text-white/90
+                      text-white
                     "
                   >
                     {loadError}
@@ -1228,7 +905,7 @@ export function PoojaKitchenGame({
 
 
             {/* ----------------------------------------------------------- */}
-            {/* Ready                                                        */}
+            {/* Ready                                                         */}
             {/* ----------------------------------------------------------- */}
 
             {status === "ready" && (
@@ -1240,51 +917,38 @@ export function PoojaKitchenGame({
                 <div
                   className="
                     mb-4
-                    flex
-                    h-16
-                    w-16
-                    items-center
-                    justify-center
                     rounded-3xl
                     bg-white/10
-                    text-4xl
+                    px-7
+                    py-5
+                    backdrop-blur-md
                   "
                 >
-                  🍳
+
+                  <h2
+                    className="
+                      mb-1
+                      font-[Fredoka,ui-rounded,sans-serif]
+                      text-3xl
+                      font-bold
+                      text-white
+                    "
+                  >
+                    Level {level?.levelNumber}
+                  </h2>
+
+                  <p
+                    className="
+                      text-sm
+                      text-white/80
+                    "
+                  >
+                    Target score:{" "}
+                    {level?.targetScore}
+                  </p>
+
                 </div>
 
-                <h2
-                  className="
-                    mb-1
-                    font-[Fredoka,ui-rounded,sans-serif]
-                    text-3xl
-                    font-bold
-                    text-white
-                  "
-                >
-                  Level {level?.levelNumber}
-                </h2>
-
-                <p
-                  className="
-                    mb-1
-                    text-sm
-                    font-semibold
-                    text-white/80
-                  "
-                >
-                  {level?.theme.name}
-                </p>
-
-                <p
-                  className="
-                    mb-6
-                    text-xs
-                    text-white/60
-                  "
-                >
-                  Target score: {level?.targetScore}
-                </p>
 
                 <PrimaryButton
                   onClick={startLevel}
@@ -1298,7 +962,7 @@ export function PoojaKitchenGame({
 
 
             {/* ----------------------------------------------------------- */}
-            {/* Paused                                                       */}
+            {/* Paused                                                        */}
             {/* ----------------------------------------------------------- */}
 
             {status === "paused" && (
@@ -1306,23 +970,6 @@ export function PoojaKitchenGame({
               <Overlay
                 key="paused"
               >
-
-                <div
-                  className="
-                    mb-4
-                    flex
-                    h-14
-                    w-14
-                    items-center
-                    justify-center
-                    rounded-2xl
-                    bg-white/10
-                    text-2xl
-                    text-white
-                  "
-                >
-                  ❚❚
-                </div>
 
                 <h2
                   className="
@@ -1339,7 +986,7 @@ export function PoojaKitchenGame({
                 <PrimaryButton
                   onClick={resumeLevel}
                 >
-                  Resume Cooking
+                  Resume
                 </PrimaryButton>
 
               </Overlay>
@@ -1348,7 +995,7 @@ export function PoojaKitchenGame({
 
 
             {/* ----------------------------------------------------------- */}
-            {/* Result                                                       */}
+            {/* Result                                                        */}
             {/* ----------------------------------------------------------- */}
 
             {(status === "completed" ||
@@ -1357,25 +1004,6 @@ export function PoojaKitchenGame({
               <Overlay
                 key="result"
               >
-
-                <div
-                  className="
-                    mb-4
-                    flex
-                    h-16
-                    w-16
-                    items-center
-                    justify-center
-                    rounded-3xl
-                    bg-white/10
-                    text-4xl
-                  "
-                >
-                  {status === "completed"
-                    ? "🏆"
-                    : "⏰"}
-                </div>
-
 
                 <h2
                   className="
@@ -1389,7 +1017,7 @@ export function PoojaKitchenGame({
                   {
                     status === "completed"
                       ? "Level Complete!"
-                      : "Time's Up"
+                      : "Time’s Up"
                   }
                 </h2>
 
@@ -1398,98 +1026,15 @@ export function PoojaKitchenGame({
                   className="
                     mb-5
                     text-sm
-                    text-white/70
+                    text-white/80
                   "
                 >
-                  {status === "completed"
-                    ? "Great work, chef!"
-                    : "The customers couldn't wait any longer."}
+                  Score{" "}
+                  {gameState.result?.score ?? 0}
+                  {" · "}
+                  Coins{" "}
+                  {gameState.result?.coinsEarned ?? 0}
                 </p>
-
-
-                <div
-                  className="
-                    mb-6
-                    flex
-                    items-center
-                    gap-3
-                  "
-                >
-
-                  <div
-                    className="
-                      rounded-2xl
-                      bg-white/10
-                      px-4
-                      py-2
-                      text-center
-                    "
-                  >
-
-                    <div
-                      className="
-                        text-[10px]
-                        font-bold
-                        uppercase
-                        tracking-wider
-                        text-white/50
-                      "
-                    >
-                      Score
-                    </div>
-
-                    <div
-                      className="
-                        mt-0.5
-                        font-[Fredoka,ui-rounded,sans-serif]
-                        text-xl
-                        font-bold
-                        text-white
-                      "
-                    >
-                      {gameState.result?.score ?? 0}
-                    </div>
-
-                  </div>
-
-
-                  <div
-                    className="
-                      rounded-2xl
-                      bg-white/10
-                      px-4
-                      py-2
-                      text-center
-                    "
-                  >
-
-                    <div
-                      className="
-                        text-[10px]
-                        font-bold
-                        uppercase
-                        tracking-wider
-                        text-white/50
-                      "
-                    >
-                      Coins
-                    </div>
-
-                    <div
-                      className="
-                        mt-0.5
-                        font-[Fredoka,ui-rounded,sans-serif]
-                        text-xl
-                        font-bold
-                        text-white
-                      "
-                    >
-                      {gameState.result?.coinsEarned ?? 0}
-                    </div>
-
-                  </div>
-
-                </div>
 
 
                 <div
@@ -1563,10 +1108,10 @@ function Overlay({
         flex-col
         items-center
         justify-center
-        bg-black/65
+        bg-black/60
         px-6
         text-center
-        backdrop-blur-[3px]
+        backdrop-blur-[2px]
       "
     >
 
@@ -1607,11 +1152,10 @@ function PrimaryButton({
         text-base
         font-bold
         shadow-lg
-        transition
         ${
           variant === "primary"
-            ? "bg-[#F5C24D] text-[#1F2A24] hover:bg-[#FFD36A]"
-            : "border border-white/20 bg-white/15 text-white backdrop-blur-sm hover:bg-white/20"
+            ? "bg-[#F5C24D] text-[#1F2A24]"
+            : "bg-white/20 text-white backdrop-blur-sm"
         }
       `}
     >
