@@ -117,15 +117,12 @@ function buildOrderLines(
 
 function CustomerWithOrder({
   customer,
-  order,
   lines,
   urgent,
   onSelectCustomer,
   onCustomerExited,
 }: {
   customer: CustomerModel;
-
-  order?: Order;
 
   lines: OrderBubbleLine[];
 
@@ -444,10 +441,6 @@ export function CustomerQueue({
 
                   customer={
                     customer
-                  }
-
-                  order={
-                    order
                   }
 
                   lines={
