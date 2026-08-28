@@ -1,15 +1,16 @@
 /**
  * OrderBubble
  *
- * Cooking-Madness-style order ticket displayed directly above a customer.
+ * Cooking-Madness-style customer order ticket.
  *
- * Purely presentational:
- *   - Receives already-resolved order lines.
- *   - Does not know about Order, Customer, or Food domain objects.
- *   - Displays only food images and outstanding quantities.
+ * Responsibilities:
+ *   - Clearly display the food(s) requested by one customer.
+ *   - Show remaining quantities.
+ *   - Visually distinguish urgent orders.
+ *   - Show partially served orders.
+ *   - Remain completely data-driven from backend Food/Order data.
  *
- * The ticket is intentionally visual rather than text-heavy so the player
- * can immediately understand which customer wants which food.
+ * This component is purely presentational.
  */
 
 import { motion } from "framer-motion";
@@ -20,6 +21,10 @@ import {
   ticketClipPath,
 } from "../animations/orderAnimations";
 
+
+// ---------------------------------------------------------------------------
+// Types
+// ---------------------------------------------------------------------------
 
 export interface OrderBubbleLine {
 
@@ -40,10 +45,7 @@ export interface OrderBubbleProps {
 
   lines: OrderBubbleLine[];
 
-  /**
-   * Visually flags the ticket when the customer's patience
-   * is running low.
-   */
+  /** Highlights an order when the customer's patience is low. */
   urgent?: boolean;
 
 }
@@ -66,25 +68,27 @@ function LineIcon({
       <div
         className="
           flex
-          h-11
-          w-11
-          shrink-0
+          h-9
+          w-9
+          flex-shrink-0
           items-center
           justify-center
-          rounded-full
+          rounded-xl
           bg-[#E8B75D]
           text-sm
-          font-bold
+          font-black
           text-[#1F2A24]
-          shadow-sm
+          shadow-inner
         "
       >
+
         {
           line.foodName
             .trim()
             .charAt(0)
             .toUpperCase() || "?"
         }
+
       </div>
 
     );
@@ -94,29 +98,19 @@ function LineIcon({
 
   return (
 
-    <div
+    <img
+      src={line.foodImage}
+      alt={line.foodName}
       className="
-        relative
-        h-11
-        w-11
-        shrink-0
+        h-9
+        w-9
+        flex-shrink-0
+        rounded-xl
+        object-cover
+        shadow-sm
       "
-    >
-
-      <img
-        src={line.foodImage}
-        alt={line.foodName}
-        className="
-          h-11
-          w-11
-          rounded-full
-          object-cover
-          shadow-sm
-        "
-        draggable={false}
-      />
-
-    </div>
+      draggable={false}
+    />
 
   );
 
@@ -128,37 +122,67 @@ function LineIcon({
 // ---------------------------------------------------------------------------
 
 function QuantityBadge({
-  quantity,
+  remaining,
 }: {
-  quantity: number;
+  remaining: number;
 }) {
 
   return (
 
-    <div
+    <span
       className="
-        absolute
-        -bottom-1
-        -right-1
         flex
-        h-5
-        min-w-5
+        h-6
+        min-w-6
         items-center
         justify-center
         rounded-full
-        border-2
-        border-[#FFF8ED]
-        bg-[#E85D5D]
-        px-1
-        text-[9px]
-        font-extrabold
-        leading-none
+        bg-[#2F6F62]
+        px-1.5
+        text-[11px]
+        font-black
         text-white
         shadow-sm
       "
     >
-      ×{quantity}
-    </div>
+
+      x{remaining}
+
+    </span>
+
+  );
+
+}
+
+
+// ---------------------------------------------------------------------------
+// Served indicator
+// ---------------------------------------------------------------------------
+
+function ServedIndicator({
+  served,
+}: {
+  served: number;
+}) {
+
+  if (served <= 0) {
+    return null;
+  }
+
+
+  return (
+
+    <span
+      className="
+        text-[8px]
+        font-bold
+        text-[#6A756F]
+      "
+    >
+
+      {served} served
+
+    </span>
 
   );
 
@@ -179,7 +203,7 @@ function OrderLine({
     Math.max(
       0,
       line.quantity -
-      line.quantityServed
+        line.quantityServed
     );
 
 
@@ -192,20 +216,64 @@ function OrderLine({
 
     <div
       className="
-        relative
         flex
-        flex-col
+        min-w-0
         items-center
-        justify-center
+        gap-2
       "
     >
+
+      {/* Food */}
 
       <LineIcon
         line={line}
       />
 
+
+      {/* Food name + served information */}
+
+      <div
+        className="
+          flex
+          min-w-0
+          flex-1
+          flex-col
+          items-start
+          justify-center
+        "
+      >
+
+        <span
+          className="
+            max-w-[96px]
+            truncate
+            text-[11px]
+            font-black
+            leading-tight
+            text-[#1F2A24]
+          "
+        >
+
+          {line.foodName}
+
+        </span>
+
+
+        <ServedIndicator
+          served={
+            line.quantityServed
+          }
+        />
+
+      </div>
+
+
+      {/* Remaining quantity */}
+
       <QuantityBadge
-        quantity={remaining}
+        remaining={
+          remaining
+        }
       />
 
     </div>
@@ -216,7 +284,7 @@ function OrderLine({
 
 
 // ---------------------------------------------------------------------------
-// Main component
+// Main order bubble
 // ---------------------------------------------------------------------------
 
 export function OrderBubble({
@@ -229,11 +297,27 @@ export function OrderBubble({
   }
 
 
+  const remainingItems =
+    lines.reduce(
+      (total, line) =>
+        total +
+        Math.max(
+          0,
+          line.quantity -
+            line.quantityServed
+        ),
+      0
+    );
+
+
   return (
 
     <motion.div
+
       initial="initial"
+
       animate="animate"
+
       exit="exit"
 
       variants={
@@ -247,15 +331,15 @@ export function OrderBubble({
       className={`
         relative
         flex
-        min-h-[64px]
-        items-center
-        justify-center
-        gap-3
-        rounded-2xl
-        border-2
-        px-3
-        pb-4
-        pt-3
+        min-w-[118px]
+        max-w-[170px]
+        flex-col
+        overflow-visible
+        rounded-[18px]
+        border
+        px-2.5
+        pb-2.5
+        pt-2
         shadow-xl
         backdrop-blur-sm
 
@@ -263,13 +347,13 @@ export function OrderBubble({
           urgent
             ? `
               border-[#E85D5D]
-              bg-[#FFE9E4]
+              bg-[#FFF0EC]/[0.97]
               ring-2
-              ring-[#E85D5D]/30
+              ring-[#E85D5D]/40
             `
             : `
-              border-[#F5C24D]
-              bg-[#FFF8ED]
+              border-white/80
+              bg-[#FFF8ED]/[0.97]
             `
         }
       `}
@@ -277,48 +361,172 @@ export function OrderBubble({
       style={{
         clipPath:
           ticketClipPath,
-        minWidth:
-          lines.length === 1
-            ? "4.75rem"
-            : "7rem",
       }}
     >
 
-      {/* ================================================================ */}
-      {/* FOOD ITEMS                                                       */}
-      {/* ================================================================ */}
-
-      {lines.map(
-        (line) => (
-
-          <OrderLine
-            key={line.foodId}
-            line={line}
-          />
-
-        )
-      )}
-
-
-      {/* ================================================================ */}
-      {/* SMALL POINTER                                                    */}
-      {/* ================================================================ */}
+      {/* =============================================================== */}
+      {/* TICKET HEADER                                                    */}
+      {/* =============================================================== */}
 
       <div
         className="
-          pointer-events-none
+          mb-1.5
+          flex
+          items-center
+          justify-between
+          gap-2
+          border-b
+          border-[#D8D1C5]
+          pb-1.5
+        "
+      >
+
+        <span
+          className="
+            text-[9px]
+            font-black
+            uppercase
+            tracking-[0.08em]
+            text-[#6A756F]
+          "
+        >
+
+          Order
+
+        </span>
+
+
+        {/* Total remaining */}
+
+        <span
+          className={`
+            rounded-full
+            px-1.5
+            py-0.5
+            text-[8px]
+            font-black
+
+            ${
+              urgent
+                ? "bg-[#E85D5D] text-white"
+                : "bg-[#E8E1D6] text-[#4C5751]"
+            }
+          `}
+        >
+
+          {remainingItems}
+          {" "}
+          {remainingItems === 1
+            ? "item"
+            : "items"}
+
+        </span>
+
+      </div>
+
+
+      {/* =============================================================== */}
+      {/* FOOD LINES                                                       */}
+      {/* =============================================================== */}
+
+      <div
+        className="
+          flex
+          flex-col
+          gap-1.5
+        "
+      >
+
+        {lines.map(
+          (line) => (
+
+            <OrderLine
+              key={
+                line.foodId
+              }
+              line={
+                line
+              }
+            />
+
+          )
+        )}
+
+      </div>
+
+
+      {/* =============================================================== */}
+      {/* URGENT INDICATOR                                                 */}
+      {/* =============================================================== */}
+
+      {urgent && (
+
+        <motion.div
+          initial={{
+            opacity: 0.65,
+          }}
+          animate={{
+            opacity: [
+              0.65,
+              1,
+              0.65,
+            ],
+          }}
+          transition={{
+            duration: 0.9,
+            repeat: Infinity,
+          }}
+          className="
+            absolute
+            -right-1.5
+            -top-1.5
+            flex
+            h-6
+            w-6
+            items-center
+            justify-center
+            rounded-full
+            bg-[#E85D5D]
+            text-[11px]
+            font-black
+            text-white
+            shadow-lg
+            ring-2
+            ring-white
+          "
+          aria-label="Urgent order"
+        >
+
+          !
+
+        </motion.div>
+
+      )}
+
+
+      {/* =============================================================== */}
+      {/* TICKET TAIL                                                      */}
+      {/* =============================================================== */}
+
+      <div
+        className={`
           absolute
-          -bottom-2
+          -bottom-[7px]
           left-1/2
-          h-4
-          w-4
+          h-3
+          w-3
           -translate-x-1/2
           rotate-45
-          border-b-2
-          border-r-2
-          border-[#F5C24D]
-          bg-[#FFF8ED]
-        "
+          border-b
+          border-r
+
+          ${
+            urgent
+              ? "border-[#E85D5D] bg-[#FFF0EC]"
+              : "border-[#D8D1C5] bg-[#FFF8ED]"
+          }
+        `}
+        aria-hidden="true"
       />
 
     </motion.div>
