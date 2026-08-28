@@ -1648,7 +1648,7 @@ class PoojaKitchenService:
         access_token = create_access_token(
             str(player.id),
             extra_claims={
-                "type": "pooja_kitchen_player"
+                "domain": "pooja_kitchen_player"
             }
         )
 
