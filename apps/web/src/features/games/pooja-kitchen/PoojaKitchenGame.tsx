@@ -414,40 +414,32 @@ export function PoojaKitchenGame({
     <OrientationGate>
 
       <div
-        className="
-          fixed
-          inset-0
-          flex
-          h-[100svh]
-          w-full
-          items-center
-          justify-center
-          overflow-hidden
-          bg-black
-        "
-        style={{
-          paddingTop:
-            "max(6px, env(safe-area-inset-top))",
-          paddingBottom:
-            "max(6px, env(safe-area-inset-bottom))",
-          boxSizing:
-            "border-box",
-        }}
-      >
+      className="
+        fixed
+        inset-0
+        h-[100dvh]
+        w-full
+        overflow-hidden
+        bg-black
+      "
+    >
 
         {/* =============================================================== */}
         {/* GAME SCENE                                                       */}
         {/* =============================================================== */}
 
         <div
-          className="
-            relative
-            h-full
-            w-full
-            overflow-hidden
-            bg-[#1F4D45]
-          "
-        >
+  className="
+    relative
+    h-full
+    w-full
+    overflow-hidden
+    bg-[#1F4D45]
+  "
+  style={{
+    touchAction: "none",
+  }}
+>
 
           {/* ============================================================= */}
           {/* BACKGROUND                                                     */}

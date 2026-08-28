@@ -282,48 +282,6 @@ function CustomerWithOrder({
         )}
 
 
-      {/* =============================================================== */}
-      {/* ORDER RELATION LABEL                                             */}
-      {/* =============================================================== */}
-
-      {canServe && (
-
-        <motion.div
-          initial={{
-            opacity: 0,
-            scale: 0.85,
-          }}
-
-          animate={{
-            opacity: 1,
-            scale: 1,
-          }}
-
-          className="
-            pointer-events-none
-            absolute
-            -bottom-5
-            z-30
-            whitespace-nowrap
-            rounded-full
-            bg-black/55
-            px-2
-            py-0.5
-            text-[8px]
-            font-black
-            uppercase
-            tracking-wide
-            text-white
-            backdrop-blur-sm
-          "
-        >
-
-          Tap to serve
-
-        </motion.div>
-
-      )}
-
     </motion.div>
 
   );
