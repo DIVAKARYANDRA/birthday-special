@@ -94,10 +94,15 @@ Boolean(getAuthToken())
 );
 
   useEffect(() => {
-    loadLevel(levelNumber);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [levelNumber]);
 
+  if (!authenticated) {
+    return;
+  }
+
+  loadLevel(levelNumber);
+
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+}, [levelNumber, authenticated]);
   // Once an order is fulfilled/expired, walk its customer off screen
   // after a short beat so the happy/angry pose is visible.
   useEffect(() => {
