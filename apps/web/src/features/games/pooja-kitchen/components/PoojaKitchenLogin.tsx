@@ -32,7 +32,7 @@ export function PoojaKitchenLogin({
 
       const response =
   await fetch(
-"https://journey-to-my-heart-api.onrender.com/api/v1/games/pooja-kitchen/auth/login",
+`${import.meta.env.VITE_API_BASE_URL ?? "https://journey-to-my-heart-api.onrender.com"}/api/v1/games/pooja-kitchen/auth/login`,
         {
           method:"POST",
 

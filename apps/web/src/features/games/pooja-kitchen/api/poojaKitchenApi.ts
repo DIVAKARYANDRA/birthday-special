@@ -18,7 +18,7 @@
 import type { Level, PlayerProgress } from '../data/types';
 import { getAuthToken } from './authToken';
 
-const API_BASE_URL = "https://journey-to-my-heart-api.onrender.com/api/v1/games/pooja-kitchen";
+const API_BASE_URL = `${import.meta.env.VITE_API_BASE_URL ?? "https://journey-to-my-heart-api.onrender.com"}/api/v1/games/pooja-kitchen`;
 
 /** Toggle to false once the real backend endpoints are live. */
 const USE_MOCK_DATA = false;
