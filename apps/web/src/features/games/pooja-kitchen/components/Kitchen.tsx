@@ -1,8 +1,14 @@
 /**
  * Kitchen
  *
- * Renders the cooking stations area. Game state and all interactions remain
- * owned by the caller; this component is presentation + event delegation only.
+ * Transparent positioning layer for the kitchen controls.
+ *
+ * The game scene itself is rendered by PoojaKitchenGame. This component
+ * places:
+ *   - cooking slots in the upper/middle kitchen area
+ *   - ingredient buttons near the bottom of the scene
+ *
+ * Game state and interactions remain owned by the caller.
  */
 
 import type {
@@ -13,9 +19,7 @@ import type {
 
 import { FoodItem } from "./FoodItem";
 
-
 export interface KitchenProps {
-
   stations: KitchenStation[];
 
   cookingSlots: CookingSlot[];
@@ -30,7 +34,6 @@ export interface KitchenProps {
   onCollect: (
     slotId: string
   ) => void;
-
 }
 
 
@@ -56,7 +59,6 @@ function cookProgress(
     1,
     slot.elapsedMs / totalMs
   );
-
 }
 
 
@@ -74,21 +76,20 @@ export function Kitchen({
 
 }: KitchenProps) {
 
-
   return (
 
     <div
       className="
-        flex
-        w-full
-        flex-col
-        gap-3
+        pointer-events-none
+        absolute
+        inset-0
+        z-30
       "
       aria-label="Kitchen stations"
     >
 
       {stations.map(
-        (station) => {
+        (station, stationIndex) => {
 
           const menuFoods =
             foods.filter(
@@ -113,139 +114,64 @@ export function Kitchen({
             );
 
 
+          /*
+           * For the current game there is one main kitchen station.
+           *
+           * Keep the station centered horizontally while allowing
+           * additional stations to spread out if they are introduced later.
+           */
+          const stationLeft =
+            stations.length === 1
+              ? "50%"
+              : `${20 + stationIndex * (
+                  60 / Math.max(1, stations.length - 1)
+                )}%`;
+
+
           return (
 
             <div
               key={station.id}
               className="
-                overflow-hidden
-                rounded-2xl
-                border
-                border-white/10
-                bg-white/[0.04]
-                p-3
-                shadow-lg
-                backdrop-blur-sm
+                pointer-events-none
+                absolute
+                inset-0
               "
             >
 
-              {/* Station header */}
+              {/* ===================================================== */}
+              {/* COOKING SLOTS                                         */}
+              {/* ===================================================== */}
 
               <div
                 className="
-                  mb-3
+                  pointer-events-none
+                  absolute
+                  top-[22%]
                   flex
-                  items-center
-                  justify-between
+                  -translate-x-1/2
+                  items-end
+                  justify-center
+                  gap-4
                 "
+                style={{
+                  left: stationLeft,
+                }}
               >
 
-                <div
-                  className="
-                    flex
-                    items-center
-                    gap-2
-                  "
-                >
+                {slotsForStation.map(
+                  (slot) => (
 
-                  <span
-                    className="
-                      text-xl
-                    "
-                  >
-                    🍳
-                  </span>
+                    slot.food ? (
 
-                  <div>
-
-                    <p
-                      className="
-                        text-sm
-                        font-semibold
-                        text-white
-                      "
-                    >
-                      {station.name}
-                    </p>
-
-                    <p
-                      className="
-                        text-[10px]
-                        text-white/50
-                      "
-                    >
-                      Cooking station
-                    </p>
-
-                  </div>
-
-                </div>
-
-
-                <span
-                  className="
-                    rounded-full
-                    bg-white/10
-                    px-2
-                    py-1
-                    text-[10px]
-                    text-white/60
-                  "
-                >
-                  {slotsForStation.filter(
-                    (slot) =>
-                      slot.state === "idle"
-                  ).length}
-                  {" "}
-                  free
-                </span>
-
-              </div>
-
-
-              {/* Cooking slots */}
-
-              <div
-                className="
-                  rounded-xl
-                  border
-                  border-white/10
-                  bg-black/10
-                  p-2
-                "
-              >
-
-                <div
-                  className="
-                    mb-2
-                    text-[10px]
-                    font-semibold
-                    uppercase
-                    tracking-wider
-                    text-white/40
-                  "
-                >
-                  Cooking
-                </div>
-
-
-                <div
-                  className="
-                    flex
-                    min-h-[64px]
-                    flex-wrap
-                    gap-2
-                  "
-                >
-
-                  {slotsForStation.map(
-                    (slot) => (
-
-                      slot.food ? (
+                      <div
+                        key={slot.id}
+                        className="
+                          pointer-events-auto
+                        "
+                      >
 
                         <FoodItem
-                          key={slot.id}
-
                           food={slot.food}
 
                           variant="cooking"
@@ -265,132 +191,107 @@ export function Kitchen({
                           }
                         />
 
-                      ) : (
+                      </div>
 
-                        <button
-                          key={slot.id}
-                          type="button"
-                          disabled
-                          aria-label="Empty cooking slot"
-                          className="
-                            flex
-                            h-12
-                            w-12
-                            items-center
-                            justify-center
-                            rounded-xl
-                            border-2
-                            border-dashed
-                            border-white/20
-                            bg-white/[0.02]
-                            text-white/20
-                          "
-                        >
-                          +
-                        </button>
+                    ) : (
 
-                      )
+                      <button
+                        key={slot.id}
+                        type="button"
+                        disabled
+                        aria-label="Empty cooking slot"
+                        className="
+                          pointer-events-none
+                          flex
+                          h-14
+                          w-14
+                          items-center
+                          justify-center
+                          rounded-2xl
+                          border-2
+                          border-dashed
+                          border-white/25
+                          bg-white/[0.04]
+                          text-2xl
+                          text-white/20
+                        "
+                      >
+                        +
+                      </button>
 
                     )
-                  )}
 
-                </div>
+                  )
+                )}
 
               </div>
 
 
-              {/* Food menu */}
+              {/* ===================================================== */}
+              {/* INGREDIENTS                                           */}
+              {/* ===================================================== */}
 
               <div
                 className="
-                  mt-3
-                  rounded-xl
-                  border
-                  border-white/10
-                  bg-black/10
-                  p-2
+                  pointer-events-none
+                  absolute
+                  bottom-[3%]
+                  left-[2%]
+                  right-[2%]
                 "
               >
 
                 <div
                   className="
-                    mb-2
+                    pointer-events-none
                     flex
-                    items-center
-                    justify-between
-                  "
-                >
-
-                  <div
-                    className="
-                      text-[10px]
-                      font-semibold
-                      uppercase
-                      tracking-wider
-                      text-white/40
-                    "
-                  >
-                    Ingredients
-                  </div>
-
-
-                  {!hasFreeSlot && (
-
-                    <span
-                      className="
-                        text-[10px]
-                        text-white/40
-                      "
-                    >
-                      All slots busy
-                    </span>
-
-                  )}
-
-                </div>
-
-
-                <div
-                  className="
-                    flex
-                    flex-wrap
-                    gap-2
+                    items-end
+                    gap-4
                   "
                 >
 
                   {menuFoods.map(
                     (food) => (
 
-                      <FoodItem
+                      <div
                         key={food.id}
+                        className="
+                          pointer-events-auto
+                        "
+                      >
 
-                        food={food}
+                        <FoodItem
+                          food={food}
 
-                        variant="menu"
+                          variant="menu"
 
-                        disabled={
-                          !hasFreeSlot
-                        }
-
-                        onClick={() => {
-
-                          const freeSlot =
-                            slotsForStation.find(
-                              (slot) =>
-                                slot.state === "idle"
-                            );
-
-                          if (freeSlot) {
-
-                            onStartCooking(
-                              freeSlot.id,
-                              food
-                            );
-
+                          disabled={
+                            !hasFreeSlot
                           }
 
-                        }}
-                      />
+                          onClick={() => {
+
+                            const freeSlot =
+                              slotsForStation.find(
+                                (slot) =>
+                                  slot.state === "idle"
+                              );
+
+                            if (
+                              freeSlot
+                            ) {
+
+                              onStartCooking(
+                                freeSlot.id,
+                                food
+                              );
+
+                            }
+
+                          }}
+                        />
+
+                      </div>
 
                     )
                   )}
