@@ -1,14 +1,19 @@
 /**
  * OrderBubble
  *
- * Cooking-Madness-style customer order ticket.
+ * Compact Cooking-Madness-style customer order ticket.
  *
  * Responsibilities:
- *   - Clearly display the food(s) requested by one customer.
+ *   - Display the food(s) requested by one customer.
  *   - Show remaining quantities.
  *   - Visually distinguish urgent orders.
- *   - Show partially served orders.
+ *   - Support partially served orders.
  *   - Remain completely data-driven from backend Food/Order data.
+ *
+ * UI principle:
+ *   Food names are intentionally hidden.
+ *   The food image + quantity is enough for the player to understand
+ *   the order while keeping the customer area compact.
  *
  * This component is purely presentational.
  */
@@ -61,6 +66,12 @@ function LineIcon({
   line: OrderBubbleLine;
 }) {
 
+  /*
+   * Food image is normally supplied by the backend/admin configuration.
+   *
+   * Keep a fallback so a missing image never breaks the order ticket.
+   */
+
   if (!line.foodImage) {
 
     return (
@@ -80,6 +91,7 @@ function LineIcon({
           text-[#1F2A24]
           shadow-inner
         "
+        aria-label={line.foodName}
       >
 
         {
@@ -100,7 +112,8 @@ function LineIcon({
 
     <img
       src={line.foodImage}
-      alt={line.foodName}
+      alt=""
+      aria-hidden="true"
       className="
         h-9
         w-9
@@ -127,22 +140,35 @@ function QuantityBadge({
   remaining: number;
 }) {
 
+  /*
+   * The quantity badge sits directly on the food icon.
+   *
+   * This keeps the order compact even when several food items
+   * are requested by the same customer.
+   */
+
   return (
 
     <span
       className="
+        absolute
+        -bottom-1
+        -right-1
         flex
-        h-6
-        min-w-6
+        h-5
+        min-w-5
         items-center
         justify-center
         rounded-full
+        border
+        border-white
         bg-[#2F6F62]
-        px-1.5
-        text-[11px]
+        px-1
+        text-[9px]
         font-black
+        leading-none
         text-white
-        shadow-sm
+        shadow-md
       "
     >
 
@@ -156,41 +182,7 @@ function QuantityBadge({
 
 
 // ---------------------------------------------------------------------------
-// Served indicator
-// ---------------------------------------------------------------------------
-
-function ServedIndicator({
-  served,
-}: {
-  served: number;
-}) {
-
-  if (served <= 0) {
-    return null;
-  }
-
-
-  return (
-
-    <span
-      className="
-        text-[8px]
-        font-bold
-        text-[#6A756F]
-      "
-    >
-
-      {served} served
-
-    </span>
-
-  );
-
-}
-
-
-// ---------------------------------------------------------------------------
-// Single order line
+// Single compact order item
 // ---------------------------------------------------------------------------
 
 function OrderLine({
@@ -207,6 +199,10 @@ function OrderLine({
     );
 
 
+  /*
+   * Fully served lines should not appear in the active order ticket.
+   */
+
   if (remaining <= 0) {
     return null;
   }
@@ -216,64 +212,23 @@ function OrderLine({
 
     <div
       className="
+        relative
         flex
-        min-w-0
+        h-9
+        w-9
+        flex-shrink-0
         items-center
-        gap-2
+        justify-center
       "
     >
-
-      {/* Food */}
 
       <LineIcon
         line={line}
       />
 
 
-      {/* Food name + served information */}
-
-      <div
-        className="
-          flex
-          min-w-0
-          flex-1
-          flex-col
-          items-start
-          justify-center
-        "
-      >
-
-        <span
-          className="
-            max-w-[96px]
-            truncate
-            text-[11px]
-            font-black
-            leading-tight
-            text-[#1F2A24]
-          "
-        >
-
-          {line.foodName}
-
-        </span>
-
-
-        <ServedIndicator
-          served={
-            line.quantityServed
-          }
-        />
-
-      </div>
-
-
-      {/* Remaining quantity */}
-
       <QuantityBadge
-        remaining={
-          remaining
-        }
+        remaining={remaining}
       />
 
     </div>
@@ -297,18 +252,33 @@ export function OrderBubble({
   }
 
 
-  const remainingItems =
-    lines.reduce(
-      (total, line) =>
-        total +
-        Math.max(
-          0,
-          line.quantity -
-            line.quantityServed
-        ),
-      0
+  /*
+   * Only count items that still need to be served.
+   */
+
+  const activeLines =
+    lines.filter(
+      (line) =>
+        line.quantity -
+          line.quantityServed >
+        0
     );
 
+
+  if (activeLines.length === 0) {
+    return null;
+  }
+
+
+  /*
+   * Keep the ticket width compact.
+   *
+   * The ticket grows horizontally as more foods are added instead of
+   * becoming a tall vertical card.
+   *
+   * max-width prevents an unusually large order from covering the
+   * customer area. The items will wrap naturally.
+   */
 
   return (
 
@@ -331,14 +301,15 @@ export function OrderBubble({
       className={`
         relative
         flex
-        min-w-[118px]
-        max-w-[170px]
-        flex-col
-        overflow-visible
-        rounded-[18px]
+        max-w-[150px]
+        flex-wrap
+        items-center
+        justify-center
+        gap-2
+        rounded-[16px]
         border
-        px-2.5
-        pb-2.5
+        px-2
+        pb-2
         pt-2
         shadow-xl
         backdrop-blur-sm
@@ -364,95 +335,25 @@ export function OrderBubble({
       }}
     >
 
+
       {/* =============================================================== */}
-      {/* TICKET HEADER                                                    */}
+      {/* FOOD ICONS                                                       */}
       {/* =============================================================== */}
 
-      <div
-        className="
-          mb-1.5
-          flex
-          items-center
-          justify-between
-          gap-2
-          border-b
-          border-[#D8D1C5]
-          pb-1.5
-        "
-      >
+      {activeLines.map(
+        (line) => (
 
-        <span
-          className="
-            text-[9px]
-            font-black
-            uppercase
-            tracking-[0.08em]
-            text-[#6A756F]
-          "
-        >
-
-          Order
-
-        </span>
-
-
-        {/* Total remaining */}
-
-        <span
-          className={`
-            rounded-full
-            px-1.5
-            py-0.5
-            text-[8px]
-            font-black
-
-            ${
-              urgent
-                ? "bg-[#E85D5D] text-white"
-                : "bg-[#E8E1D6] text-[#4C5751]"
+          <OrderLine
+            key={
+              line.foodId
             }
-          `}
-        >
+            line={
+              line
+            }
+          />
 
-          {remainingItems}
-          {" "}
-          {remainingItems === 1
-            ? "item"
-            : "items"}
-
-        </span>
-
-      </div>
-
-
-      {/* =============================================================== */}
-      {/* FOOD LINES                                                       */}
-      {/* =============================================================== */}
-
-      <div
-        className="
-          flex
-          flex-col
-          gap-1.5
-        "
-      >
-
-        {lines.map(
-          (line) => (
-
-            <OrderLine
-              key={
-                line.foodId
-              }
-              line={
-                line
-              }
-            />
-
-          )
-        )}
-
-      </div>
+        )
+      )}
 
 
       {/* =============================================================== */}
@@ -462,24 +363,34 @@ export function OrderBubble({
       {urgent && (
 
         <motion.div
+
           initial={{
             opacity: 0.65,
+            scale: 0.9,
           }}
+
           animate={{
             opacity: [
               0.65,
               1,
               0.65,
             ],
+            scale: [
+              0.9,
+              1,
+              0.9,
+            ],
           }}
+
           transition={{
             duration: 0.9,
             repeat: Infinity,
           }}
+
           className="
             absolute
-            -right-1.5
-            -top-1.5
+            -right-2
+            -top-2
             flex
             h-6
             w-6
@@ -494,6 +405,7 @@ export function OrderBubble({
             ring-2
             ring-white
           "
+
           aria-label="Urgent order"
         >
 

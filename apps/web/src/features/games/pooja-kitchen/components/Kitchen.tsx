@@ -1,17 +1,24 @@
 /**
  * Kitchen
  *
- * Bottom cooking/control area for Pooja Kitchen.
+ * Transparent positioning layer for the kitchen controls.
  *
- * Design goals:
- *   - The customer area remains visually separate from the kitchen controls.
- *   - Cooking slots always live in a dedicated lower cooking zone.
- *   - Food/menu buttons remain at the bottom of the screen.
- *   - Additional foods can be supported without breaking the layout.
- *   - Additional cooking slots can be supported without changing game code.
- *   - All level-specific configuration continues to come from the backend.
+ * Layout strategy:
  *
- * Game state and interactions remain owned by the caller.
+ *   - Customers remain visually dominant in the center of the scene.
+ *   - Cooking slots are moved to a compact side rail so they do not
+ *     consume the central vertical space.
+ *   - Food selection remains permanently anchored to the bottom counter.
+ *   - The layout is configuration-driven and does not contain
+ *     level-specific food/customer knowledge.
+ *
+ * Future levels can therefore change:
+ *   - foods
+ *   - stations
+ *   - number of cooking slots
+ *   - themes
+ *
+ * without requiring changes to this component.
  */
 
 import type {
@@ -22,7 +29,13 @@ import type {
 
 import { FoodItem } from "./FoodItem";
 
+
+// ---------------------------------------------------------------------------
+// Props
+// ---------------------------------------------------------------------------
+
 export interface KitchenProps {
+
   stations: KitchenStation[];
 
   cookingSlots: CookingSlot[];
@@ -37,6 +50,7 @@ export interface KitchenProps {
   onCollect: (
     slotId: string
   ) => void;
+
 }
 
 
@@ -74,7 +88,49 @@ function cookProgress(
 
 
 // ---------------------------------------------------------------------------
-// Kitchen
+// Station side
+// ---------------------------------------------------------------------------
+
+function getStationSide(
+  stationIndex: number,
+  stationCount: number
+): "left" | "right" {
+
+  /*
+   * With one station:
+   *
+   *       CUSTOMER       COOKING
+   *
+   * Put the cooking rail on the right because this keeps the
+   * main customer area visually clean.
+   */
+
+  if (stationCount === 1) {
+    return "right";
+  }
+
+
+  /*
+   * With multiple stations:
+   *
+   * Station 0 -> left
+   * Station 1 -> right
+   * Station 2 -> left
+   * Station 3 -> right
+   *
+   * This allows future levels to introduce more kitchen stations
+   * without returning everything to the center.
+   */
+
+  return stationIndex % 2 === 0
+    ? "left"
+    : "right";
+
+}
+
+
+// ---------------------------------------------------------------------------
+// Main component
 // ---------------------------------------------------------------------------
 
 export function Kitchen({
@@ -101,14 +157,19 @@ export function Kitchen({
         inset-0
         z-30
       "
-      aria-label="Kitchen stations"
+      aria-label="Kitchen controls"
     >
 
+
       {stations.map(
-        (station) => {
+        (
+          station,
+          stationIndex
+        ) => {
+
 
           // ---------------------------------------------------------------
-          // Foods supported by this station
+          // Foods available at this station
           // ---------------------------------------------------------------
 
           const menuFoods =
@@ -131,6 +192,10 @@ export function Kitchen({
             );
 
 
+          // ---------------------------------------------------------------
+          // Determine whether at least one slot is available.
+          // ---------------------------------------------------------------
+
           const hasFreeSlot =
             slotsForStation.some(
               (slot) =>
@@ -138,9 +203,26 @@ export function Kitchen({
             );
 
 
+          const side =
+            getStationSide(
+              stationIndex,
+              stations.length
+            );
+
+
           // ---------------------------------------------------------------
-          // Render
+          // Side positioning
           // ---------------------------------------------------------------
+
+          const sidePosition =
+            side === "right"
+              ? {
+                  right: "3%",
+                }
+              : {
+                  left: "3%",
+                };
+
 
           return (
 
@@ -153,48 +235,55 @@ export function Kitchen({
               "
             >
 
+
               {/* ========================================================= */}
-              {/* COOKING AREA                                              */}
+              {/* COOKING SIDE RAIL                                         */}
               {/* ========================================================= */}
-              {/*
-               * This is deliberately kept in the lower half of the game.
-               *
-               * Customers/order bubbles occupy the upper portion.
-               *
-               * The cooking area is therefore independent from the
-               * customer queue and will remain stable when more customers
-               * or orders are introduced.
-               */}
 
               <div
                 className="
                   pointer-events-none
                   absolute
-                  bottom-[25%]
-                  left-0
-                  right-0
+                  top-[40%]
                   flex
-                  items-end
-                  justify-center
-                  px-3
+                  max-w-[21%]
+                  -translate-y-1/2
+                  flex-col
+                  items-center
+                  gap-2
+                  rounded-2xl
+                  border
+                  border-white/10
+                  bg-black/10
+                  px-1.5
+                  py-2
+                  backdrop-blur-[2px]
                 "
+                style={sidePosition}
               >
+
+
+                {/* ------------------------------------------------------- */}
+                {/* Cooking slots                                            */}
+                {/* ------------------------------------------------------- */}
 
                 <div
                   className="
                     pointer-events-none
-                    flex
-                    max-w-full
-                    items-end
-                    justify-center
-                    gap-2
-                    sm:gap-3
-                    md:gap-4
+                    grid
+                    max-h-[130px]
+                    grid-cols-2
+                    items-center
+                    justify-items-center
+                    gap-x-2
+                    gap-y-3
+                    overflow-visible
                   "
                 >
 
                   {slotsForStation.map(
                     (slot) => {
+
 
                       // ---------------------------------------------------
                       // Occupied slot
@@ -208,15 +297,17 @@ export function Kitchen({
                             key={slot.id}
                             className="
                               pointer-events-auto
+                              relative
                               flex
-                              flex-shrink-0
-                              items-end
+                              items-center
                               justify-center
                             "
                           >
 
                             <FoodItem
-                              food={slot.food}
+                              food={
+                                slot.food
+                              }
 
                               variant="cooking"
 
@@ -225,11 +316,14 @@ export function Kitchen({
                               }
 
                               progress={
-                                cookProgress(slot)
+                                cookProgress(
+                                  slot
+                                )
                               }
 
                               onClick={() =>
-                                slot.state === "ready"
+                                slot.state ===
+                                "ready"
                                   ? onCollect(
                                       slot.id
                                     )
@@ -245,7 +339,7 @@ export function Kitchen({
 
 
                       // ---------------------------------------------------
-                      // Empty cooking slot
+                      // Empty slot
                       // ---------------------------------------------------
 
                       return (
@@ -253,11 +347,9 @@ export function Kitchen({
                         <div
                           key={slot.id}
                           className="
-                            pointer-events-none
                             flex
                             h-11
                             w-11
-                            flex-shrink-0
                             items-center
                             justify-center
                             rounded-xl
@@ -265,11 +357,6 @@ export function Kitchen({
                             border-dashed
                             border-white/20
                             bg-black/10
-                            sm:h-12
-                            sm:w-12
-                            sm:rounded-2xl
-                            md:h-14
-                            md:w-14
                           "
                           aria-label="Empty cooking slot"
                         >
@@ -278,8 +365,7 @@ export function Kitchen({
                             className="
                               text-lg
                               font-light
-                              text-white/25
-                              md:text-xl
+                              text-white/20
                             "
                           >
                             +
@@ -294,114 +380,100 @@ export function Kitchen({
 
                 </div>
 
+
               </div>
 
 
               {/* ========================================================= */}
-              {/* FOOD MENU / COOKING CONTROLS                              */}
+              {/* BOTTOM FOOD COUNTER                                       */}
               {/* ========================================================= */}
-              {/*
-               * The menu is intentionally anchored to the bottom.
-               *
-               * This becomes the permanent interaction area for every
-               * level. Future levels can simply provide different Food
-               * definitions from the admin panel.
-               *
-               * Horizontal scrolling prevents a large number of foods
-               * from breaking the landscape layout.
-               */}
 
               <div
                 className="
                   pointer-events-none
                   absolute
-                  bottom-[2%]
-                  left-0
-                  right-0
-                  flex
-                  justify-center
-                  px-2
-                  sm:px-3
-                  md:px-4
+                  bottom-[2.5%]
+                  left-1/2
+                  w-[94%]
+                  -translate-x-1/2
                 "
               >
 
                 <div
                   className="
-                    pointer-events-auto
+                    pointer-events-none
                     flex
-                    max-w-[96%]
+                    min-h-[74px]
                     items-end
+                    justify-center
                     gap-2
-                    overflow-x-auto
-                    overflow-y-hidden
-                    px-1
+                    rounded-3xl
+                    border
+                    border-white/10
+                    bg-black/10
+                    px-3
                     pb-1
-                    sm:gap-3
-                    md:gap-4
+                    pt-2
+                    backdrop-blur-[2px]
                   "
-                  style={{
-                    scrollbarWidth: "none",
-                    WebkitOverflowScrolling:
-                      "touch",
-                  }}
                 >
 
+
                   {menuFoods.map(
-                    (food) => {
+                    (food) => (
 
-                      return (
+                      <div
+                        key={food.id}
+                        className="
+                          pointer-events-auto
+                          flex-shrink-0
+                        "
+                      >
 
-                        <div
-                          key={food.id}
-                          className="
-                            flex-shrink-0
-                          "
-                        >
+                        <FoodItem
+                          food={
+                            food
+                          }
 
-                          <FoodItem
-                            food={food}
+                          variant="menu"
 
-                            variant="menu"
+                          disabled={
+                            !hasFreeSlot
+                          }
 
-                            disabled={
-                              !hasFreeSlot
+                          onClick={() => {
+
+                            const freeSlot =
+                              slotsForStation.find(
+                                (slot) =>
+                                  slot.state ===
+                                  "idle"
+                              );
+
+
+                            if (
+                              freeSlot
+                            ) {
+
+                              onStartCooking(
+                                freeSlot.id,
+                                food
+                              );
+
                             }
 
-                            onClick={() => {
+                          }}
+                        />
 
-                              const freeSlot =
-                                slotsForStation.find(
-                                  (slot) =>
-                                    slot.state ===
-                                    "idle"
-                                );
+                      </div>
 
-
-                              if (
-                                freeSlot
-                              ) {
-
-                                onStartCooking(
-                                  freeSlot.id,
-                                  food
-                                );
-
-                              }
-
-                            }}
-                          />
-
-                        </div>
-
-                      );
-
-                    }
+                    )
                   )}
 
                 </div>
 
               </div>
+
 
             </div>
 
