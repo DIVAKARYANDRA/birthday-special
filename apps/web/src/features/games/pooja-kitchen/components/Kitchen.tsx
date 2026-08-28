@@ -412,11 +412,11 @@ export function Kitchen({
                   {menuFoods.map(
                     (food) => {
 
-                      const freeSlot =
-                        slotsForStation.find(
-                          (slot) =>
-                            slot.state === "idle"
-                        );
+                      // const freeSlot =
+                      //   slotsForStation.find(
+                      //     (slot) =>
+                      //       slot.state === "idle"
+                      //   );
 
 
                       return (
