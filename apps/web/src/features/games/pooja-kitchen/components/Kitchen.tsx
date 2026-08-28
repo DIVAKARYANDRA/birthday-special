@@ -1,16 +1,15 @@
 /**
  * Kitchen
  *
- * Transparent positioning layer for the kitchen controls.
+ * Transparent interaction layer for the kitchen controls.
  *
  * Layout strategy:
- *
- *   - Customers remain visually dominant in the center of the scene.
- *   - Cooking slots are moved to a compact side rail so they do not
+ *   - Customers remain visually dominant in the center.
+ *   - Cooking slots live on the left/right edges so they do not
  *     consume the central vertical space.
- *   - Food selection remains permanently anchored to the bottom counter.
- *   - The layout is configuration-driven and does not contain
- *     level-specific food/customer knowledge.
+ *   - Food selection remains permanently anchored to the bottom.
+ *   - No large background panel or blur is used behind the controls.
+ *   - All interaction remains configuration-driven.
  *
  * Future levels can therefore change:
  *   - foods
@@ -97,12 +96,13 @@ function getStationSide(
 ): "left" | "right" {
 
   /*
-   * With one station:
+   * One station:
    *
-   *       CUSTOMER       COOKING
+   *       CUSTOMERS
    *
-   * Put the cooking rail on the right because this keeps the
-   * main customer area visually clean.
+   *   FOOD        FOOD
+   *
+   * Put the cooking slots on the right.
    */
 
   if (stationCount === 1) {
@@ -111,15 +111,12 @@ function getStationSide(
 
 
   /*
-   * With multiple stations:
+   * Multiple stations alternate sides.
    *
    * Station 0 -> left
    * Station 1 -> right
    * Station 2 -> left
    * Station 3 -> right
-   *
-   * This allows future levels to introduce more kitchen stations
-   * without returning everything to the center.
    */
 
   return stationIndex % 2 === 0
@@ -155,7 +152,7 @@ export function Kitchen({
         pointer-events-none
         absolute
         inset-0
-        z-30
+        z-[40]
       "
       aria-label="Kitchen controls"
     >
@@ -193,7 +190,7 @@ export function Kitchen({
 
 
           // ---------------------------------------------------------------
-          // Determine whether at least one slot is available.
+          // Determine whether at least one cooking slot is available.
           // ---------------------------------------------------------------
 
           const hasFreeSlot =
@@ -217,10 +214,10 @@ export function Kitchen({
           const sidePosition =
             side === "right"
               ? {
-                  right: "3%",
+                  right: "1.5%",
                 }
               : {
-                  left: "3%",
+                  left: "1.5%",
                 };
 
 
@@ -244,50 +241,37 @@ export function Kitchen({
                 className="
                   pointer-events-none
                   absolute
-                  top-[40%]
+                  top-[42%]
+                  z-[60]
                   flex
-                  max-w-[21%]
                   -translate-y-1/2
                   flex-col
                   items-center
-                  gap-2
-                  rounded-2xl
-                  border
-                  border-white/10
-                  bg-black/10
-                  px-1.5
-                  py-2
-                  backdrop-blur-[2px]
+                  justify-center
                 "
                 style={sidePosition}
               >
 
 
-                {/* ------------------------------------------------------- */}
-                {/* Cooking slots                                            */}
-                {/* ------------------------------------------------------- */}
-
                 <div
                   className="
                     pointer-events-none
                     grid
-                    max-h-[130px]
-                    grid-cols-2
+                    grid-cols-1
                     items-center
                     justify-items-center
-                    gap-x-2
-                    gap-y-3
-                    overflow-visible
+                    gap-2
                   "
                 >
+
 
                   {slotsForStation.map(
                     (slot) => {
 
 
-                      // ---------------------------------------------------
-                      // Occupied slot
-                      // ---------------------------------------------------
+                      // -------------------------------------------------
+                      // Occupied cooking slot
+                      // -------------------------------------------------
 
                       if (slot.food) {
 
@@ -298,6 +282,7 @@ export function Kitchen({
                             className="
                               pointer-events-auto
                               relative
+                              z-[70]
                               flex
                               items-center
                               justify-center
@@ -321,14 +306,20 @@ export function Kitchen({
                                 )
                               }
 
-                              onClick={() =>
-                                slot.state ===
-                                "ready"
-                                  ? onCollect(
-                                      slot.id
-                                    )
-                                  : undefined
-                              }
+                              onClick={() => {
+
+                                if (
+                                  slot.state ===
+                                  "ready"
+                                ) {
+
+                                  onCollect(
+                                    slot.id
+                                  );
+
+                                }
+
+                              }}
                             />
 
                           </div>
@@ -338,34 +329,35 @@ export function Kitchen({
                       }
 
 
-                      // ---------------------------------------------------
-                      // Empty slot
-                      // ---------------------------------------------------
+                      // -------------------------------------------------
+                      // Empty cooking slot
+                      // -------------------------------------------------
 
                       return (
 
                         <div
                           key={slot.id}
                           className="
+                            pointer-events-none
                             flex
-                            h-11
-                            w-11
+                            h-10
+                            w-10
                             items-center
                             justify-center
                             rounded-xl
                             border
                             border-dashed
-                            border-white/20
-                            bg-black/10
+                            border-white/15
+                            bg-black/5
                           "
                           aria-label="Empty cooking slot"
                         >
 
                           <span
                             className="
-                              text-lg
+                              text-base
                               font-light
-                              text-white/20
+                              text-white/15
                             "
                           >
                             +
@@ -380,7 +372,6 @@ export function Kitchen({
 
                 </div>
 
-
               </div>
 
 
@@ -392,9 +383,10 @@ export function Kitchen({
                 className="
                   pointer-events-none
                   absolute
-                  bottom-[2.5%]
+                  bottom-[1.5%]
                   left-1/2
-                  w-[94%]
+                  z-[55]
+                  w-[96%]
                   -translate-x-1/2
                 "
               >
@@ -403,18 +395,14 @@ export function Kitchen({
                   className="
                     pointer-events-none
                     flex
-                    min-h-[74px]
+                    min-h-[66px]
                     items-end
                     justify-center
                     gap-2
-                    rounded-3xl
-                    border
-                    border-white/10
-                    bg-black/10
-                    px-3
-                    pb-1
-                    pt-2
-                    backdrop-blur-[2px]
+                    overflow-visible
+                    px-1
+                    pb-0
+                    pt-1
                   "
                 >
 
@@ -426,6 +414,8 @@ export function Kitchen({
                         key={food.id}
                         className="
                           pointer-events-auto
+                          relative
+                          z-[60]
                           flex-shrink-0
                         "
                       >
