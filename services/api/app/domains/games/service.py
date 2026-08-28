@@ -7,6 +7,8 @@ from sqlalchemy.orm import Session
 from app.core.security import (
     verify_password,
     create_access_token,
+    create_refresh_token,
+    decode_token,
 )
 from app.core.config import get_settings
 from app.core.exceptions import UnauthorizedError
@@ -1644,6 +1646,9 @@ class PoojaKitchenService:
                 "Invalid username or password"
             )
 
+        # --------------------------------------------------------
+        # Access token
+        # --------------------------------------------------------
 
         access_token = create_access_token(
             str(player.id),
@@ -1652,13 +1657,100 @@ class PoojaKitchenService:
             }
         )
 
+        # --------------------------------------------------------
+        # Refresh token
+        # --------------------------------------------------------
+
+        session_id = str(uuid.uuid4())
+
+        refresh_token = create_refresh_token(
+            str(player.id),
+            session_id=session_id
+        )
 
         return TokenResponse(
             access_token=access_token,
-            refresh_token="",
+            refresh_token=refresh_token,
             token_type="bearer",
         )
 
+    def refresh(
+        self,
+        refresh_token: str,
+    ) -> TokenResponse:
+
+        # --------------------------------------------------------
+        # Decode and validate refresh token
+        # --------------------------------------------------------
+
+        payload = decode_token(
+            refresh_token,
+            expected_type="refresh"
+        )
+
+        # --------------------------------------------------------
+        # Make sure this is a Pooja Kitchen token
+        # --------------------------------------------------------
+
+        if payload.get("domain") != "pooja_kitchen_player":
+            raise UnauthorizedError(
+                "This token is not a Pooja Kitchen player session."
+            )
+
+        # --------------------------------------------------------
+        # Extract player ID
+        # --------------------------------------------------------
+
+        try:
+            player_id = uuid.UUID(
+                str(payload.get("sub"))
+            )
+        except (TypeError, ValueError) as exc:
+            raise UnauthorizedError(
+                "Invalid Pooja Kitchen player session."
+            ) from exc
+
+        # --------------------------------------------------------
+        # Make sure player still exists
+        # --------------------------------------------------------
+
+        player = self.repository.get_player_by_id(
+            player_id
+        )
+
+        if player is None:
+            raise UnauthorizedError(
+                "Pooja Kitchen player not found."
+            )
+
+        # --------------------------------------------------------
+        # Issue new access token
+        # --------------------------------------------------------
+
+        access_token = create_access_token(
+            str(player.id),
+            extra_claims={
+                "domain": "pooja_kitchen_player"
+            }
+        )
+
+        # --------------------------------------------------------
+        # Rotate refresh token
+        # --------------------------------------------------------
+
+        session_id = str(uuid.uuid4())
+
+        new_refresh_token = create_refresh_token(
+            str(player.id),
+            session_id=session_id
+        )
+
+        return TokenResponse(
+            access_token=access_token,
+            refresh_token=new_refresh_token,
+            token_type="bearer",
+        )
+        
     def update_level(
         self,
         level_id: str,
