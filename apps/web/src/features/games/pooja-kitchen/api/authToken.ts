@@ -1,42 +1,38 @@
 const TOKEN_KEY = "pooja_kitchen_token";
 
-
 export function setAuthToken(
   token: string | null
 ): void {
 
-  if(token){
+  console.log("[PoojaKitchen Auth] Setting token:", !!token);
 
+  if (token) {
     localStorage.setItem(
       TOKEN_KEY,
       token
     );
-
-  }
-  else{
-
+  } else {
     localStorage.removeItem(
       TOKEN_KEY
     );
-
   }
-
 }
-
 
 export function getAuthToken(): string | null {
 
-  return localStorage.getItem(
-    TOKEN_KEY
+  const token =
+    localStorage.getItem(TOKEN_KEY);
+
+  console.log(
+    "[PoojaKitchen Auth] Reading token:",
+    !!token
   );
 
+  return token;
 }
-
 
 export function clearAuthToken(): void {
 
-  localStorage.removeItem(
-    TOKEN_KEY
-  );
+  localStorage.removeItem(TOKEN_KEY);
 
 }

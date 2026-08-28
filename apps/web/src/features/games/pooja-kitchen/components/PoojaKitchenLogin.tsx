@@ -56,13 +56,21 @@ export function PoojaKitchenLogin({
 
 
       const data =
-        await response.json();
+  await response.json();
 
+console.log(
+  "[PoojaKitchen Login] Response keys:",
+  Object.keys(data)
+);
 
-      setAuthToken(
-        data.access_token
-      );
+console.log(
+  "[PoojaKitchen Login] Has access_token:",
+  !!data.access_token
+);
 
+setAuthToken(
+  data.access_token
+);
 
       onSuccess();
 

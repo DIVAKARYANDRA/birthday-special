@@ -40,17 +40,47 @@ interface CompleteLevelResult {
   progress: PlayerProgress;
 }
 
-async function requestJson<T>(path: string, init?: RequestInit): Promise<T> {
+async function requestJson<T>(
+  path: string,
+  init?: RequestInit
+): Promise<T> {
+
   const token = getAuthToken();
 
-  const response = await fetch(`${API_BASE_URL}${path}`, {
-    ...init,
-    headers: {
-      'Content-Type': 'application/json',
-      ...(token ? { Authorization: `Bearer ${token}` } : {}),
-      ...(init?.headers ?? {}),
-    },
-  });
+  console.log(
+    "[PoojaKitchen API] Request:",
+    path,
+    "Token exists:",
+    !!token
+  );
+
+  const response = await fetch(
+    `${API_BASE_URL}${path}`,
+    {
+      ...init,
+
+      headers: {
+        "Content-Type": "application/json",
+
+        ...(token
+          ? {
+              Authorization:
+                `Bearer ${token}`,
+            }
+          : {}),
+
+        ...(init?.headers ?? {}),
+      },
+    }
+  );
+
+  console.log(
+    "[PoojaKitchen API] Response:",
+    path,
+    response.status
+  );
+
+  // rest unchanged...
 
   if (response.status === 401) {
     throw new Error(
